@@ -1,4 +1,4 @@
-package blog.codeswamp
+package dev.codeswamp
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

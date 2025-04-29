@@ -1,4 +1,4 @@
-package blog.codeswamp
+package dev.codeswamp
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
