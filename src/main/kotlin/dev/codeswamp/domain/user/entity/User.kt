@@ -1,5 +1,6 @@
 package dev.codeswamp.domain.user.entity
 
+import dev.codeswamp.domain.article.entity.article.ArticleMetadata
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -11,7 +12,7 @@ class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    open val id: Long? = null;
+    val id: Long? = null;
 
     @Column(nullable = false, unique = true)
     var email: String? = null
