@@ -1,6 +1,5 @@
 package dev.codeswamp.domain.user.entity
 
-import dev.codeswamp.domain.article.entity.article.ArticleMetadata
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue

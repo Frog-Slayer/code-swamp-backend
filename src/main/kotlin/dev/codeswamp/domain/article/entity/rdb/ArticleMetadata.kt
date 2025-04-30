@@ -1,7 +1,7 @@
-package dev.codeswamp.domain.article.entity.article
+package dev.codeswamp.domain.article.entity.rdb.article
 
-import dev.codeswamp.domain.article.entity.folder.Folder
-import dev.codeswamp.domain.article.entity.reaction.Comment
+import dev.codeswamp.domain.article.entity.rdb.folder.Folder
+import dev.codeswamp.domain.article.entity.rdb.reaction.Comment
 import dev.codeswamp.domain.user.entity.User
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
