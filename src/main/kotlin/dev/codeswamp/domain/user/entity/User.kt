@@ -7,20 +7,20 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 
 @Entity
-class User {
+data class User (
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null;
+    val id: Long? = null,
 
     @Column(nullable = false, unique = true)
-    var email: String? = null
+    var email: String? = null,
 
     @Column(nullable = false, unique = true)
-    var nickname: String? = null
+    var nickname: String? = null,
 
-    var profileUrl: String? = null
+    var profileUrl: String? = null,
 
     @Column(nullable = false)
-    var role: Role = Role.ROLE_GUEST
-}
+    var role: Role = Role.ROLE_GUEST,
+)
