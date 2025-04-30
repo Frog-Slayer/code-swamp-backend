@@ -1,6 +1,6 @@
-package dev.codeswamp.user.service
+package dev.codeswamp.domain.user.service
 
-import dev.codeswamp.user.entity.User
+import dev.codeswamp.domain.user.entity.User
 import org.springframework.stereotype.Service
 
 @Service

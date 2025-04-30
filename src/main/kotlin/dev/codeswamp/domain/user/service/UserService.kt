@@ -1,6 +1,6 @@
-package dev.codeswamp.user.service
+package dev.codeswamp.domain.user.service
 
-import dev.codeswamp.user.entity.User
+import dev.codeswamp.domain.user.entity.User
 
 interface UserService {
     fun getUserByEmail(email: String): User

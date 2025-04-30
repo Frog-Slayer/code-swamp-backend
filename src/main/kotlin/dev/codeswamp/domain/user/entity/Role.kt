@@ -1,4 +1,4 @@
-package dev.codeswamp.user.entity
+package dev.codeswamp.domain.user.entity
 
 enum class Role {
     ROLE_GUEST,
