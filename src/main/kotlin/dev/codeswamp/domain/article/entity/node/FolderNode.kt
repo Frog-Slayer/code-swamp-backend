@@ -1,7 +1,6 @@
-package dev.codeswamp.domain.article.entity.node.folder
+package dev.codeswamp.domain.article.entity.node
 
-import dev.codeswamp.domain.article.entity.node.article.ArticleNode
-import jakarta.persistence.Embedded
+import dev.codeswamp.domain.article.entity.node.ArticleNode
 import org.springframework.data.neo4j.core.schema.GeneratedValue
 import org.springframework.data.neo4j.core.schema.Id
 import org.springframework.data.neo4j.core.schema.Node

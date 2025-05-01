@@ -9,7 +9,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 
 @Entity
-data class Reaction (
+data class Emoji (
 
     @Id
     @GeneratedValue

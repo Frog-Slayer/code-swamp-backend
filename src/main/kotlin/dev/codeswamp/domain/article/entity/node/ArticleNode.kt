@@ -1,4 +1,4 @@
-package dev.codeswamp.domain.article.entity.node.article
+package dev.codeswamp.domain.article.entity.node
 
 import org.springframework.data.neo4j.core.schema.GeneratedValue
 import org.springframework.data.neo4j.core.schema.Id
@@ -10,4 +10,3 @@ data class ArticleNode (
 
     val articleId: Long,//PK of RDB entity
 )
-
