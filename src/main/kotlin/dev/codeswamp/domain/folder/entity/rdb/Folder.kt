@@ -1,4 +1,4 @@
-package dev.codeswamp.domain.article.entity.rdb.folder
+package dev.codeswamp.domain.folder.entity.rdb
 
 import dev.codeswamp.domain.user.entity.User
 import jakarta.persistence.Entity

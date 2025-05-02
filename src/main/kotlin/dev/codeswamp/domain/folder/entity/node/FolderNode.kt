@@ -1,4 +1,4 @@
-package dev.codeswamp.domain.article.entity.node
+package dev.codeswamp.domain.folder.entity.node
 
 import dev.codeswamp.domain.article.entity.node.ArticleNode
 import org.springframework.data.neo4j.core.schema.GeneratedValue

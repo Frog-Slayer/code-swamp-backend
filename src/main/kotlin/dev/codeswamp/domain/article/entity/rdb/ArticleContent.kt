@@ -1,4 +1,4 @@
-package dev.codeswamp.domain.article.entity.rdb.article
+package dev.codeswamp.domain.article.entity.rdb
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
