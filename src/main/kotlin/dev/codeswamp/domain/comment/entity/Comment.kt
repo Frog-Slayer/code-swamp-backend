@@ -20,8 +20,8 @@ data class Comment(
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    val user: User,
+    @JoinColumn(name = "author_id")
+    val author: User,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_metadata_id")
@@ -29,11 +29,13 @@ data class Comment(
 
     var content: String,
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    val parent: Comment? = null,
+
     @CreatedDate
     val createdAt: Instant = Instant.now(),
 
     @LastModifiedDate
     val updatedAt: Instant = Instant.now()
-
-
 )
