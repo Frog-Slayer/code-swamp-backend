@@ -13,18 +13,4 @@ class ArticleController {
     // 메타 정보 수정     PATCH /articles/{id}
 
     // 본문 수정         PUT /articles/{id}
-
-    // 코멘트 달기        POST /articles/{id}/comments
-
-    // 코멘트 수정       PATCH /comments/{id}
-
-    // 코멘트 삭제       DELETE /comments/{id}
-
-    // 글 이모지 달기     POST /articles/{id}/emoji
-
-    // 글 이모지 삭제     DELETE /articles/{articleId}/emoji/{{emojiId}
-
-    // 코멘트 이모지 달기   POST /comments/{id}/emoji
-
-    // 코멘트 이모지 삭제   DELETE /comments/{id}/emoji/{id}
 }
