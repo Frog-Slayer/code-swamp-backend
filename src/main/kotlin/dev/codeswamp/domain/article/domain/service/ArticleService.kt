@@ -31,4 +31,8 @@ class ArticleService (
         article.publish()
         articleRepository.save(article)
     }
+
+    fun findAllByKeywords(keywords: List<String>): List<Article> {
+        return articleRepository.findAllByKeywords(keywords)
+    }
 }
