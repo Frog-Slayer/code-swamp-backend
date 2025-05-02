@@ -1,5 +1,6 @@
-package dev.codeswamp.domain.article.entity.rdb
+package dev.codeswamp.domain.article.infrastructure.persistence.entity.rdb
 
+import dev.codeswamp.domain.article.infrastructure.persistence.entity.rdb.ArticleView
 import dev.codeswamp.domain.comment.entity.Comment
 import dev.codeswamp.domain.folder.entity.rdb.Folder
 import dev.codeswamp.domain.user.entity.User
@@ -17,7 +18,7 @@ import org.springframework.data.annotation.LastModifiedDate
 import java.time.Instant
 
 @Entity
-data class ArticleMetadata(
+data class ArticleMetadataEntity(
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
@@ -44,10 +45,10 @@ data class ArticleMetadata(
 
     val currentVersion: Long,//현재 컨텐츠 버전
 
-    @OneToMany(mappedBy = "articleMetadata", fetch = FetchType.LAZY)
-    val contentVersions: List<ArticleContent> = mutableListOf(),
+    @OneToMany(mappedBy = "articleMetadataEntity", fetch = FetchType.LAZY)
+    val contentVersions: List<ArticleContentEntity> = mutableListOf(),
 
-    @OneToMany(mappedBy = "articleMetadata", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "articleMetadataEntity", fetch = FetchType.LAZY)
     val comments: List<Comment> = mutableListOf(),
 
     @OneToMany

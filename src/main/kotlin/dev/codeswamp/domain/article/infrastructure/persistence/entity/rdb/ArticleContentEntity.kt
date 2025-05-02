@@ -1,4 +1,4 @@
-package dev.codeswamp.domain.article.entity.rdb
+package dev.codeswamp.domain.article.infrastructure.persistence.entity.rdb
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -10,14 +10,14 @@ import org.springframework.data.annotation.CreatedDate
 import java.time.Instant
 
 @Entity
-data class ArticleContent (
+data class ArticleContentEntity (
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
     @ManyToOne
     @JoinColumn(name = "article_metadata_id")
-    val articleMetadata: ArticleMetadata,
+    val articleMetadataEntity: ArticleMetadataEntity,
 
     var content: String,//raw markdown text
 

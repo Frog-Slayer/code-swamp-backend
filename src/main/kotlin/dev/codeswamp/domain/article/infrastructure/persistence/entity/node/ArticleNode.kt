@@ -1,4 +1,4 @@
-package dev.codeswamp.domain.article.entity.node
+package dev.codeswamp.domain.article.infrastructure.persistence.entity.node
 
 import org.springframework.data.neo4j.core.schema.GeneratedValue
 import org.springframework.data.neo4j.core.schema.Id

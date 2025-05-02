@@ -1,6 +1,6 @@
 package dev.codeswamp.domain.comment.entity
 
-import dev.codeswamp.domain.article.entity.rdb.ArticleMetadata
+import dev.codeswamp.domain.article.infrastructure.persistence.entity.rdb.ArticleMetadataEntity
 import dev.codeswamp.domain.user.entity.User
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -25,7 +25,7 @@ data class Comment(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_metadata_id")
-    var articleMetadata: ArticleMetadata,
+    var articleMetadataEntity: ArticleMetadataEntity,
 
     var content: String,
 

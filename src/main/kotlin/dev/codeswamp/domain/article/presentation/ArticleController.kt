@@ -1,4 +1,4 @@
-package dev.codeswamp.domain.article.controller
+package dev.codeswamp.domain.article.presentation
 
 import org.springframework.web.bind.annotation.RestController
 

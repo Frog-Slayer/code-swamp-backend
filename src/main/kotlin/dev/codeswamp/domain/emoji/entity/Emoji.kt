@@ -1,6 +1,6 @@
 package dev.codeswamp.domain.emoji.entity
 
-import dev.codeswamp.domain.article.entity.rdb.ArticleMetadata
+import dev.codeswamp.domain.article.infrastructure.persistence.entity.rdb.ArticleMetadataEntity
 import dev.codeswamp.domain.user.entity.User
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -17,7 +17,7 @@ data class Emoji (
 
     @ManyToOne
     @JoinColumn(name = "article_metadata_id")
-    val articleMetadata: ArticleMetadata,
+    val articleMetadataEntity: ArticleMetadataEntity,
 
     @ManyToOne
     @JoinColumn(name = "user_id")

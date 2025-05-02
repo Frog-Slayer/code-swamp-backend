@@ -1,4 +1,4 @@
-package dev.codeswamp.domain.article.entity.rdb
+package dev.codeswamp.domain.article.infrastructure.persistence.entity.rdb
 
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -17,4 +17,4 @@ data class ArticleView(
     @CreatedDate
     val createdAt: Instant = Instant.now(),
 
-)
+    )
