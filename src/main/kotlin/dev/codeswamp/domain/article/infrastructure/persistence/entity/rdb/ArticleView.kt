@@ -12,9 +12,9 @@ data class ArticleView(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = 0,
+    val id: Long? = null,
 
     @CreatedDate
     val createdAt: Instant = Instant.now(),
 
-    )
+)
