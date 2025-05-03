@@ -35,9 +35,3 @@ out/
 
 ### VS Code ###
 .vscode/
-
-### QueryDSL ###
-/src/main/generated
-
-### .yml ###
-/src/main/resources/*.yml
