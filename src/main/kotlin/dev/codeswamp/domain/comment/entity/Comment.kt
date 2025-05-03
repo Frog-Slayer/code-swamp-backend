@@ -1,6 +1,6 @@
 package dev.codeswamp.domain.comment.entity
 
-import dev.codeswamp.domain.article.infrastructure.persistence.entity.rdb.ArticleMetadataEntity
+import dev.codeswamp.domain.article.infrastructure.persistence.entity.ArticleMetadataEntity
 import dev.codeswamp.domain.user.entity.User
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType

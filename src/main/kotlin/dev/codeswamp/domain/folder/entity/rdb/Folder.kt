@@ -19,10 +19,10 @@ data class Folder(
     var name: String,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "owner_id")
     val owner: User,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "parent_id")
     val parent: Folder? = null,
 )

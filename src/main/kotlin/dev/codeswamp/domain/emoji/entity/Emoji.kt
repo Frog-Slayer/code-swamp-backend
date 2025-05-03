@@ -1,6 +1,6 @@
 package dev.codeswamp.domain.emoji.entity
 
-import dev.codeswamp.domain.article.infrastructure.persistence.entity.rdb.ArticleMetadataEntity
+import dev.codeswamp.domain.article.infrastructure.persistence.entity.ArticleMetadataEntity
 import dev.codeswamp.domain.user.entity.User
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue

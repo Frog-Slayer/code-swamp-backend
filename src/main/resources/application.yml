@@ -1,0 +1,7 @@
+spring:
+  application:
+    name: codeswamp
+  profiles:
+    active: dev
+  jpa:
+    show-sql: true
