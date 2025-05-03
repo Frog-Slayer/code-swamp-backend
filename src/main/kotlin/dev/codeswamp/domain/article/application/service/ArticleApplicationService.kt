@@ -15,8 +15,6 @@ interface ArticleApplicationService {
 
     fun delete(user: User, articleId: Long)
 
-    fun findBySlug(user: User?, slug: String): ArticleReadResponseDto
-
     fun findByArticleId(user: User?, articleId: Long): ArticleReadResponseDto
 
     fun findAllByKeywords(user: User?, keywords: List<String>): List<ArticleReadResponseDto>

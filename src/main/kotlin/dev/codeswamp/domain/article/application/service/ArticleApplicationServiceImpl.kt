@@ -37,13 +37,6 @@ class ArticleApplicationServiceImpl(
         TODO("Not yet implemented")
     }
 
-    override fun findBySlug(
-        user: User?,
-        slug: String
-    ): ArticleReadResponseDto {
-        TODO("Not yet implemented")
-    }
-
     override fun findByArticleId(
         user: User?,
         articleId: Long
