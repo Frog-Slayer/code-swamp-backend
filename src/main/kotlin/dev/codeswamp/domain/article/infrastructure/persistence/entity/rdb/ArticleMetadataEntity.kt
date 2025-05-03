@@ -25,14 +25,12 @@ data class ArticleMetadataEntity(
     @Column(nullable = false)
     var title: String,
 
-    @Column(nullable = false)
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(nullable = false, name = "user_id")
     val writer: User,
 
-    @Column(nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "folder_id")
+    @JoinColumn(nullable = false, name = "folder_id")
     var folder: Folder,
 
     @CreatedDate
