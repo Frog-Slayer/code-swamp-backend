@@ -13,38 +13,35 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
+@RequestMapping("/articles")
 class ArticleController(
     private val articleApplicationService: ArticleApplicationService
 ){
-    // 글 가져오기        GET /@{사용자명}/{slug}
-    @GetMapping("/@{username}/{slug}")
-    fun getArticle(@AuthenticationPrincipal user: User, @PathVariable username: String, @PathVariable slug: String): ArticleReadResponseDto? {
+    @GetMapping("/{id}")
+    fun getArticle(@AuthenticationPrincipal user: User, @PathVariable id:Long): ArticleReadResponseDto? {
         TODO("Not yet implemented")
     }
 
-    // 글 발행           POST /articles
-    @PostMapping("/articles")
-    fun saveArticle(@AuthenticationPrincipal user: User, @RequestBody article: Article): Article {
+    @PostMapping("/")
+    fun saveArticle(@AuthenticationPrincipal user: User, @RequestBody article: Article): ArticleReadResponseDto? {
         TODO("Not yet implemented")
     }
 
-    // 문서 삭제         DELETE /articles/{id}
-    @DeleteMapping("/articles/{id}")
+    @DeleteMapping("/{id}")
     fun deleteArticle(@AuthenticationPrincipal user: User, @PathVariable id: Long) {
         TODO("Not yet implemented")
     }
 
-    // 메타 정보 수정     PATCH /articles/{id}
-    @PatchMapping("/articles/{id}")
+    @PatchMapping("/{id}")
     fun modifyArticleMetadata(@AuthenticationPrincipal user: User, @RequestBody articleMetadata: ArticleMetadataDto) {
         TODO("Not yet implemented")
     }
 
-    // 본문 수정         PUT /articles/{id}
-    @PutMapping("/articles/{id}")
+    @PutMapping("/{id}")
     fun modifyArticleContent(@AuthenticationPrincipal user: User, @PathVariable id: Long, @RequestBody content: String) {
         TODO("Not yet implemented")
     }
