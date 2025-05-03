@@ -2,6 +2,7 @@ package dev.codeswamp.domain.article.application.service
 
 import dev.codeswamp.domain.article.domain.model.Article
 import dev.codeswamp.domain.article.presentation.dto.request.ArticleMetadataDto
+import dev.codeswamp.domain.article.presentation.dto.response.ArticleReadResponseDto
 import dev.codeswamp.domain.user.entity.User
 
 interface ArticleApplicationService {
@@ -14,10 +15,10 @@ interface ArticleApplicationService {
 
     fun delete(user: User, articleId: Long)
 
-    fun findBySlug(user: User?, slug: String): Article
+    fun findBySlug(user: User?, slug: String): ArticleReadResponseDto
 
-    fun findByArticleId(user: User?, articleId: Long): Article
+    fun findByArticleId(user: User?, articleId: Long): ArticleReadResponseDto
 
-    fun findAllByKeywords(user: User?, keywords: List<String>): List<Article>
+    fun findAllByKeywords(user: User?, keywords: List<String>): List<ArticleReadResponseDto>
 
 }
