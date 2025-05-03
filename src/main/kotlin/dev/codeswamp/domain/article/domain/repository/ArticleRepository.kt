@@ -9,6 +9,4 @@ interface ArticleRepository {
 
     fun findAllByIds(articleIds : List<Long>): List<Article>
     fun findById(articleId : Long): Article
-
-    fun findAllByKeywords(keywords: List<String>): List<Article>
 }
