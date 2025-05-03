@@ -2,7 +2,9 @@ package dev.codeswamp.domain.article.domain.service
 
 import dev.codeswamp.domain.article.domain.model.Article
 import dev.codeswamp.domain.article.domain.repository.ArticleRepository
+import org.springframework.stereotype.Service
 
+@Service
 class ArticleService (
     private val articleRepository: ArticleRepository
 ){
