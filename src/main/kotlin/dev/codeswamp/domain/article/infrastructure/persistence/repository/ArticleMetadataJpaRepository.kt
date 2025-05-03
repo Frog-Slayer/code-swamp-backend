@@ -1,6 +1,6 @@
-package dev.codeswamp.domain.article.infrastructure.persistence.repository.rdb
+package dev.codeswamp.domain.article.infrastructure.persistence.repository
 
-import dev.codeswamp.domain.article.infrastructure.persistence.entity.rdb.ArticleMetadataEntity
+import dev.codeswamp.domain.article.infrastructure.persistence.entity.ArticleMetadataEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.Optional
 

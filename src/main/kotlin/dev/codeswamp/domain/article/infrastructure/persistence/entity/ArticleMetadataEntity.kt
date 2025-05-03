@@ -1,6 +1,5 @@
-package dev.codeswamp.domain.article.infrastructure.persistence.entity.rdb
+package dev.codeswamp.domain.article.infrastructure.persistence.entity
 
-import dev.codeswamp.domain.article.infrastructure.persistence.entity.rdb.ArticleView
 import dev.codeswamp.domain.comment.entity.Comment
 import dev.codeswamp.domain.folder.entity.rdb.Folder
 import dev.codeswamp.domain.user.entity.User

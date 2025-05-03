@@ -1,9 +1,9 @@
-package dev.codeswamp.domain.article.infrastructure.persistence.repository
+package dev.codeswamp.domain.article.infrastructure
 
 import dev.codeswamp.domain.article.domain.model.Article
 import dev.codeswamp.domain.article.domain.repository.ArticleRepository
-import dev.codeswamp.domain.article.infrastructure.persistence.repository.rdb.ArticleContentJpaRepository
-import dev.codeswamp.domain.article.infrastructure.persistence.repository.rdb.ArticleMetadataJpaRepository
+import dev.codeswamp.domain.article.infrastructure.persistence.repository.ArticleContentJpaRepository
+import dev.codeswamp.domain.article.infrastructure.persistence.repository.ArticleMetadataJpaRepository
 
 class ArticleRepositoryImpl (
     val articleMetadataJpaRepository: ArticleMetadataJpaRepository,
