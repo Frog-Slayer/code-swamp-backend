@@ -4,7 +4,7 @@ import dev.codeswamp.domain.article.infrastructure.persistence.entity.rdb.Articl
 import org.springframework.data.jpa.repository.JpaRepository
 import java.util.Optional
 
-interface ArticleMetadataRepository : JpaRepository<ArticleMetadataEntity, Long> {
+interface ArticleMetadataJpaRepository : JpaRepository<ArticleMetadataEntity, Long> {
 
     override fun findById(id: Long): Optional<ArticleMetadataEntity?>
     fun findByIdIsIn(ids: List<Long>): List<ArticleMetadataEntity>
