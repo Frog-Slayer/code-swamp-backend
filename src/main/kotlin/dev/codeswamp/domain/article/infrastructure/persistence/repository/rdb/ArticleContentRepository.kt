@@ -1,4 +1,7 @@
 package dev.codeswamp.domain.article.infrastructure.persistence.repository.rdb
 
-class ArticleContentRepository {
+import dev.codeswamp.domain.article.infrastructure.persistence.entity.rdb.ArticleContentEntity
+import org.springframework.data.jpa.repository.JpaRepository
+
+interface ArticleContentRepository : JpaRepository<ArticleContentEntity, Long> {
 }
