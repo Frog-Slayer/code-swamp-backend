@@ -28,10 +28,6 @@ data class Article (
         updateDate()
     }
 
-    fun setPublic(isPublic: Boolean) {
-        this.isPublic = isPublic
-    }
-
     fun publish() {
         if (this.type != ArticleType.DRAFT) {
             this.type = ArticleType.PUBLISHED
