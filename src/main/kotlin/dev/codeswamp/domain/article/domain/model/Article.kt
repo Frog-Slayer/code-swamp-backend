@@ -16,7 +16,7 @@ data class Article (
     var createdAt: Instant,
     var updatedAt: Instant,
 
-    //content
+    //content(raw Markdown document)
     var content: String,
 ) {
     fun changeTitle(title: String) {
