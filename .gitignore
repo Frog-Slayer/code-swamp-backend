@@ -1,0 +1,19 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+
+build/
+out/
+
+.DS_Store
+Thumbs.db
+
+*.class
+*.jar
+*.war
+*.ear
+
+# Gradle
+.gradle/
+*.gradle*
+
