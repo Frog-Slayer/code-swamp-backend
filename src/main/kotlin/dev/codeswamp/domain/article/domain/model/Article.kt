@@ -1,6 +1,6 @@
 package dev.codeswamp.domain.article.domain.model
 
-import dev.codeswamp.domain.folder.entity.rdb.Folder
+import dev.codeswamp.domain.folder.domain.Folder
 import dev.codeswamp.domain.user.entity.User
 import java.time.Instant
 
