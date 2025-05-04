@@ -1,12 +1,12 @@
 package dev.codeswamp.domain.folder.domain.service
 
 import dev.codeswamp.domain.folder.domain.entity.Folder
-import dev.codeswamp.domain.folder.domain.repository.folderRepository
+import dev.codeswamp.domain.folder.domain.repository.FolderRepository
 import org.springframework.stereotype.Service
 
 @Service
 class FolderService (
-    private val folderRepository: folderRepository
+    private val folderRepository: FolderRepository
 ){
 
     fun create(ownerId: Long, name: String, parentId: Long) : Folder {
@@ -42,8 +42,6 @@ class FolderService (
 
         folderRepository.delete(folder)
     }
-
-
 
 
 
