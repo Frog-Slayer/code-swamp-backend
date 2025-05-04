@@ -2,7 +2,9 @@ package dev.codeswamp.domain.article.infrastructure.persistence.repository
 
 import dev.codeswamp.domain.article.domain.model.Article
 import dev.codeswamp.domain.article.domain.repository.ArticleRepository
+import org.springframework.stereotype.Repository
 
+@Repository
 class ArticleRepositoryImpl (
     val articleMetadataJpaRepository: ArticleMetadataJpaRepository,
     val articleContentJpaRepository: ArticleContentJpaRepository,

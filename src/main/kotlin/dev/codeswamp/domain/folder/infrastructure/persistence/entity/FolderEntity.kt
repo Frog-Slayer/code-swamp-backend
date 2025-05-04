@@ -1,4 +1,4 @@
-package dev.codeswamp.domain.folder.entity.rdb
+package dev.codeswamp.domain.folder.infrastructure.persistence.entity
 
 import dev.codeswamp.domain.user.entity.User
 import jakarta.persistence.Entity
@@ -10,7 +10,7 @@ import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 
 @Entity
-data class Folder(
+data class FolderEntity(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,5 +24,5 @@ data class Folder(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    val parent: Folder? = null,
+    val parent: FolderEntity? = null,
 )
