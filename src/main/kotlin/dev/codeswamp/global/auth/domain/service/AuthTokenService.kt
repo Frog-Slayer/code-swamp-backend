@@ -7,4 +7,5 @@ interface AuthTokenService {
     fun generateToken(user: User): AuthToken
     fun validateToken(authToken: AuthToken): Boolean
     fun extractUserInfo(authToken: AuthToken): User
+    fun saveToken(authToken: AuthToken)
 }
