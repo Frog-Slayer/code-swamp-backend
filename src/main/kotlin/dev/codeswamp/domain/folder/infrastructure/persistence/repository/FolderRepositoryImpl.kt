@@ -22,4 +22,8 @@ class FolderRepositoryImpl(
         TODO("Not yet implemented")
     }
 
+    override fun findAllByIds(folderIds: List<Long>): List<Folder> {
+        TODO("Not yet implemented")
+    }
+
 }
