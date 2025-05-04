@@ -2,6 +2,7 @@ package dev.codeswamp.domain.folder.domain.service
 
 import dev.codeswamp.domain.folder.domain.entity.Folder
 import dev.codeswamp.domain.folder.domain.repository.FolderRepository
+import dev.codeswamp.domain.folder.infrastructure.persistence.entity.FolderEntity
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,6 +17,16 @@ class FolderService (
             parentId = parentId
         )
         return folderRepository.save(folder)
+    }
+
+    //TODO - Exception 구체화
+    fun findById(id: Long): Folder {
+        return folderRepository.findById(id)
+            .orElseThrow{ NoSuchElementException("no")}
+    }
+
+    fun findAllByIds(folderIds: List<Long>) : List<Folder> {
+        return folderRepository.findAllByIds(folderIds)
     }
 
     //TODO - Exception 구체화

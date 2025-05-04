@@ -6,7 +6,10 @@ import org.springframework.stereotype.Repository
 import java.util.Optional
 
 @Repository
-class FolderRepositoryImpl : FolderRepository {
+class FolderRepositoryImpl(
+    private val folderJpaRepository: FolderJpaRepository
+) : FolderRepository {
+
     override fun save(folder: Folder): Folder {
         TODO("Not yet implemented")
     }
