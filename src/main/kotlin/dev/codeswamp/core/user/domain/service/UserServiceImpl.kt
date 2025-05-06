@@ -1,13 +1,16 @@
 package dev.codeswamp.core.user.domain.service
 
 import dev.codeswamp.core.user.domain.model.User
+import dev.codeswamp.core.user.domain.repository.UserRepository
 import dev.codeswamp.core.user.infrastructure.entity.UserEntity
 import org.springframework.stereotype.Service
 
 @Service
-class UserServiceImpl : UserService {
+class UserServiceImpl(
+    private val userRepository: UserRepository
+) : UserService {
     override fun signUp(user: User) {
-        TODO("Not yet implemented")
+        userRepository.save(user)
     }
 
     override fun findById(id: Long): User {
@@ -41,9 +44,4 @@ class UserServiceImpl : UserService {
     override fun isValidNickname(nickname: String): Boolean {
         TODO("Not yet implemented")
     }
-
-    override fun isDuplicateNickname(nickname: String): Boolean {
-        TODO("Not yet implemented")
-    }
-
 }

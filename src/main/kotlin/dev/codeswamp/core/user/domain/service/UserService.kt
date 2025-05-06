@@ -15,6 +15,4 @@ interface UserService {
 
     fun isValidUsername(username: String): Boolean
     fun isValidNickname(nickname: String): Boolean
-    fun isDuplicateNickname(nickname: String): Boolean
-
 }
