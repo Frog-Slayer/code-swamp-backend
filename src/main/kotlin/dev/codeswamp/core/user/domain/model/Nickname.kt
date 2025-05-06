@@ -11,7 +11,7 @@ class Nickname private constructor(val nickname: String) {
         }
 
         private fun isValidNickname(nickname: String): Boolean {
-            return nickname.length in 2..12 && nickname.matches("^[a-zA-Z0-9]*$".toRegex())
+            return nickname.length in 2..12 && nickname.matches("^[a-zA-Z0-9가-힣]*$".toRegex())
         }
     }
 }
