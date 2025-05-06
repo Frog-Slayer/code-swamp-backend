@@ -16,18 +16,18 @@ class UserServiceImpl(
     }
 
     override fun findById(id: Long): User {
-        TODO("Not yet implemented")
+        return userRepository.findById(id).orElseThrow()
     }
 
     override fun findUserByEmail(email: String): User {
-        TODO("Not yet implemented")
+        return userRepository.findByEmail(email).orElseThrow()
     }
 
     override fun findUserByUsername(username: Username): User {
-        TODO("Not yet implemented")
+        return userRepository.findByUsername(username).orElseThrow()
     }
 
     override fun findUserByNickname(nickname: Nickname): User {
-        TODO("Not yet implemented")
+        return userRepository.findByNickname(nickname).orElseThrow()
     }
 }
