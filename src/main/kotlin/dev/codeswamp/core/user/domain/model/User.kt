@@ -1,6 +1,5 @@
 package dev.codeswamp.core.user.domain.model
 
-import javax.management.relation.Role
 
 data class User (
     val id: Long? = null,

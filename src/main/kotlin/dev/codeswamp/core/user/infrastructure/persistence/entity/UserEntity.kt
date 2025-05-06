@@ -1,5 +1,9 @@
 package dev.codeswamp.core.user.infrastructure.persistence.entity
 
+import dev.codeswamp.core.user.domain.model.Nickname
+import dev.codeswamp.core.user.domain.model.Role
+import dev.codeswamp.core.user.domain.model.User
+import dev.codeswamp.core.user.domain.model.Username
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -31,4 +35,20 @@ data class UserEntity (
     @Column(nullable = false)
     var role: Role = Role.ROLE_GUEST,
     **/
-)
+) {
+    fun toDomain(): User {
+        return User(
+            id = id,
+            username = Username.of(username),
+            email = email,
+            nickname = Nickname.of(username),
+            profileUrl = profileUrl,
+            role = Role.GUEST
+        )
+    }
+
+
+
+
+
+}
