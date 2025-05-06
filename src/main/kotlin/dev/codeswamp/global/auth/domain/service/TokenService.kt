@@ -10,4 +10,9 @@ class TokenService (
     private val tokenIssueService: TokenIssueService,
     private val tokenValidationService: TokenValidationService,
     private val tokenStoreService: TokenStoreService,
-) : TokenIssueService by tokenIssueService, TokenValidationService by tokenValidationService , TokenStoreService by tokenStoreService
+) : TokenIssueService by tokenIssueService, TokenValidationService by tokenValidationService , TokenStoreService by tokenStoreService {
+
+    fun refreshAccessToken(refreshToken: RefreshToken): AccessToken {
+        TODO("not yet implemented")
+    }
+}
