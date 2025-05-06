@@ -1,4 +1,4 @@
-package dev.codeswamp.core.user.infrastructure.entity
+package dev.codeswamp.core.user.infrastructure.persistence.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity

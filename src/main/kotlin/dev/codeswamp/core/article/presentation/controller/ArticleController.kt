@@ -4,7 +4,7 @@ import dev.codeswamp.core.article.application.service.ArticleApplicationService
 import dev.codeswamp.core.article.domain.model.Article
 import dev.codeswamp.core.article.presentation.dto.request.ArticleMetadataDto
 import dev.codeswamp.core.article.presentation.dto.response.ArticleReadResponseDto
-import dev.codeswamp.core.user.infrastructure.entity.UserEntity
+import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping

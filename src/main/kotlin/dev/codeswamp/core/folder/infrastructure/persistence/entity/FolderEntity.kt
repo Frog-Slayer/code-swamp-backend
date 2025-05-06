@@ -1,6 +1,6 @@
 package dev.codeswamp.core.folder.infrastructure.persistence.entity
 
-import dev.codeswamp.core.user.infrastructure.entity.UserEntity
+import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue

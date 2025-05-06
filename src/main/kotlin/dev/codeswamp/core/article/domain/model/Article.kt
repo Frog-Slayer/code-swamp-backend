@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.domain.model
 
-import dev.codeswamp.core.user.infrastructure.entity.UserEntity
+import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
 import java.time.Instant
 
 data class Article (

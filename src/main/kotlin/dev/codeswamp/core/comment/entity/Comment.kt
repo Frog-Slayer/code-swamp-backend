@@ -1,7 +1,7 @@
 package dev.codeswamp.core.comment.entity
 
 import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleMetadataEntity
-import dev.codeswamp.core.user.infrastructure.entity.UserEntity
+import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue

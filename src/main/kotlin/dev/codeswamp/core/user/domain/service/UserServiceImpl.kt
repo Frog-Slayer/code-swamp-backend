@@ -4,7 +4,6 @@ import dev.codeswamp.core.user.domain.model.Nickname
 import dev.codeswamp.core.user.domain.model.User
 import dev.codeswamp.core.user.domain.model.Username
 import dev.codeswamp.core.user.domain.repository.UserRepository
-import dev.codeswamp.core.user.infrastructure.entity.UserEntity
 import org.springframework.stereotype.Service
 
 @Service
