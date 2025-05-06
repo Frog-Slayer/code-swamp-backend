@@ -2,6 +2,7 @@ package dev.codeswamp.core.article.infrastructure.persistence.entity
 
 import dev.codeswamp.core.comment.entity.Comment
 import dev.codeswamp.core.folder.domain.entity.Folder
+import dev.codeswamp.core.folder.infrastructure.persistence.entity.FolderEntity
 import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -30,7 +31,7 @@ data class ArticleMetadataEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "folder_id")
-    var folder: Folder,
+    var folder: FolderEntity,
 
     @CreatedDate
     val createdAt: Instant = Instant.now(),
