@@ -16,7 +16,7 @@ class UserApplicationServiceImpl(
 ) : UserApplicationService {
 
     @Transactional
-    override fun signUp(user: User, dto: UserSignUpRequestDto): User {//user -> detached
+    override fun signUp(user: User, dto: UserSignUpRequestDto): User {
         val signUpUser = User (
                 id = user.id,
                 email =  user.email,
@@ -32,7 +32,7 @@ class UserApplicationServiceImpl(
 
     @Transactional
     override fun modifyUserNickname(
-        user: User,//detached
+        user: User,
         nicknameDto: NicknameChangeRequestDto
     ) {
         user.nickname = Nickname.of(nicknameDto.nickname)
@@ -40,7 +40,7 @@ class UserApplicationServiceImpl(
     }
 
     @Transactional
-    override fun modifyUserProfileImage(user: User, profileImageUrl: String?) {//user -> detached
+    override fun modifyUserProfileImage(user: User, profileImageUrl: String?) {
         user.profileUrl = profileImageUrl
         userService.save(user)//명시적 호출 필요
     }
