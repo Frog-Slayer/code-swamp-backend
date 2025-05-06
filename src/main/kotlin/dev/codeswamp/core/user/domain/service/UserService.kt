@@ -1,15 +1,14 @@
 package dev.codeswamp.core.user.domain.service
 
+import dev.codeswamp.core.user.domain.model.Nickname
 import dev.codeswamp.core.user.domain.model.User
+import dev.codeswamp.core.user.domain.model.Username
 
 interface UserService {
     fun save(user: User)
 
     fun findById(id: Long): User
     fun findUserByEmail(email: String): User
-    fun findUserByUsername(username: String): User
-    fun findUserByNickname(nickname: String): User
-
-    fun isValidUsername(username: String): Boolean
-    fun isValidNickname(nickname: String): Boolean
+    fun findUserByUsername(username: Username): User
+    fun findUserByNickname(nickname: Nickname): User
 }
