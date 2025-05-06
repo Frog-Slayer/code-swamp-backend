@@ -36,6 +36,7 @@ data class UserEntity (
     var role: Role = Role.ROLE_GUEST,
     **/
 ) {
+    //TODO: Role 수정 필요
     fun toDomain(): User {
         return User(
             id = id,
@@ -47,8 +48,16 @@ data class UserEntity (
         )
     }
 
-
-
-
-
+    //TODO: Role 수정 필요
+    companion object {
+        fun from(user: User): UserEntity {
+            return UserEntity(
+                id = user.id,
+                username = user.username.username,
+                email = user.email,
+                nickname = user.nickname.nickname,
+                profileUrl = user.profileUrl,
+            )
+        }
+    }
 }
