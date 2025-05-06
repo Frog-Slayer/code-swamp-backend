@@ -1,6 +1,6 @@
 package dev.codeswamp.core.user.controller
 
-import dev.codeswamp.core.user.service.UserService
+import dev.codeswamp.core.user.domain.service.UserService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.GetMapping

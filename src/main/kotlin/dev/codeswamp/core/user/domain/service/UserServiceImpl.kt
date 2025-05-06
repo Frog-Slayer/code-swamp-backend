@@ -1,0 +1,41 @@
+package dev.codeswamp.core.user.domain.service
+
+import dev.codeswamp.core.user.domain.model.User
+import dev.codeswamp.core.user.infrastructure.entity.UserEntity
+import org.springframework.stereotype.Service
+
+@Service
+class UserServiceImpl : UserService {
+    override fun getUserByEmail(email: String): User {
+        TODO("Not yet implemented")
+    }
+
+    override fun getUserByUsername(username: String): User {
+        TODO("Not yet implemented")
+    }
+
+    override fun getUserByNickname(nickname: String): User {
+        TODO("Not yet implemented")
+    }
+
+    override fun modifyProfile(user: User, profileUrl: String?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun modifyNickname(user: User, nickname: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun isValidUsername(username: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun isValidNickname(nickname: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+    override fun isDuplicateNickname(nickname: String): Boolean {
+        TODO("Not yet implemented")
+    }
+
+}
