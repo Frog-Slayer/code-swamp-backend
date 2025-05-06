@@ -16,10 +16,13 @@ data class UserEntity (
     val id: Long? = null,
 
     @Column(nullable = false, unique = true)
-    var email: String? = null,
+    val username: String,//변경 불가(사용자 ID)
 
     @Column(nullable = false, unique = true)
-    var nickname: String? = null,
+    var email: String,
+
+    @Column(nullable = false, unique = true)
+    var nickname: String,
 
     var profileUrl: String? = null,
 
