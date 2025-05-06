@@ -6,15 +6,19 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserServiceImpl : UserService {
-    override fun getUserByEmail(email: String): User {
+    override fun signUp(user: User) {
         TODO("Not yet implemented")
     }
 
-    override fun getUserByUsername(username: String): User {
+    override fun findUserByEmail(email: String): User {
         TODO("Not yet implemented")
     }
 
-    override fun getUserByNickname(nickname: String): User {
+    override fun findUserByUsername(username: String): User {
+        TODO("Not yet implemented")
+    }
+
+    override fun findUserByNickname(nickname: String): User {
         TODO("Not yet implemented")
     }
 

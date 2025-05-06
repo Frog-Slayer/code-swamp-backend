@@ -5,9 +5,9 @@ import dev.codeswamp.core.user.domain.model.User
 interface UserService {
     fun signUp(user: User)
 
-    fun getUserByEmail(email: String): User
-    fun getUserByUsername(username: String): User
-    fun getUserByNickname(nickname: String): User
+    fun findUserByEmail(email: String): User
+    fun findUserByUsername(username: String): User
+    fun findUserByNickname(nickname: String): User
 
     fun modifyProfile(user: User, profileUrl: String? = null)
     fun modifyNickname(user: User, nickname: String)
