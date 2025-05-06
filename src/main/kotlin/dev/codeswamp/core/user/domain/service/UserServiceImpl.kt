@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 class UserServiceImpl(
     private val userRepository: UserRepository
 ) : UserService {
-    override fun signUp(user: User) {
+    override fun save(user: User) {
         userRepository.save(user)
     }
 
@@ -26,14 +26,6 @@ class UserServiceImpl(
     }
 
     override fun findUserByNickname(nickname: String): User {
-        TODO("Not yet implemented")
-    }
-
-    override fun modifyProfile(user: User, profileUrl: String?) {
-        TODO("Not yet implemented")
-    }
-
-    override fun modifyNickname(user: User, nickname: String) {
         TODO("Not yet implemented")
     }
 
