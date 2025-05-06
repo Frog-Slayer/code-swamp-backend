@@ -10,5 +10,11 @@ data class User (
     var profileUrl: String? = null,
     val role: Role,
 ) {
+    fun modifyNickname(nickname: Nickname) {
+        this.nickname = nickname
+    }
 
+    fun modifyProfileUrl(profileUrl: String) {
+        this.profileUrl = profileUrl
+    }
 }
