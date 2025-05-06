@@ -1,7 +1,7 @@
 package dev.codeswamp.core.comment.entity
 
 import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleMetadataEntity
-import dev.codeswamp.core.user.entity.User
+import dev.codeswamp.core.user.infrastructure.entity.UserEntity
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
@@ -21,7 +21,7 @@ data class Comment(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id")
-    val author: User,
+    val author: UserEntity,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_metadata_id")

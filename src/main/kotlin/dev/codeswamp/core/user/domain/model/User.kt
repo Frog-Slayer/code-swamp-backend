@@ -1,6 +1,6 @@
 package dev.codeswamp.core.user.domain.model
 
-import dev.codeswamp.core.user.entity.Role
+import dev.codeswamp.core.user.infrastructure.entity.Role
 
 data class User (
     val id: Long? = null,

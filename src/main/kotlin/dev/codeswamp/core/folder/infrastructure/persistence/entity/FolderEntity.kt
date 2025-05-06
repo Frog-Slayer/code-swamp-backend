@@ -1,6 +1,6 @@
 package dev.codeswamp.core.folder.infrastructure.persistence.entity
 
-import dev.codeswamp.core.user.entity.User
+import dev.codeswamp.core.user.infrastructure.entity.UserEntity
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
@@ -20,7 +20,7 @@ data class FolderEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
-    val owner: User,
+    val owner: UserEntity,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")

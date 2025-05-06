@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.domain.model
 
-import dev.codeswamp.core.user.entity.User
+import dev.codeswamp.core.user.infrastructure.entity.UserEntity
 import java.time.Instant
 
 data class Article (
@@ -9,7 +9,7 @@ data class Article (
     var title: String,
     var type: ArticleType = ArticleType.NEW,
 
-    val writer: User,
+    val writer: UserEntity,
     var isPublic: Boolean,
 
     var createdAt: Instant,

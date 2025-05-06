@@ -4,7 +4,7 @@ import dev.codeswamp.core.article.domain.service.ArticleService
 import dev.codeswamp.core.article.infrastructure.search.ArticleSearchRepository
 import dev.codeswamp.core.article.presentation.dto.request.ArticleMetadataDto
 import dev.codeswamp.core.article.presentation.dto.response.ArticleReadResponseDto
-import dev.codeswamp.core.user.entity.User
+import dev.codeswamp.core.user.infrastructure.entity.UserEntity
 import org.springframework.stereotype.Service
 
 @Service
@@ -14,7 +14,7 @@ class ArticleApplicationServiceImpl(
     ) : ArticleApplicationService {
 
     override fun create(
-        user: User,
+        user: UserEntity,
         metadata: ArticleMetadataDto,
         content: String
     ) {
@@ -22,30 +22,30 @@ class ArticleApplicationServiceImpl(
     }
 
     override fun updateArticleMetadata(
-        user: User,
+        user: UserEntity,
         articleId: Long,
         metadata: ArticleMetadataDto
     ) {
         TODO("Not yet implemented")
     }
 
-    override fun updateArticleContent(user: User, articleId: Long, content: String) {
+    override fun updateArticleContent(user: UserEntity, articleId: Long, content: String) {
         TODO("Not yet implemented")
     }
 
-    override fun delete(user: User, articleId: Long) {
+    override fun delete(user: UserEntity, articleId: Long) {
         TODO("Not yet implemented")
     }
 
     override fun findByArticleId(
-        user: User?,
+        user: UserEntity?,
         articleId: Long
     ): ArticleReadResponseDto {
         TODO("Not yet implemented")
     }
 
     override fun findAllByKeywords(
-        user: User?,
+        user: UserEntity?,
         keywords: List<String>
     ): List<ArticleReadResponseDto> {
         TODO("Not yet implemented")

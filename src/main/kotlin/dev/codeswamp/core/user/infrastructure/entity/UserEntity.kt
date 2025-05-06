@@ -1,4 +1,4 @@
-package dev.codeswamp.core.user.entity
+package dev.codeswamp.core.user.infrastructure.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -9,7 +9,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "users")
-data class User (
+data class UserEntity (
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +23,9 @@ data class User (
 
     var profileUrl: String? = null,
 
+    //TODO
+    /**
     @Column(nullable = false)
     var role: Role = Role.ROLE_GUEST,
+    **/
 )

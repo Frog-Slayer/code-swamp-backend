@@ -1,13 +1,13 @@
 package dev.codeswamp.core.user.service
 
-import dev.codeswamp.core.user.entity.User
+import dev.codeswamp.core.user.infrastructure.entity.UserEntity
 
 interface UserService {
-    fun getUserByEmail(email: String): User
-    fun getUserByNickname(nickname: String): User
+    fun getUserByEmail(email: String): UserEntity
+    fun getUserByNickname(nickname: String): UserEntity
 
-    fun modifyProfile(user: User, profileUrl: String? = null)
-    fun modifyNickname(user: User, nickname: String)
+    fun modifyProfile(user: UserEntity, profileUrl: String? = null)
+    fun modifyNickname(user: UserEntity, nickname: String)
 
     fun isValidNickname(nickname: String): Boolean
     fun isDuplicateNickname(nickname: String): Boolean

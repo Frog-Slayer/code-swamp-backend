@@ -2,7 +2,7 @@ package dev.codeswamp.core.article.infrastructure.persistence.entity
 
 import dev.codeswamp.core.comment.entity.Comment
 import dev.codeswamp.core.folder.domain.entity.Folder
-import dev.codeswamp.core.user.entity.User
+import dev.codeswamp.core.user.infrastructure.entity.UserEntity
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -26,7 +26,7 @@ data class ArticleMetadataEntity(
 
     @ManyToOne
     @JoinColumn(nullable = false, name = "user_id")
-    val writer: User,
+    val writer: UserEntity,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "folder_id")
