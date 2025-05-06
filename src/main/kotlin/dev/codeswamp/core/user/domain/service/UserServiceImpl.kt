@@ -10,6 +10,10 @@ class UserServiceImpl : UserService {
         TODO("Not yet implemented")
     }
 
+    override fun findById(id: Long): User {
+        TODO("Not yet implemented")
+    }
+
     override fun findUserByEmail(email: String): User {
         TODO("Not yet implemented")
     }
