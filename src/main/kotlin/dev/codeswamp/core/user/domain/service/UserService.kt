@@ -5,10 +5,10 @@ import dev.codeswamp.core.user.domain.model.User
 import dev.codeswamp.core.user.domain.model.Username
 
 interface UserService {
-    fun save(user: User)
+    fun save(user: User) : User
 
-    fun findById(id: Long): User
-    fun findUserByEmail(email: String): User
-    fun findUserByUsername(username: Username): User
-    fun findUserByNickname(nickname: Nickname): User
+    fun findById(id: Long): User?
+    fun findUserByEmail(email: String): User?
+    fun findUserByUsername(username: Username): User?
+    fun findUserByNickname(nickname: Nickname): User?
 }

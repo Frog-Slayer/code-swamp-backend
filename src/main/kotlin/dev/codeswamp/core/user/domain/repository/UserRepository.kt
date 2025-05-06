@@ -7,8 +7,8 @@ import java.util.Optional
 
 interface UserRepository {
     fun save(user: User): User
-    fun findById(id: Long): Optional<User>
-    fun findByUsername(username: Username): Optional<User>
-    fun findByEmail(email: String): Optional<User>
-    fun findByNickname(nickname: Nickname): Optional<User>
+    fun findById(id: Long): User?
+    fun findByUsername(username: Username): User?
+    fun findByEmail(email: String): User?
+    fun findByNickname(nickname: Nickname): User?
 }

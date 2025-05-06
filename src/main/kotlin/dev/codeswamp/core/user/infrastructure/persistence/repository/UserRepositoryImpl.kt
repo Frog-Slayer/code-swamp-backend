@@ -16,19 +16,20 @@ class UserRepositoryImpl(
         return userJpaRepository.save(UserEntity.from(user)).toDomain()
     }
 
-    override fun findById(id: Long): Optional<User> {
-        return userJpaRepository.findById(id).map { it.toDomain() }
+    override fun findById(id: Long): User? {
+        val userEntity : UserEntity? = userJpaRepository.findById(id).orElse(null)
+        return  userEntity?.toDomain()
     }
 
-    override fun findByUsername(username: Username): Optional<User> {
-        return userJpaRepository.findByUsername(username.username).map { it.toDomain() }
+    override fun findByUsername(username: Username): User? {
+        return userJpaRepository.findByUsername(username.username)?.toDomain()
     }
 
-    override fun findByEmail(email: String): Optional<User> {
-        return userJpaRepository.findByEmail(email).map { it.toDomain() }
+    override fun findByEmail(email: String): User? {
+        return userJpaRepository.findByEmail(email)?.toDomain()
     }
 
-    override fun findByNickname(nickname: Nickname): Optional<User> {
-        return userJpaRepository.findByNickname(nickname.nickname ).map { it.toDomain() }
+    override fun findByNickname(nickname: Nickname): User? {
+        return userJpaRepository.findByNickname(nickname.nickname )?.toDomain()
     }
 }
