@@ -7,6 +7,5 @@ data class RefreshToken (
     val value: String,
     val authUser: AuthUser,
     val expiration: Instant,
-    val revoked: Boolean,
 )
 
