@@ -1,4 +1,4 @@
-package dev.codeswamp.core.user.controller
+package dev.codeswamp.core.user.presentation.controller
 
 import dev.codeswamp.core.user.domain.service.UserService
 import org.springframework.security.core.annotation.AuthenticationPrincipal
