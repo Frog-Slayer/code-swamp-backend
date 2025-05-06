@@ -6,7 +6,7 @@ import dev.codeswamp.core.user.presentation.dto.request.UserSignUpRequestDto
 
 interface UserApplicationService {
     //회원정보 완성
-    fun signUp(dto: UserSignUpRequestDto): User
+    fun signUp(user:User, dto: UserSignUpRequestDto): User
 
     fun modifyUserNickname(user: User, nicknameDto: NicknameChangeRequestDto)
 
