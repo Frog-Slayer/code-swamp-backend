@@ -6,7 +6,9 @@ data class User (
     val id: Long? = null,
     val username: String,//변경 불가(사용자 ID)
     val email: String,
-    val nickname: String,
-    val profileUrl: String,
+    var nickname: String,
+    var profileUrl: String? = null,
     val role: Role,
-)
+) {
+
+}
