@@ -46,7 +46,7 @@ class TokenServiceImpl(
         return ValidatedAccessToken(
             value = accessToken.value,
             authUser = authUser,
-            expiration = Instant.now().plusSeconds(3600),//TODO
+            expiration = accessToken.expiration
         )
     }
 
@@ -59,7 +59,7 @@ class TokenServiceImpl(
         return ValidatedRefreshToken(
             value = refreshToken.value,
             authUser = savedRefreshToken.authUser,//TODO: 취약점 존재. 리프레시 토큰이 저장된 상태에서 사용자가 사라지는 경우 처리 필요
-            expiration = Instant.now().plusSeconds(3600),//TODO
+            expiration = refreshToken.expiration
         )
     }
 
