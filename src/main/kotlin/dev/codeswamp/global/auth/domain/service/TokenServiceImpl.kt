@@ -19,7 +19,6 @@ class TokenServiceImpl(
     private val tokenRepository: TokenRepository
 ) : TokenService {
 
-    //TODO issuer & generator 통합 및 위임
     override fun issueAccessToken(authUser: AuthUser): ValidatedAccessToken {
         return tokenGenerator.generateAccessToken(authUser)
     }
