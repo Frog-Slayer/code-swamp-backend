@@ -87,10 +87,30 @@ class UserServiceImplUnitTest {
         assertThatThrownBy { Nickname.of(longNickname) }
             .isInstanceOf(IllegalArgumentException::class.java)
 
-
-        assertDoesNotThrow { Nickname.of(validNickname) }
-
-        val nickname = Nickname.of(validNickname)
+        val nickname = assertDoesNotThrow { Nickname.of(validNickname) }
         assertThat(nickname.value).isEqualTo(validNickname)
     }
+
+    @Test
+    fun `닉네임 포맷 검증` () {
+        val validNickname = "validNick123"
+        val validKoreanNickname = "유효한12자닉네임입니다"
+        val nicknameWithWhitespace = "띄어쓰기가 포함"
+        val nicknameWithSpecialChar= "!@123"
+
+        val validNickObj = assertDoesNotThrow {  Nickname.of(validNickname) }
+        assertThat(validNickObj.value).isEqualTo(validNickname)
+
+        val validKoreanNickObj = assertDoesNotThrow {  Nickname.of(validKoreanNickname) }
+        assertThat(validKoreanNickObj.value).isEqualTo(validKoreanNickname)
+
+        assertThatThrownBy {  Nickname.of(nicknameWithWhitespace) }
+            .isInstanceOf(IllegalArgumentException::class.java)
+
+        assertThatThrownBy {  Nickname.of(nicknameWithSpecialChar) }
+            .isInstanceOf(IllegalArgumentException::class.java)
+
+    }
+
+
 }
