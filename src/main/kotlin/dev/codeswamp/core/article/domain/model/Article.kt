@@ -9,7 +9,7 @@ data class Article (
     var title: String,
     var type: ArticleType = ArticleType.NEW,
 
-    val writer: UserEntity,
+    val userId: Long,
     var isPublic: Boolean,
 
     var createdAt: Instant,
