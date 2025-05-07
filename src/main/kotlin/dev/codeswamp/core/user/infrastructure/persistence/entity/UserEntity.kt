@@ -42,7 +42,7 @@ data class UserEntity (
             id = id,
             username = Username.of(username),
             email = email,
-            nickname = Nickname.of(username),
+            nickname = Nickname.of(nickname),
             profileUrl = profileUrl,
             role = Role.GUEST
         )
