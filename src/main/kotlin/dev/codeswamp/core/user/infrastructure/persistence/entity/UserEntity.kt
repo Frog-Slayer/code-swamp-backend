@@ -53,9 +53,9 @@ data class UserEntity (
         fun from(user: User): UserEntity {
             return UserEntity(
                 id = user.id,
-                username = user.username.username,
+                username = user.username.value,
                 email = user.email,
-                nickname = user.nickname.nickname,
+                nickname = user.nickname.value,
                 profileUrl = user.profileUrl,
             )
         }

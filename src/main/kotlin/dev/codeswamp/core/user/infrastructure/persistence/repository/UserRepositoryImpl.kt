@@ -6,7 +6,6 @@ import dev.codeswamp.core.user.domain.model.Username
 import dev.codeswamp.core.user.domain.repository.UserRepository
 import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
 import org.springframework.stereotype.Repository
-import java.util.Optional
 
 @Repository
 class UserRepositoryImpl(
@@ -22,7 +21,7 @@ class UserRepositoryImpl(
     }
 
     override fun findByUsername(username: Username): User? {
-        return userJpaRepository.findByUsername(username.username)?.toDomain()
+        return userJpaRepository.findByUsername(username.value)?.toDomain()
     }
 
     override fun findByEmail(email: String): User? {
@@ -30,6 +29,6 @@ class UserRepositoryImpl(
     }
 
     override fun findByNickname(nickname: Nickname): User? {
-        return userJpaRepository.findByNickname(nickname.nickname )?.toDomain()
+        return userJpaRepository.findByNickname(nickname.value )?.toDomain()
     }
 }
