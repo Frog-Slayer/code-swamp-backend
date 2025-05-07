@@ -26,7 +26,7 @@ class RedisTokenStorage(
         redisTemplate.opsForValue().set(tokenKey, refreshToken)
 
         redisTemplate.expire(uidKey,refreshTokenExpiration, TimeUnit.SECONDS )
-        redisTemplate.expire(uidKey,refreshTokenExpiration, TimeUnit.SECONDS )
+        redisTemplate.expire(tokenKey,refreshTokenExpiration, TimeUnit.SECONDS )
     }
 
     @RedisTransaction
