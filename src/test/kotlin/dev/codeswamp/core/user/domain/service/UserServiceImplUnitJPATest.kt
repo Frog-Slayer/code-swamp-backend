@@ -25,8 +25,6 @@ import kotlin.test.Test
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class UserServiceImplJPAUnitTest(
-    @Autowired private val userJpaRepository: UserJpaRepository,
-    @Autowired private val userRepo: UserRepository,
     @Autowired private val userService: UserService
 ){
     private lateinit var user1: User
