@@ -3,5 +3,7 @@ spring:
     name: codeswamp
   profiles:
     active: dev
+  config:
+    import: application-secret.yml
   jpa:
     show-sql: true
