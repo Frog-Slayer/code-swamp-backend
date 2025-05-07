@@ -22,15 +22,11 @@ class RedisTokenStorage(
         val uidKey = "token:user:$uid"
         val tokenKey = "token:refresh:$token"
 
-        redisTemplate.multi()
-
         redisTemplate.opsForValue().set(uidKey, refreshToken)
         redisTemplate.opsForValue().set(tokenKey, refreshToken)
 
-        redisTemplate.expire(uidKey,refreshTokenExpiration, TimeUnit.SECONDS    )
-        redisTemplate.expire(uidKey,refreshTokenExpiration, TimeUnit.SECONDS    )
-
-        redisTemplate.exec()
+        redisTemplate.expire(uidKey,refreshTokenExpiration, TimeUnit.SECONDS )
+        redisTemplate.expire(uidKey,refreshTokenExpiration, TimeUnit.SECONDS )
     }
 
     @RedisTransaction
