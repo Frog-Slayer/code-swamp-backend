@@ -1,6 +1,5 @@
 package dev.codeswamp.global.auth.infrastructure.redis
 
-import dev.codeswamp.global.aop.redis.RedisTransaction
 import dev.codeswamp.global.auth.domain.model.authToken.ValidatedRefreshToken
 import dev.codeswamp.global.auth.domain.repository.TokenRepository
 import org.springframework.beans.factory.annotation.Value
@@ -14,7 +13,6 @@ class RedisTokenStorage(
     @Value("\${jwt.refresh-token-exp}") private val refreshTokenExpiration : Long
 ) : TokenRepository {
 
-    @RedisTransaction
     override fun storeRefreshToken(refreshToken: ValidatedRefreshToken) {
         val uid = refreshToken.authUser.id
         val token = refreshToken.value
@@ -29,7 +27,6 @@ class RedisTokenStorage(
         redisTemplate.expire(tokenKey,refreshTokenExpiration, TimeUnit.SECONDS )
     }
 
-    @RedisTransaction
     override fun delete(refreshToken: ValidatedRefreshToken) {
         val uid = refreshToken.authUser.id
         val token = refreshToken.value
@@ -41,14 +38,12 @@ class RedisTokenStorage(
         redisTemplate.delete(tokenKey)
     }
 
-    @RedisTransaction
     override fun findRefreshTokenByToken(token: String): ValidatedRefreshToken? {
         val tokenKey = "token:refresh:$token"
 
         return redisTemplate.opsForValue().get(tokenKey)
     }
 
-    @RedisTransaction
     override fun findRefreshTokenByUserId(userId: Long): ValidatedRefreshToken? {
         val uidKey = "token:user:$userId"
         return redisTemplate.opsForValue().get(uidKey)
