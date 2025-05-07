@@ -15,8 +15,8 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 
-@DisplayName("UserService 단위 테스트")
-class UserServiceImplUnitTest {
+@DisplayName("UserService Mock 단위 테스트")
+class UserServiceImplMockUnitTest {
 
     private lateinit var userService:  UserService;
     private lateinit var userRepository: UserRepository;
