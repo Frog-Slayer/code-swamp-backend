@@ -5,11 +5,14 @@ import dev.codeswamp.global.auth.domain.model.authToken.RawAccessToken
 import dev.codeswamp.global.auth.domain.model.authToken.ValidatedAccessToken
 import dev.codeswamp.global.auth.domain.model.authToken.RawRefreshToken
 import dev.codeswamp.global.auth.domain.model.authToken.ValidatedRefreshToken
+import dev.codeswamp.global.auth.domain.util.TokenGenerator
+import dev.codeswamp.global.auth.domain.util.TokenParser
 import org.springframework.stereotype.Service
 
 @Service
 class TokenServiceImpl(
-    //TODO TokenParser, TokenGenerator
+    private val tokenParser: TokenParser,
+    private val tokenGenerator: TokenGenerator
 ) : TokenService {
 
     fun refreshAccessToken(refreshToken: ValidatedRefreshToken): ValidatedAccessToken {

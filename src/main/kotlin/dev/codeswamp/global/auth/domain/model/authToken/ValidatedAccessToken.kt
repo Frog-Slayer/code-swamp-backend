@@ -5,7 +5,6 @@ import java.time.Instant
 
 data class ValidatedAccessToken(
     val value: String,
-    val sub: String,
     val authUser: AuthUser,
     val expiration: Instant,
 ) {
