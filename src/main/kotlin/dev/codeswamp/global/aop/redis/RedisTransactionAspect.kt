@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 class RedisTransactionAspect (
     private val redisTemplate: RedisTemplate<String, Any>
 ) {
-    @Pointcut("@annotation(dev.codeswamp.global.aop.redis.TransactionalRedis)")
+    @Pointcut("@annotation(dev.codeswamp.global.aop.redis.RedisTransaction)")
     fun transactionalMethod() {}
 
     @Around("transactionalMethod()")

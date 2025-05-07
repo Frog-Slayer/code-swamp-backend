@@ -20,20 +20,15 @@ class RedisTokenStorage(
         val uidKey = "token:user:$uid"
         val tokenKey = "token:refresh:$token"
 
-        try {//transaction
-            redisTemplate.multi()
+        redisTemplate.multi()
 
-            redisTemplate.opsForValue().set(uidKey, refreshToken)
-            redisTemplate.opsForValue().set(tokenKey, refreshToken)
+        redisTemplate.opsForValue().set(uidKey, refreshToken)
+        redisTemplate.opsForValue().set(tokenKey, refreshToken)
 
-            redisTemplate.expire(uidKey,refreshTokenExpiration, TimeUnit.SECONDS    )
-            redisTemplate.expire(uidKey,refreshTokenExpiration, TimeUnit.SECONDS    )
+        redisTemplate.expire(uidKey,refreshTokenExpiration, TimeUnit.SECONDS    )
+        redisTemplate.expire(uidKey,refreshTokenExpiration, TimeUnit.SECONDS    )
 
-            redisTemplate.exec()
-        } catch (e: Exception) {
-            redisTemplate.discard()
-            throw e
-        }
+        redisTemplate.exec()
     }
 
     override fun delete(refreshToken: ValidatedRefreshToken) {
