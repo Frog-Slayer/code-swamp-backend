@@ -44,7 +44,7 @@ class TokenServiceImpl(
         require( !refreshToken.expired()) {"Token expired!"}
 
         val savedRefreshToken = tokenRepository.findRefreshTokenByToken(refreshToken.value)
-            ?: throw IllegalStateException("No user found for token sub")//TODO
+            ?: throw IllegalStateException("No user found for token")//TODO
 
         return ValidatedRefreshToken(
             value = refreshToken.value,

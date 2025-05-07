@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import java.time.temporal.ChronoUnit
 import javax.crypto.SecretKey
 
 @Component
@@ -27,7 +28,7 @@ class JwtParser (
         return RawAccessToken(
             value = accessToken,
             sub = claims.subject,
-            expiration = claims.expiration.toInstant()
+            expiration = claims.expiration.toInstant().truncatedTo(ChronoUnit.SECONDS)
         )
     }
 
@@ -42,7 +43,7 @@ class JwtParser (
         return RawRefreshToken(
             value = refreshToken,
             sub = claims.subject,
-            expiration = claims.expiration.toInstant()
+            expiration = claims.expiration.toInstant().truncatedTo(ChronoUnit.SECONDS)
         )
     }
 }

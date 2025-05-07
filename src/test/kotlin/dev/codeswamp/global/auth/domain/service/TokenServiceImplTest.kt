@@ -15,8 +15,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import kotlin.test.DefaultAsserter.assertNotNull
-import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 
 @DisplayName("TokenService 단위 테스트")
@@ -90,6 +88,27 @@ class TokenServiceImplTest (
 
     @Test
     fun validateRefreshToken() {
+        //토큰 생성
+        val refreshToken = tokenService.issueRefreshToken(authUser)
+
+        //토큰 저장
+        tokenService.storeRefreshToken(refreshToken)
+
+
+        val tokenVal = refreshToken.value
+
+        assertThat(tokenVal).isNotNull()
+
+        //raw 토큰을 생성
+        val rawToken = tokenParser.parseRefreshToken(tokenVal)
+
+        assertThat(rawToken).isNotNull()
+        assertThat(rawToken.value).isEqualTo(refreshToken.value)
+
+
+        //validate
+        val validatedToken = tokenService.validateRefreshToken(rawToken)
+        assertThat(refreshToken).isEqualTo(validatedToken)
     }
 
 }
