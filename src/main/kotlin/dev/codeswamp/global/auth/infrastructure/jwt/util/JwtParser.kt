@@ -19,7 +19,7 @@ class JwtParser (
     override fun parseAccessToken(accessToken: String): RawAccessToken {
         val claims = Jwts.parser()
             .verifyWith(secretKey)
-            .clockSkewSeconds(Long.MAX_VALUE)//ignore expiration here
+            .clockSkewSeconds(Long.MAX_VALUE / 1000)//ignore expiration here
             .build()
             .parseSignedClaims(accessToken)
             .payload
@@ -34,7 +34,7 @@ class JwtParser (
     override fun parseRefreshToken(refreshToken: String): RawRefreshToken {
         val claims = Jwts.parser()
             .verifyWith(secretKey)
-            .clockSkewSeconds(Long.MAX_VALUE)//ignore expiration here
+            .clockSkewSeconds(Long.MAX_VALUE / 1000)//ignore expiration here
             .build()
             .parseSignedClaims(refreshToken)
             .payload
