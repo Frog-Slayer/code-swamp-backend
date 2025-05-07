@@ -1,4 +1,4 @@
-package dev.codeswamp.global.auth.infrastructure.adapter.jwt.service
+package dev.codeswamp.global.auth.infrastructure.jwt.service
 
 import dev.codeswamp.global.auth.domain.model.authToken.AccessToken
 import dev.codeswamp.global.auth.domain.model.authToken.RefreshToken
