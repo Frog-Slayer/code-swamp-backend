@@ -19,22 +19,13 @@ class TokenServiceImpl(
     private val tokenRepository: TokenRepository
 ) : TokenService {
 
+    //TODO issuer & generator 통합 및 위임
     override fun issueAccessToken(authUser: AuthUser): ValidatedAccessToken {
-        val tokenValue = tokenGenerator.generateAccessToken(authUser)
-        return ValidatedAccessToken(
-            value = tokenValue,
-            authUser = authUser,
-            expiration = Instant.now().plusSeconds(3600),//TODO
-        )
+        return tokenGenerator.generateAccessToken(authUser)
     }
 
     override fun issueRefreshToken(authUser: AuthUser): ValidatedRefreshToken {
-        val tokenValue = tokenGenerator.generateRefreshToken(authUser)
-        return  ValidatedRefreshToken(
-            value = tokenValue,
-            authUser = authUser,
-            expiration = Instant.now().plusSeconds(3600),//TODO
-        )
+        return tokenGenerator.generateRefreshToken(authUser)
     }
 
     override fun validateAccessToken(accessToken: RawAccessToken): ValidatedAccessToken {

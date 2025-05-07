@@ -5,15 +5,16 @@ import dev.codeswamp.global.auth.domain.model.authToken.RawRefreshToken
 import dev.codeswamp.global.auth.domain.util.TokenParser
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import java.time.Instant
-import java.util.Base64
 import javax.crypto.SecretKey
 
 @Component
-class JwtParser : TokenParser {
-    private val jwtKey = "temporary_jwt_auth_key"
-    private val secretKey: SecretKey = Keys.hmacShaKeyFor(Base64.getDecoder().decode(jwtKey))
+class JwtParser (
+    @Value("\${jwt.secret}") private val secret: String,
+) : TokenParser {
+
+    private val secretKey: SecretKey = Keys.hmacShaKeyFor(secret.toByteArray())
 
     override fun parseAccessToken(accessToken: String): RawAccessToken {
         val claims = Jwts.parser()
