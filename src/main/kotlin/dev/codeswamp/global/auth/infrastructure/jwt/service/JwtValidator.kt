@@ -14,10 +14,10 @@ class JwtValidator(
 ) : TokenValidationService{
     override fun validateAccessToken(accessToken: AccessToken) {
         require(!accessToken.expired()) {"Access token is expired"}
-        requireNotNull( userRepository.findById(accessToken.authUser.id))
+        //TODO requireNotNull( userRepository.findById(accessToken.authUser.id))
     }
 
     override fun validateRefreshToken(refreshToken: RefreshToken) {
-        TODO("Not yet implemented")
+        require(!refreshToken.expired()) {"Refresh token is expired"}
     }
 }
