@@ -7,6 +7,7 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
+import java.time.temporal.ChronoUnit
 import javax.crypto.SecretKey
 
 @Component
@@ -19,7 +20,7 @@ class JwtParser (
     override fun parseAccessToken(accessToken: String): RawAccessToken {
         val claims = Jwts.parser()
             .verifyWith(secretKey)
-            .clockSkewSeconds(Long.MAX_VALUE)//ignore expiration here
+            .clockSkewSeconds(Long.MAX_VALUE / 1000)//ignore expiration here
             .build()
             .parseSignedClaims(accessToken)
             .payload
@@ -27,14 +28,14 @@ class JwtParser (
         return RawAccessToken(
             value = accessToken,
             sub = claims.subject,
-            expiration = claims.expiration.toInstant()
+            expiration = claims.expiration.toInstant().truncatedTo(ChronoUnit.SECONDS)
         )
     }
 
     override fun parseRefreshToken(refreshToken: String): RawRefreshToken {
         val claims = Jwts.parser()
             .verifyWith(secretKey)
-            .clockSkewSeconds(Long.MAX_VALUE)//ignore expiration here
+            .clockSkewSeconds(Long.MAX_VALUE / 1000)//ignore expiration here
             .build()
             .parseSignedClaims(refreshToken)
             .payload
@@ -42,7 +43,7 @@ class JwtParser (
         return RawRefreshToken(
             value = refreshToken,
             sub = claims.subject,
-            expiration = claims.expiration.toInstant()
+            expiration = claims.expiration.toInstant().truncatedTo(ChronoUnit.SECONDS)
         )
     }
 }

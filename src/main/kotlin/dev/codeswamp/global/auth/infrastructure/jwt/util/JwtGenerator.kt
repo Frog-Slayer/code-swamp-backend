@@ -9,6 +9,7 @@ import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.Date
 import javax.crypto.SecretKey
 
@@ -33,7 +34,7 @@ class JwtGenerator(
         return ValidatedAccessToken(
             value = value,
             authUser = user,
-            expiration = now.plusSeconds(accessTokenExpiration)
+            expiration = now.plusSeconds(accessTokenExpiration).truncatedTo(ChronoUnit.SECONDS),
         )
     }
 
@@ -49,7 +50,7 @@ class JwtGenerator(
         return ValidatedRefreshToken(
             value = value,
             authUser = user,
-            expiration = now.plusSeconds( refreshTokenExpiration)
+            expiration = now.plusSeconds( refreshTokenExpiration).truncatedTo(ChronoUnit.SECONDS),
         )
     }
 }

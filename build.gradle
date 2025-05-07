@@ -39,6 +39,8 @@ dependencies {
     implementation 'io.projectreactor.kotlin:reactor-kotlin-extensions'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-reactor'
 	implementation "org.springframework.boot:spring-boot-starter-validation"
+	implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
+	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
 
 	implementation "io.jsonwebtoken:jjwt-api:0.12.6"
 	implementation "io.jsonwebtoken:jjwt-impl:0.12.6"
