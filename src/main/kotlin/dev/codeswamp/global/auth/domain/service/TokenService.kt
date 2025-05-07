@@ -1,18 +1,22 @@
 package dev.codeswamp.global.auth.domain.service
 
 import dev.codeswamp.global.auth.domain.model.AuthUser
-import dev.codeswamp.global.auth.domain.model.authToken.AccessToken
-import dev.codeswamp.global.auth.domain.model.authToken.RefreshToken
-import org.springframework.stereotype.Service
+import dev.codeswamp.global.auth.domain.model.authToken.RawAccessToken
+import dev.codeswamp.global.auth.domain.model.authToken.RawRefreshToken
+import dev.codeswamp.global.auth.domain.model.authToken.ValidatedAccessToken
+import dev.codeswamp.global.auth.domain.model.authToken.ValidatedRefreshToken
 
-@Service
-class TokenService (
-    private val tokenIssueService: TokenIssueService,
-    private val tokenValidationService: TokenValidationService,
-    private val tokenStoreService: TokenStoreService,
-) : TokenIssueService by tokenIssueService, TokenValidationService by tokenValidationService , TokenStoreService by tokenStoreService {
+interface TokenService {
+    //issue
+    fun issueAccessToken(authUser: AuthUser) : ValidatedAccessToken
+    fun issueRefreshToken(authUser: AuthUser) : ValidatedRefreshToken
 
-    fun refreshAccessToken(refreshToken: RefreshToken): AccessToken {
-        TODO("not yet implemented")
-    }
+    //store
+    fun storeRefreshToken(token: ValidatedRefreshToken)
+    fun rotateRefreshToken(newToken: ValidatedRefreshToken)
+    fun findRefreshTokenByUserId(userId: Long): ValidatedRefreshToken?
+
+    //validate
+    fun validateAccessToken(accessToken: RawAccessToken) : ValidatedAccessToken
+    fun validateRefreshToken(refreshToken: RawRefreshToken) : ValidatedRefreshToken
 }

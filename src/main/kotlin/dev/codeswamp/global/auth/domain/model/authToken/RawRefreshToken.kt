@@ -1,11 +1,12 @@
 package dev.codeswamp.global.auth.domain.model.authToken
 
-import dev.codeswamp.global.auth.domain.model.AuthUser
 import java.time.Instant
 
-data class RefreshToken (
+data class RawRefreshToken (
     val value: String,
-    val authUser: AuthUser,
+    val sub: String,
     val expiration: Instant,
-)
+) {
+    fun expired() = Instant.now().isAfter(expiration)
+}
 
