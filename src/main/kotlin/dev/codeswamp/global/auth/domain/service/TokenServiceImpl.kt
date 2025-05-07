@@ -8,7 +8,9 @@ import dev.codeswamp.global.auth.domain.model.authToken.ValidatedRefreshToken
 import org.springframework.stereotype.Service
 
 @Service
-class TokenServiceImpl : TokenIssueService, TokenValidationService, TokenStoreService {
+class TokenServiceImpl(
+    //TODO TokenParser, TokenGenerator
+) : TokenService {
 
     fun refreshAccessToken(refreshToken: ValidatedRefreshToken): ValidatedAccessToken {
         TODO("not yet implemented")
