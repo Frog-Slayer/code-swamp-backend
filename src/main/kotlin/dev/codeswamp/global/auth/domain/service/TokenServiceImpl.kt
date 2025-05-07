@@ -5,48 +5,78 @@ import dev.codeswamp.global.auth.domain.model.authToken.RawAccessToken
 import dev.codeswamp.global.auth.domain.model.authToken.ValidatedAccessToken
 import dev.codeswamp.global.auth.domain.model.authToken.RawRefreshToken
 import dev.codeswamp.global.auth.domain.model.authToken.ValidatedRefreshToken
+import dev.codeswamp.global.auth.domain.repository.TokenRepository
 import dev.codeswamp.global.auth.domain.util.TokenGenerator
 import dev.codeswamp.global.auth.domain.util.TokenParser
 import org.springframework.stereotype.Service
+import java.time.Instant
 
 @Service
 class TokenServiceImpl(
     private val tokenParser: TokenParser,
-    private val tokenGenerator: TokenGenerator
+    private val tokenGenerator: TokenGenerator,
+    private val userFinder: UserFinder,
+    private val tokenRepository: TokenRepository
 ) : TokenService {
 
-    fun refreshAccessToken(refreshToken: ValidatedRefreshToken): ValidatedAccessToken {
-        TODO("not yet implemented")
-    }
-
     override fun issueAccessToken(authUser: AuthUser): ValidatedAccessToken {
-        TODO("Not yet implemented")
+        val tokenValue = tokenGenerator.generateAccessToken(authUser)
+        return ValidatedAccessToken(
+            value = tokenValue,
+            authUser = authUser,
+            expiration = Instant.now().plusSeconds(3600),//TODO
+        )
     }
 
     override fun issueRefreshToken(authUser: AuthUser): ValidatedRefreshToken {
-        TODO("Not yet implemented")
+        val tokenValue = tokenGenerator.generateRefreshToken(authUser)
+        return  ValidatedRefreshToken(
+            value = tokenValue,
+            authUser = authUser,
+            expiration = Instant.now().plusSeconds(3600),//TODO
+        )
     }
 
     override fun validateAccessToken(accessToken: RawAccessToken): ValidatedAccessToken {
-        TODO("Not yet implemented")
+        require( !accessToken.expired()) {"Token expired!"}
+
+        val authUser = userFinder.findBySubject(accessToken.sub)
+            ?: throw IllegalStateException("No user found for token sub")//TODO
+
+        return ValidatedAccessToken(
+            value = accessToken.value,
+            authUser = authUser,
+            expiration = Instant.now().plusSeconds(3600),//TODO
+        )
     }
 
     override fun validateRefreshToken(refreshToken: RawRefreshToken): ValidatedRefreshToken {
-        TODO("Not yet implemented")
+        require( !refreshToken.expired()) {"Token expired!"}
+
+        val savedRefreshToken = tokenRepository.findRefreshTokenByToken(refreshToken.value)
+            ?: throw IllegalStateException("No user found for token sub")//TODO
+
+        return ValidatedRefreshToken(
+            value = refreshToken.value,
+            authUser = savedRefreshToken.authUser,//TODO: 취약점 존재. 리프레시 토큰이 저장된 상태에서 사용자가 사라지는 경우 처리 필요
+            expiration = Instant.now().plusSeconds(3600),//TODO
+        )
     }
 
     override fun storeRefreshToken(token: ValidatedRefreshToken) {
-        TODO("Not yet implemented")
+        tokenRepository.storeRefreshToken(token)
     }
 
-    override fun rotateRefreshToken(
-        token: String,
-        newToken: ValidatedRefreshToken
-    ) {
-        TODO("Not yet implemented")
+    override fun rotateRefreshToken(newToken: ValidatedRefreshToken)
+    {
+        tokenRepository.findRefreshTokenByUserId(newToken.authUser.id)?.let {
+            tokenRepository.delete(it)
+        }
+
+        tokenRepository.storeRefreshToken(newToken)
     }
 
     override fun findRefreshTokenByUserId(userId: Long): ValidatedRefreshToken? {
-        TODO("Not yet implemented")
+        return tokenRepository.findRefreshTokenByUserId(userId)
     }
 }

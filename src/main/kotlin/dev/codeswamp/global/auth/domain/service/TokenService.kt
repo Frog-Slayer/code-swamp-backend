@@ -13,7 +13,7 @@ interface TokenService {
 
     //store
     fun storeRefreshToken(token: ValidatedRefreshToken)
-    fun rotateRefreshToken(token: String, newToken: ValidatedRefreshToken)
+    fun rotateRefreshToken(newToken: ValidatedRefreshToken)
     fun findRefreshTokenByUserId(userId: Long): ValidatedRefreshToken?
 
     //validate
