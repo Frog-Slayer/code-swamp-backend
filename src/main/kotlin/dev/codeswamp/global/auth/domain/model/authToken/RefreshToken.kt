@@ -7,5 +7,7 @@ data class RefreshToken (
     val value: String,
     val authUser: AuthUser,
     val expiration: Instant,
-)
+) {
+    fun expired() = Instant.now().isAfter(expiration)
+}
 
