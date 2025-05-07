@@ -8,6 +8,7 @@ import dev.codeswamp.core.user.domain.service.UserService
 import dev.codeswamp.global.auth.domain.model.AuthUser
 import dev.codeswamp.global.auth.domain.util.TokenParser
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import java.lang.IllegalStateException
 import kotlin.test.assertNotNull
 
 @DisplayName("TokenService 단위 테스트")
@@ -94,7 +96,6 @@ class TokenServiceImplTest (
         //토큰 저장
         tokenService.storeRefreshToken(refreshToken)
 
-
         val tokenVal = refreshToken.value
 
         assertThat(tokenVal).isNotNull()
@@ -110,5 +111,24 @@ class TokenServiceImplTest (
         val validatedToken = tokenService.validateRefreshToken(rawToken)
         assertThat(refreshToken).isEqualTo(validatedToken)
     }
+
+    @Test
+    fun rotateRefreshTokenTest() {
+        val oldToken = tokenService.issueRefreshToken(authUser)
+        tokenService.storeRefreshToken(oldToken)
+
+        val rawOldToken = tokenParser.parseRefreshToken(oldToken.value)
+
+        val newToken = tokenService.issueRefreshToken(authUser)
+        tokenService.rotateRefreshToken( newToken )
+
+        assertThatThrownBy { tokenService.validateRefreshToken(rawOldToken) }
+            .isInstanceOf(IllegalStateException::class.java)
+
+
+
+    }
+
+
 
 }
