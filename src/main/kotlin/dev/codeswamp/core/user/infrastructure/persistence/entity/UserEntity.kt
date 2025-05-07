@@ -19,14 +19,14 @@ data class UserEntity (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(nullable = false, unique = true)
-    val username: String,//변경 불가(사용자 ID)
+    @Column(unique = true)
+    val username: String? = null,//변경 불가(사용자 ID)
 
     @Column(nullable = false, unique = true)
     var email: String,
 
-    @Column(nullable = false, unique = true)
-    var nickname: String,
+    @Column(unique = true)
+    var nickname: String? = null,
 
     var profileUrl: String? = null,
 

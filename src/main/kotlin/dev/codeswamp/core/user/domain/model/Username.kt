@@ -1,17 +1,17 @@
 package dev.codeswamp.core.user.domain.model
 
-class Username private constructor(val value: String) {
+class Username private constructor(val value: String?) {
     companion object {
-        fun of(username: String): Username {
-            require(isValidUsername(username)) {
+        fun of(username: String?): Username {
+            require(username == null || isValidUsername(username)) {
                 "username $username is not valid"
             }
 
             return Username(username)
         }
 
-        private fun isValidUsername(username: String): Boolean {
-            return username.length in 2..12 && username.matches("^[a-zA-Z0-9]*$".toRegex())
+        private fun isValidUsername(username: String?): Boolean {
+            return username != null && username.length in 2..12 && username.matches("^[a-zA-Z0-9]*$".toRegex())
         }
     }
 
@@ -20,6 +20,6 @@ class Username private constructor(val value: String) {
     }
 
     override fun hashCode(): Int {
-        return this.value.hashCode()
+        return value?.hashCode() ?: 0
     }
 }
