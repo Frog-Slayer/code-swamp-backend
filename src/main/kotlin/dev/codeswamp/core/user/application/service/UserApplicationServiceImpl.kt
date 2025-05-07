@@ -17,9 +17,10 @@ class UserApplicationServiceImpl(
 
     @Transactional
     override fun signUp(user: User, dto: UserSignUpRequestDto): User {
-        val signUpUser = User (
-                id = user.id,
-                email =  user.email,
+        requireNotNull(dto.username ) { "$dto.username is required" }
+        requireNotNull(dto.nickname ) { "$dto.nickname is required" }
+
+        val signUpUser =  user.copy(
                 username = Username.of(dto.username),
                 nickname = Nickname.of(dto.nickname),
                 profileUrl = dto.profileImageUrl,
@@ -27,6 +28,9 @@ class UserApplicationServiceImpl(
         )
 
         userService.save(signUpUser)
+
+        //TODO 루트 폴더 생성
+
         return signUpUser
     }
 
