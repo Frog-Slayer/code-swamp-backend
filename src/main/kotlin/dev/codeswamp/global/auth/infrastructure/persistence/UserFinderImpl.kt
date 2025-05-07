@@ -14,7 +14,7 @@ class UserFinderImpl(
 
         return AuthUser(
             id = user.id!!,
-            username = user.username.value!!,
+            username = user.email,
             roles = setOf(user.role.name),//TODO
         )
     }
@@ -24,7 +24,7 @@ class UserFinderImpl(
 
         return AuthUser(
             id = user.id!!,
-            username = user.username.value!!,
+            username = user.email,
             roles = setOf(user.role.name),//TODO
         )
     }
