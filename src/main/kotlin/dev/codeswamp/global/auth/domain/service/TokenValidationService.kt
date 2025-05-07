@@ -1,9 +1,11 @@
 package dev.codeswamp.global.auth.domain.service
 
-import dev.codeswamp.global.auth.domain.model.authToken.AccessToken
-import dev.codeswamp.global.auth.domain.model.authToken.RefreshToken
+import dev.codeswamp.global.auth.domain.model.authToken.RawAccessToken
+import dev.codeswamp.global.auth.domain.model.authToken.ValidatedAccessToken
+import dev.codeswamp.global.auth.domain.model.authToken.RawRefreshToken
+import dev.codeswamp.global.auth.domain.model.authToken.ValidatedRefreshToken
 
 interface TokenValidationService {
-    fun validateAccessToken(accessToken: AccessToken)
-    fun validateRefreshToken(refreshToken: RefreshToken)
+    fun validateAccessToken(accessToken: RawAccessToken) : ValidatedAccessToken
+    fun validateRefreshToken(refreshToken: RawRefreshToken) : ValidatedRefreshToken
 }
