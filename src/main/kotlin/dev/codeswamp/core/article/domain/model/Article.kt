@@ -9,7 +9,9 @@ data class Article (
     var title: String = "",
     var type: ArticleType = ArticleType.NEW,
 
-    val userId: Long,
+    val authorId: Long,
+    val folderId: Long,//TODO 의존성..?
+
     var isPublic: Boolean = true,
 
     var createdAt: Instant = Instant.now(),
