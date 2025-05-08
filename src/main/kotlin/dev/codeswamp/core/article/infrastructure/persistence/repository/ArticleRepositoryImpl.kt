@@ -71,7 +71,12 @@ class ArticleRepositoryImpl (
     }
 
     override fun delete(article: Article) {
-        TODO("Not yet implemented")
+        if (article.id == null) { throw Exception("no such article") }//TODO
+
+        val metadataEntity = articleMetadataJpaRepository.findById(article.id)
+                .orElseThrow{ Exception("Could not find ${article.id}") }//TODO
+
+        articleMetadataJpaRepository.deleteById(metadataEntity.id!!)
     }
 
     override fun findAllByIds(articleIds: List<Long>): List<Article> {
