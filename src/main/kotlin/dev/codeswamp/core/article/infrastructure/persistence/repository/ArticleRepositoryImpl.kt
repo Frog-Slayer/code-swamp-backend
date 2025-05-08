@@ -10,113 +10,23 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class ArticleRepositoryImpl (
-    private val articleMetadataJpaRepository: ArticleMetadataJpaRepository,
-    private val articleContentJpaRepository: ArticleContentJpaRepository,
+    private val articleJpaRepository: ArticleJpaRepository,
+    private val articleDiffJpaRepository: ArticleDiffJpaRepository,
 ) : ArticleRepository {
-
-    @Transactional
     override fun save(article: Article): Article {
-        return if (article.id == null) {
-            val metadataEntity = articleMetadataJpaRepository.save(
-                ArticleMetadataEntity(
-                    title = article.title,
-                    authorId = article.authorId,
-                    folderId = article.folderId,
-                    createdAt = article.createdAt,
-                    updatedAt = article.updatedAt,
-                    isPublic = article.isPublic,
-                    currentVersion = null,
-                )
-            )
-
-            val contentEntity = articleContentJpaRepository.save(
-                ArticleContentEntity(
-                    articleMetadataEntity = metadataEntity,
-                    content = article.content,
-                    createdAt = article.createdAt,
-                )
-            )
-
-            metadataEntity.currentVersion =  contentEntity.id
-            toDomain(metadataEntity, contentEntity)
-        }
-        else {
-            val metadataEntity = articleMetadataJpaRepository.findById(article.id)
-                .orElseThrow{ Exception("Could not find ${article.id}") }
-
-            val currentContentEntity = articleContentJpaRepository.findById(metadataEntity.currentVersion!!)
-                .orElseThrow{ Exception("Could not find any version of ${article.id}") }
-
-            metadataEntity.title = article.title
-            metadataEntity.updatedAt = article.updatedAt
-            metadataEntity.isPublic = article.isPublic
-
-            val finalContentEntity = if (currentContentEntity.content != article.content) {
-                val newContentEntity = articleContentJpaRepository.save(
-                    ArticleContentEntity(
-                        articleMetadataEntity = metadataEntity,
-                        content = article.content,
-                        createdAt = article.updatedAt,
-                    )
-                )
-
-                newContentEntity
-            }
-            else {
-                currentContentEntity
-            }
-
-            metadataEntity.currentVersion = finalContentEntity.id
-            toDomain(metadataEntity, finalContentEntity)
-        }
+        TODO("Not yet implemented")
     }
 
-    @Transactional
     override fun delete(article: Article) {
-        if (article.id == null) { throw Exception("no such article") }//TODO
-
-        val metadataEntity = articleMetadataJpaRepository.findById(article.id)
-                .orElseThrow{ Exception("Could not find ${article.id}") }//TODO
-
-        articleMetadataJpaRepository.deleteById(metadataEntity.id!!)
+        TODO("Not yet implemented")
     }
 
     override fun findAllByIds(articleIds: List<Long>): List<Article> {
-        val metadataEntities = articleMetadataJpaRepository.findAllById(articleIds)
-
-        val contentEntities = articleContentJpaRepository.findAllById(
-            metadataEntities.map {it.currentVersion}
-        ).associateBy { it.id }
-
-        return metadataEntities.map { metadataEntity ->
-            val contentEntity = contentEntities[metadataEntity.currentVersion]
-                ?: throw Exception("Cannot find content for article version")
-
-            toDomain(metadataEntity, contentEntity)
-        }
+        TODO("Not yet implemented")
     }
 
     override fun findById(articleId: Long): Article? {
-        val metadataEntity = articleMetadataJpaRepository.findById(articleId)
-            .orElseThrow{Exception("Could not find article") }//TODO
-
-        val contentEntity = articleContentJpaRepository.findById(metadataEntity.currentVersion!!)
-            .orElseThrow{ Exception("Could not find article") }//TODO
-
-        return toDomain(metadataEntity, contentEntity)
+        TODO("Not yet implemented")
     }
 
-    private fun toDomain(metadata: ArticleMetadataEntity, content: ArticleContentEntity): Article {
-        return  Article(
-            id = metadata.id,
-            title = metadata.title,
-            type = ArticleType.NEW,//TODO
-            authorId = metadata.authorId,
-            folderId = metadata.folderId,
-            isPublic = metadata.isPublic,
-            createdAt = metadata.createdAt,
-            updatedAt = metadata.updatedAt,
-            content = content.content
-        )
-    }
 }

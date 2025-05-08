@@ -1,5 +1,7 @@
 package dev.codeswamp.core.article.infrastructure.persistence.entity
 
+import dev.codeswamp.core.article.domain.model.Article
+import dev.codeswamp.core.article.domain.model.ArticleType
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -45,4 +47,18 @@ data class ArticleEntity (
 
     @OneToMany
     val views: MutableList<ArticleView> = mutableListOf(),
-)
+) {
+    fun toArticle(): Article {
+        return Article(
+            id = id,
+            title =  title,
+            type = ArticleType.NEW,//TODO
+            authorId = authorId,
+            folderId = folderId,
+            isPublic = isPublic,
+            createdAt = createdAt,
+            updatedAt = updatedAt,
+            content = content
+        )
+    }
+}
