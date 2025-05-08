@@ -48,7 +48,7 @@ data class ArticleEntity (
     @OneToMany
     val views: MutableList<ArticleView> = mutableListOf(),
 ) {
-    fun toArticle(): Article {
+    fun toDomain(): Article {
         return Article(
             id = id,
             title =  title,
