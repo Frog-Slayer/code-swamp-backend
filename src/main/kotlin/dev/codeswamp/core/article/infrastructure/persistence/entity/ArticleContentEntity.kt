@@ -10,6 +10,7 @@ import org.springframework.data.annotation.CreatedDate
 import java.time.Instant
 
 @Entity
+@Deprecated("버전 전체 저장 방식에서 diff + snapshot 방식으로 변경")
 data class ArticleContentEntity (
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

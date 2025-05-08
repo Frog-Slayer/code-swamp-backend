@@ -1,26 +1,10 @@
 package dev.codeswamp.core.article.infrastructure.persistence.entity
 
-import dev.codeswamp.core.comment.entity.Comment
-import dev.codeswamp.core.folder.domain.entity.Folder
-import dev.codeswamp.core.folder.infrastructure.persistence.entity.FolderEntity
-import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
-import jakarta.persistence.CascadeType
-import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.OneToMany
-import org.springframework.data.annotation.CreatedDate
-import org.springframework.data.annotation.LastModifiedDate
-import java.time.Instant
 
 @Entity
-@Deprecated("버전 전체 저장 방식에서 diff + snapshot 방식으로 변경")
-data class ArticleMetadataEntity(
+class ArticleEntity {
+
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
@@ -50,4 +34,4 @@ data class ArticleMetadataEntity(
 
     @OneToMany
     val views: MutableList<ArticleView> = mutableListOf(),
-)
+}
