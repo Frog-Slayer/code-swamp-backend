@@ -5,15 +5,15 @@ import java.time.Instant
 
 data class Article (
     //metatdata
-    val id: Long,
-    var title: String,
+    val id: Long?,
+    var title: String = "",
     var type: ArticleType = ArticleType.NEW,
 
     val userId: Long,
-    var isPublic: Boolean,
+    var isPublic: Boolean = true,
 
-    var createdAt: Instant,
-    var updatedAt: Instant,
+    var createdAt: Instant = Instant.now(),
+    var updatedAt: Instant = Instant.now(),
 
     //content(raw Markdown document)
     var content: String,
@@ -23,8 +23,10 @@ data class Article (
     }
 
     fun changeContent(content: String) {
-        this.content = content
-        updateDate()
+        if (this.content != content) {
+            this.content = content
+            updateDate()
+        }
     }
 
     fun publish() {

@@ -21,7 +21,7 @@ class ArticleRepositoryImpl (
         TODO("Not yet implemented")
     }
 
-    override fun findById(articleId: Long): Article {
+    override fun findById(articleId: Long): Article? {
         TODO("Not yet implemented")
     }
 }

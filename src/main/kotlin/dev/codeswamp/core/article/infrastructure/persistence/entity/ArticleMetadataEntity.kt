@@ -25,13 +25,11 @@ data class ArticleMetadataEntity(
     @Column(nullable = false)
     var title: String,
 
-    @ManyToOne
-    @JoinColumn(nullable = false, name = "user_id")
-    val writer: UserEntity,
+    @Column(nullable = false)
+    val authorId: Long,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "folder_id")
-    var folder: FolderEntity,
+    @Column(nullable = false)
+    var folderId: Long,
 
     @CreatedDate
     val createdAt: Instant = Instant.now(),
@@ -43,11 +41,10 @@ data class ArticleMetadataEntity(
 
     val currentVersion: Long,//현재 컨텐츠 버전
 
-    @OneToMany(mappedBy = "articleMetadataEntity", fetch = FetchType.LAZY)
-    val contentVersions: List<ArticleContentEntity> = mutableListOf(),
+    val comments: List<Long> = mutableListOf(),
 
     @OneToMany(mappedBy = "articleMetadataEntity", fetch = FetchType.LAZY)
-    val comments: List<Comment> = mutableListOf(),
+    val contentVersions: List<ArticleContentEntity> = mutableListOf(),
 
     @OneToMany
     val views: List<ArticleView> = mutableListOf(),

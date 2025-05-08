@@ -7,5 +7,5 @@ interface ArticleRepository {
     fun delete(article: Article)
 
     fun findAllByIds(articleIds : List<Long>): List<Article>
-    fun findById(articleId : Long): Article
+    fun findById(articleId : Long): Article?
 }
