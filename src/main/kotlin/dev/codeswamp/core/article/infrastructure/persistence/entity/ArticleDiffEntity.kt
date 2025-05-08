@@ -23,7 +23,7 @@ data class ArticleDiffEntity (
     val article: ArticleEntity,
 
     @Column(nullable = false)
-    val version: Long,
+    val version: Int = 0,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     val diffData: String,

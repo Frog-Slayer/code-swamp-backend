@@ -2,10 +2,8 @@ package dev.codeswamp.core.article.infrastructure.persistence.entity
 
 import dev.codeswamp.core.article.domain.model.Article
 import dev.codeswamp.core.article.domain.model.ArticleType
-import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
@@ -29,6 +27,9 @@ data class ArticleEntity (
     @Column(nullable = false)
     val authorId: Long,
 
+    @Column(nullable = false)
+    var currentVersion: Int = 0,
+
     @Column(nullable = false, columnDefinition = "TEXT")
     val content: String,
 
@@ -47,6 +48,7 @@ data class ArticleEntity (
 
     @OneToMany
     val views: MutableList<ArticleView> = mutableListOf(),
+
 ) {
     fun toDomain(): Article {
         return Article(

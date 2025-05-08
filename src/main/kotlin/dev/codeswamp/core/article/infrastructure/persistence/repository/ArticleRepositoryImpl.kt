@@ -7,6 +7,7 @@ import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleConte
 import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleDiffEntity
 import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleEntity
 import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleMetadataEntity
+import dev.codeswamp.core.article.infrastructure.utils.ArticleDiffUtil
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Repository
 
@@ -36,8 +37,26 @@ class ArticleRepositoryImpl (
         val savedEntity = articleJpaRepository.save(articleEntity)
 
         //diff 확인 및 저장
+        val diff : String? = ArticleDiffUtil.generateDiff(savedEntity.content, article.content)
 
-        return savedEntity.toDomain()
+        return if (diff == null) {
+            savedEntity.toDomain()
+        }
+        else {
+            val latestVersion = articleDiffJpaRepository.findLatestVersionByArticleId(savedEntity.id!!)
+            val history = articleDiffJpaRepository.save (
+                ArticleDiffEntity(
+                    id = null,
+                    article = savedEntity,
+                    version = latestVersion + 1,
+                    diffData = diff,
+                    createdAt = article.createdAt
+                )
+            )
+
+            savedEntity.currentVersion = history.version
+            savedEntity.toDomain()
+        }
     }
 
     override fun delete(article: Article) {
