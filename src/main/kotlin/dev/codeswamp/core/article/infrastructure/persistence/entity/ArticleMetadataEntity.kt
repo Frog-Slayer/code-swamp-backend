@@ -4,6 +4,7 @@ import dev.codeswamp.core.comment.entity.Comment
 import dev.codeswamp.core.folder.domain.entity.Folder
 import dev.codeswamp.core.folder.infrastructure.persistence.entity.FolderEntity
 import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -41,11 +42,11 @@ data class ArticleMetadataEntity(
 
     var currentVersion: Long?,//현재 컨텐츠 버전
 
-    val comments: List<Long> = mutableListOf(),
+    val comments: MutableList<Long> = mutableListOf(),
 
-    @OneToMany(mappedBy = "articleMetadataEntity", fetch = FetchType.LAZY)
-    val contentVersions: List<ArticleContentEntity> = mutableListOf(),
+    @OneToMany(mappedBy = "articleMetadataEntity", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE, CascadeType.PERSIST])
+    val contentVersions: MutableList<ArticleContentEntity> = mutableListOf(),
 
     @OneToMany
-    val views: List<ArticleView> = mutableListOf(),
+    val views: MutableList<ArticleView> = mutableListOf(),
 )

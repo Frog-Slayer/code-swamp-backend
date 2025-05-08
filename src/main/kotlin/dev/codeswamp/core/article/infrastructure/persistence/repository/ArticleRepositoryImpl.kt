@@ -23,9 +23,6 @@ class ArticleRepositoryImpl (
                     updatedAt = article.updatedAt,
                     isPublic = article.isPublic,
                     currentVersion = null,
-                    comments = emptyList(),
-                    contentVersions = emptyList(),
-                    views = emptyList(),
                 )
             )
 
@@ -52,14 +49,15 @@ class ArticleRepositoryImpl (
             metadataEntity.isPublic = article.isPublic
 
             val finalContentEntity = if (currentContentEntity.content != article.content) {
-                val newContentEntity = articleContentJpaRepository.save(
-                    ArticleContentEntity(
+                val newContentEntity = ArticleContentEntity(
                         articleMetadataEntity = metadataEntity,
                         content = article.content,
                         createdAt = article.updatedAt,
                     )
-                )
+
+                metadataEntity.contentVersions.add(newContentEntity)
                 metadataEntity.currentVersion = newContentEntity.id
+
                 newContentEntity
             }
             else {
