@@ -6,16 +6,16 @@ import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
 
 interface ArticleApplicationService {
 
-    fun create(user: UserEntity, metadata: ArticleMetadataDto, content: String)
+    fun create(userId: Long, metadata: ArticleMetadataDto, content: String)
 
-    fun updateArticleMetadata(user: UserEntity, articleId: Long, metadata: ArticleMetadataDto)
+    fun updateArticleMetadata(userId: Long, articleId: Long, metadata: ArticleMetadataDto)
 
-    fun updateArticleContent(user: UserEntity, articleId: Long, content: String)
+    fun updateArticleContent(userId: Long, articleId: Long, content: String)
 
-    fun delete(user: UserEntity, articleId: Long)
+    fun delete(userId: Long, articleId: Long)
 
-    fun findByArticleId(user: UserEntity?, articleId: Long): ArticleReadResponseDto
+    fun findByArticleId(userId: Long?, articleId: Long): ArticleReadResponseDto
 
-    fun findAllByKeywords(user: UserEntity?, keywords: List<String>): List<ArticleReadResponseDto>
+    fun findAllByKeywords(userId: Long?, keywords: List<String>): List<ArticleReadResponseDto>
 
 }

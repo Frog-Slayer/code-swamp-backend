@@ -9,11 +9,7 @@ class ArticleService (
     private val articleRepository: ArticleRepository
 ){
 
-    fun create(article: Article): Article {
-        return articleRepository.save(article)
-    }
-
-    fun update(article: Article): Article {
+    fun save(article: Article): Article {
         return articleRepository.save(article)
     }
 
@@ -25,7 +21,7 @@ class ArticleService (
         return articleRepository.findAllByIds(articleIds)
     }
 
-    fun findById(articleId: Long): Article {
+    fun findById(articleId: Long): Article? {
         return articleRepository.findById(articleId)
     }
 

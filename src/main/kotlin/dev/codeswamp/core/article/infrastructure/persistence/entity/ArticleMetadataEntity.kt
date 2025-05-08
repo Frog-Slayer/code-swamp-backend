@@ -4,6 +4,7 @@ import dev.codeswamp.core.comment.entity.Comment
 import dev.codeswamp.core.folder.domain.entity.Folder
 import dev.codeswamp.core.folder.infrastructure.persistence.entity.FolderEntity
 import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -25,13 +26,11 @@ data class ArticleMetadataEntity(
     @Column(nullable = false)
     var title: String,
 
-    @ManyToOne
-    @JoinColumn(nullable = false, name = "user_id")
-    val writer: UserEntity,
+    @Column(nullable = false)
+    val authorId: Long,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "folder_id")
-    var folder: FolderEntity,
+    @Column(nullable = false)
+    var folderId: Long,
 
     @CreatedDate
     val createdAt: Instant = Instant.now(),
@@ -41,14 +40,13 @@ data class ArticleMetadataEntity(
 
     var isPublic: Boolean,
 
-    val currentVersion: Long,//현재 컨텐츠 버전
+    var currentVersion: Long? = null,//현재 컨텐츠 버전
 
-    @OneToMany(mappedBy = "articleMetadataEntity", fetch = FetchType.LAZY)
-    val contentVersions: List<ArticleContentEntity> = mutableListOf(),
+    val comments: MutableList<Long> = mutableListOf(),
 
-    @OneToMany(mappedBy = "articleMetadataEntity", fetch = FetchType.LAZY)
-    val comments: List<Comment> = mutableListOf(),
+    @OneToMany(mappedBy = "articleMetadataEntity", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE, CascadeType.PERSIST])
+    val contentVersions: MutableList<ArticleContentEntity> = mutableListOf(),
 
     @OneToMany
-    val views: List<ArticleView> = mutableListOf(),
+    val views: MutableList<ArticleView> = mutableListOf(),
 )

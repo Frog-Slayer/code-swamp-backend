@@ -1,0 +1,90 @@
+package dev.codeswamp.core.article.infrastructure.persistence.repository
+
+import dev.codeswamp.core.article.domain.model.Article
+import dev.codeswamp.core.article.domain.model.ArticleType
+import dev.codeswamp.core.article.domain.repository.ArticleRepository
+import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Order
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestMethodOrder
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+
+@DisplayName("ArticleRepositoryImpl test")
+@SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
+class ArticleRepositoryImplTest (
+    @Autowired private val articleMetadataJpaRepository: ArticleMetadataJpaRepository,
+    @Autowired private val articleContentJpaRepository: ArticleContentJpaRepository,
+    @Autowired private val articleRepository: ArticleRepository
+){
+    @BeforeAll
+    fun beforeAll() {
+        val article = Article(
+            title = "test",
+            authorId = 1 ,
+            folderId = 1,
+            content = "hello"
+        )
+
+        articleRepository.save(article)
+    }
+
+    @Test
+    fun `저장 후 조회 테스트`() {
+        val found = articleRepository.findById(1)
+
+        assertNotNull(found)
+        assertThat(found?.id!!).isEqualTo(1)
+    }
+
+    @Test
+    @Order(1)
+    fun `컨텐츠 수정 X 테스트`() {
+        val found = articleRepository.findById(1)
+        assertNotNull(found)
+
+        found?.changeContent("hello")
+        articleRepository.save(found!!)
+
+        val metadata = articleMetadataJpaRepository.findById(1).orElse(null)
+
+        assertThat(metadata).isNotNull()
+        assertThat(metadata.currentVersion).isEqualTo(1)
+    }
+
+    @Test
+    @Order(2)
+    fun `컨텐츠 수정 테스트`() {
+        val found = articleRepository.findById(1)
+
+        found?.changeContent("this is modified")
+        articleRepository.save(found!!)
+
+        val metadata = articleMetadataJpaRepository.findById(1).orElse(null)
+
+        assertThat(metadata).isNotNull()
+        assertNotNull(metadata.currentVersion)
+        assertThat(metadata.currentVersion).isNotEqualTo(1)
+        assertThat(metadata.currentVersion).isEqualTo(2)
+    }
+
+    @Test
+    fun delete() {
+    }
+
+    @Test
+    fun findAllByIds() {
+    }
+
+    @Test
+    fun findById() {
+    }
+}
