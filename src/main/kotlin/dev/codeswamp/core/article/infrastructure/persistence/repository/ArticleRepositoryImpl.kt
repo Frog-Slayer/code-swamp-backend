@@ -60,14 +60,16 @@ class ArticleRepositoryImpl (
     }
 
     override fun delete(article: Article) {
-        TODO("Not yet implemented")
+        articleJpaRepository.deleteById(article.id!!)
     }
 
     override fun findAllByIds(articleIds: List<Long>): List<Article> {
-        TODO("Not yet implemented")
+        return articleJpaRepository.findAllByIdIsIn(articleIds).map { it.toDomain() }
     }
 
     override fun findById(articleId: Long): Article? {
-        TODO("Not yet implemented")
+        return articleJpaRepository.findById(articleId)
+            .orElse(null)
+            .toDomain()
     }
 }
