@@ -1,11 +1,24 @@
 package dev.codeswamp.core.article.infrastructure.persistence.entity
 
+import jakarta.persistence.CascadeType
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
+import org.springframework.data.annotation.CreatedDate
+import org.springframework.data.annotation.LastModifiedDate
+import java.time.Instant
 
 @Entity
-class ArticleEntity {
+@Table(name = "article")
+data class ArticleEntity (
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
     @Column(nullable = false)
@@ -14,8 +27,8 @@ class ArticleEntity {
     @Column(nullable = false)
     val authorId: Long,
 
-    @Column(nullable = false)
-    var folderId: Long,
+    @Column(nullable = false, columnDefinition = "TEXT")
+    val content: String,
 
     @CreatedDate
     val createdAt: Instant = Instant.now(),
@@ -25,13 +38,11 @@ class ArticleEntity {
 
     var isPublic: Boolean,
 
-    var currentVersion: Long? = null,//현재 컨텐츠 버전
-
     val comments: MutableList<Long> = mutableListOf(),
 
-    @OneToMany(mappedBy = "articleMetadataEntity", fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE, CascadeType.PERSIST])
-    val contentVersions: MutableList<ArticleContentEntity> = mutableListOf(),
+    @Column(nullable = false)
+    var folderId: Long,
 
     @OneToMany
     val views: MutableList<ArticleView> = mutableListOf(),
-}
+)
