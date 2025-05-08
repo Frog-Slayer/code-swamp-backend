@@ -46,6 +46,8 @@ dependencies {
 	implementation "io.jsonwebtoken:jjwt-impl:0.12.6"
 	implementation "io.jsonwebtoken:jjwt-jackson:0.12.6"
 
+	implementation "io.github.java-diff-utils:java-diff-utils"
+
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	runtimeOnly 'com.h2database:h2'
 
