@@ -78,11 +78,28 @@ class ArticleRepositoryImpl (
     }
 
     override fun findAllByIds(articleIds: List<Long>): List<Article> {
-        TODO("Not yet implemented")
+        val metadataEntities = articleMetadataJpaRepository.findAllById(articleIds)
+
+        val contentEntities = articleContentJpaRepository.findAllById(
+            metadataEntities.map {it.currentVersion}
+        ).associateBy { it.id }
+
+        return metadataEntities.map { metadataEntity ->
+            val contentEntity = contentEntities[metadataEntity.currentVersion]
+                ?: throw Exception("Cannot find content for article version")
+
+            toDomain(metadataEntity, contentEntity)
+        }
     }
 
     override fun findById(articleId: Long): Article? {
-        TODO("Not yet implemented")
+        val metadataEntity = articleMetadataJpaRepository.findById(articleId)
+            .orElseThrow{Exception("Could not find article") }//TODO
+
+        val contentEntity = articleContentJpaRepository.findById(metadataEntity.id!!)
+            .orElseThrow{ Exception("Could not find article") }//TODO
+
+        return toDomain(metadataEntity, contentEntity)
     }
 
     private fun toDomain(metadata: ArticleMetadataEntity, content: ArticleContentEntity): Article {
