@@ -5,7 +5,7 @@ import java.time.Instant
 
 data class Article (
     //metatdata
-    val id: Long?,
+    val id: Long? = null,
     var title: String = "",
     var type: ArticleType = ArticleType.NEW,
 

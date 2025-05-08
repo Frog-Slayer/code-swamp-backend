@@ -5,13 +5,16 @@ import dev.codeswamp.core.article.domain.model.ArticleType
 import dev.codeswamp.core.article.domain.repository.ArticleRepository
 import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleContentEntity
 import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleMetadataEntity
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Repository
 
 @Repository
 class ArticleRepositoryImpl (
-    val articleMetadataJpaRepository: ArticleMetadataJpaRepository,
-    val articleContentJpaRepository: ArticleContentJpaRepository,
+    private val articleMetadataJpaRepository: ArticleMetadataJpaRepository,
+    private val articleContentJpaRepository: ArticleContentJpaRepository,
 ) : ArticleRepository {
+
+    @Transactional
     override fun save(article: Article): Article {
         return if (article.id == null) {
             val metadataEntity = articleMetadataJpaRepository.save(
@@ -26,7 +29,7 @@ class ArticleRepositoryImpl (
                 )
             )
 
-            val contentEntity = articleContentJpaRepository.save (
+            val contentEntity = articleContentJpaRepository.save(
                 ArticleContentEntity(
                     articleMetadataEntity = metadataEntity,
                     content = article.content,
@@ -49,14 +52,13 @@ class ArticleRepositoryImpl (
             metadataEntity.isPublic = article.isPublic
 
             val finalContentEntity = if (currentContentEntity.content != article.content) {
-                val newContentEntity = ArticleContentEntity(
+                val newContentEntity = articleContentJpaRepository.save(
+                    ArticleContentEntity(
                         articleMetadataEntity = metadataEntity,
                         content = article.content,
                         createdAt = article.updatedAt,
                     )
-
-                metadataEntity.contentVersions.add(newContentEntity)
-                metadataEntity.currentVersion = newContentEntity.id
+                )
 
                 newContentEntity
             }
@@ -64,10 +66,12 @@ class ArticleRepositoryImpl (
                 currentContentEntity
             }
 
+            metadataEntity.currentVersion = finalContentEntity.id
             toDomain(metadataEntity, finalContentEntity)
         }
     }
 
+    @Transactional
     override fun delete(article: Article) {
         if (article.id == null) { throw Exception("no such article") }//TODO
 
@@ -96,7 +100,7 @@ class ArticleRepositoryImpl (
         val metadataEntity = articleMetadataJpaRepository.findById(articleId)
             .orElseThrow{Exception("Could not find article") }//TODO
 
-        val contentEntity = articleContentJpaRepository.findById(metadataEntity.id!!)
+        val contentEntity = articleContentJpaRepository.findById(metadataEntity.currentVersion!!)
             .orElseThrow{ Exception("Could not find article") }//TODO
 
         return toDomain(metadataEntity, contentEntity)

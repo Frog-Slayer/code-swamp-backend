@@ -40,7 +40,7 @@ data class ArticleMetadataEntity(
 
     var isPublic: Boolean,
 
-    var currentVersion: Long?,//현재 컨텐츠 버전
+    var currentVersion: Long? = null,//현재 컨텐츠 버전
 
     val comments: MutableList<Long> = mutableListOf(),
 
