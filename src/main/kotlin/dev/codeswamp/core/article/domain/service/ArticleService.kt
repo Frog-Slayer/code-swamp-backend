@@ -14,17 +14,18 @@ class ArticleService (
     @Transactional
     fun create(article: Article): Article {
         val saved = articleRepository.save(article)
-        articleHistoryService.saveDiff(null, saved)
+        //diff 계산 및 저장
+        val diff = articleHistoryService.calculateDiff(null, saved);
+        articleHistoryService.save(diff!!)
+
         return saved
     }
-
 
     @Transactional
     fun update(article: Article): Article {
         val original = articleRepository.findById(article.id!!) ?: throw IllegalArgumentException("Article does not exist")
         val updated = articleRepository.save(article)
-
-        articleHistoryService.saveDiff(original, updated)
+        //diff 계산 및 저장
         return updated
     }
 
@@ -39,7 +40,6 @@ class ArticleService (
     @Transactional
     fun deleteById(articleId: Long) {
         val article = articleRepository.findById(articleId) ?: throw IllegalArgumentException("Article not found")
-
         articleRepository.delete(article)
     }
 }

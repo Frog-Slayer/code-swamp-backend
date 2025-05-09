@@ -1,12 +1,10 @@
-package dev.codeswamp.core.article.infrastructure.persistence.repository
+package dev.codeswamp.core.article.infrastructure.persistence.jpa
 
 import dev.codeswamp.core.article.domain.model.Article
-import dev.codeswamp.core.article.domain.model.ArticleType
 import dev.codeswamp.core.article.domain.repository.ArticleRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order

@@ -5,6 +5,7 @@ import java.time.Instant
 data class ArticleDiff (
     val id: Long? = null,
     val article: Article,
+    val previous: ArticleDiff? = null,
     val diffData: String,
     val createdAt: Instant = Instant.now()
 )

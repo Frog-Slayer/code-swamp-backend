@@ -13,25 +13,34 @@ class ArticleHistoryService(
     private val diffProcessor: ArticleDiffProcessor
 ) {
     fun calculateDiff(original: Article?, updated: Article) : ArticleDiff? {
-        val originalContent = original?.content ?: ""
-
+        val originalContent = original?.content
         val diff = diffProcessor.calculateDiff(originalContent, updated.content)
+        val prevVersion = original?.currentVersion?.let{ findById(it)}
 
         return diff?.let {
             ArticleDiff(
                 diffData = it,
+                previous = prevVersion,
                 article = updated,
                 createdAt = updated.updatedAt,
             )
         }
     }
 
-    fun save(articleDiff: ArticleDiff): ArticleDiff? {
+    fun save(articleDiff: ArticleDiff): ArticleDiff {
         return articleDiffRepository.save(articleDiff)
+    }
+
+    fun findById(id: Long): ArticleDiff? {
+        return articleDiffRepository.findById(id)
     }
 
     fun getHistory(articleId: Long) : List<ArticleDiff> {
         return articleDiffRepository.findByArticleId(articleId)
+    }
+
+    fun deleteArticle(articleId: Long) {
+        articleDiffRepository.deleteByArticleId(articleId)
     }
 
     fun buildFullContentFromHistory(history: List<ArticleDiff>) : String {

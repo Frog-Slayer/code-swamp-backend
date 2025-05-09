@@ -1,4 +1,4 @@
-package dev.codeswamp.core.article.infrastructure.persistence.repository
+package dev.codeswamp.core.article.infrastructure.persistence.jpa
 
 import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleDiffEntity
 import org.springframework.data.jpa.repository.JpaRepository
