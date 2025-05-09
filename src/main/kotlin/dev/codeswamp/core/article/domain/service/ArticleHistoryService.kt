@@ -12,6 +12,10 @@ class ArticleHistoryService(
     private val diffCalculator: ArticleDiffCalculator
 ) {
     fun calculateDiff(original: Article?, updated: Article) : ArticleDiff? {
+        val originalContent = original?.content ?: ""
+
+        val diff = diffCalculator.calculateDiff(originalContent, updated.content)
+
         TODO("Not yet implemented")
     }
 
