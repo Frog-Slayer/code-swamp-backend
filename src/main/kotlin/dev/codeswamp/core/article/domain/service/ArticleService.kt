@@ -24,9 +24,14 @@ class ArticleService (
     @Transactional
     fun update(article: Article): Article {
         val original = articleRepository.findById(article.id!!) ?: throw IllegalArgumentException("Article does not exist")
-        val updated = articleRepository.save(article)
-        //diff 계산 및 저장
-        return updated
+
+        val diff = articleHistoryService.calculateDiff(original, article)
+        if (diff != null) {
+            val savedDiff = articleHistoryService.save(diff)
+            article.currentVersion = savedDiff.id!!
+        }
+
+        return articleRepository.save(article)
     }
 
     fun findById(articleId: Long): Article? {
