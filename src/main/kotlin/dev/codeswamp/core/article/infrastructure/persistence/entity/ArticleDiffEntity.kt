@@ -32,4 +32,15 @@ data class ArticleDiffEntity (
 
     @Column(nullable = false, updatable = false)
     val createdAt: Instant = Instant.now()
-)
+) {
+
+    fun toDomain(): ArticleDiff {
+        return  ArticleDiff(
+            id = id,
+            articleId = article.id!!,
+            previousVersionId = previousVersion?.id,
+            diffData = diffData,
+            createdAt = createdAt
+        )
+    }
+}

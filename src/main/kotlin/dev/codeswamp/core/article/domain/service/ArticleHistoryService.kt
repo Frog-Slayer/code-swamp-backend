@@ -21,7 +21,7 @@ class ArticleHistoryService(
             ArticleDiff(
                 diffData = it,
                 previousVersionId = prevVersion,
-                article = updated,
+                articleId = updated.id!!,
                 createdAt = updated.updatedAt,
             )
         }
@@ -50,7 +50,7 @@ class ArticleHistoryService(
 
     fun rollbackTo(article: Article, rollbackVersionId: Long): Article {
         val rollbackVersion = findById(rollbackVersionId) ?: throw IllegalArgumentException("Rollback not found")
-        if (rollbackVersion.article.id != article.id) throw IllegalArgumentException("version does not match")
+        if (rollbackVersion.articleId != article.id) throw IllegalArgumentException("version does not match")
 
         val currentVersion = article.currentVersion
         val lca = diffProcessor.findLCA(currentVersion,  rollbackVersionId)
