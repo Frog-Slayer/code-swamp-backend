@@ -1,12 +1,9 @@
 package dev.codeswamp.core.article.infrastructure.persistence.repository
 
 import dev.codeswamp.core.article.domain.model.Article
-import dev.codeswamp.core.article.domain.model.ArticleType
 import dev.codeswamp.core.article.domain.repository.ArticleRepository
-import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleContentEntity
 import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleDiffEntity
 import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleEntity
-import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleMetadataEntity
 import dev.codeswamp.core.article.infrastructure.utils.ArticleDiffUtil
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Repository
