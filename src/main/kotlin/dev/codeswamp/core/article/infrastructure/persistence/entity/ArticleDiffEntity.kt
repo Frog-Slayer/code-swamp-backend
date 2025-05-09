@@ -1,5 +1,6 @@
 package dev.codeswamp.core.article.infrastructure.persistence.entity
 
+import dev.codeswamp.core.article.domain.model.ArticleDiff
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -22,8 +23,9 @@ data class ArticleDiffEntity (
     @JoinColumn(name = "article_id", nullable = false)
     val article: ArticleEntity,
 
-    @Column(nullable = false)
-    val version: Int = 0,
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "prev_id")
+    val previousVersion: ArticleDiffEntity?,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     val diffData: String,
