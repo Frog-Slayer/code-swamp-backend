@@ -48,19 +48,22 @@ class ArticleHistoryService(
         return diffProcessor.buildFullContentFromHistory( sortedHistoryDiffList)
     }
 
-    fun rollbackTo(article: Article, rollbackVersion: Long): Article {
+    fun rollbackTo(article: Article, rollbackVersionId: Long): Article {
+        val rollbackVersion = findById(rollbackVersionId) ?: throw IllegalArgumentException("Rollback not found")
+        if (rollbackVersion.article.id != article.id) throw IllegalArgumentException("version does not match")
+
         val currentVersion = article.currentVersion
-        val lca = diffProcessor.findLCA(currentVersion,  rollbackVersion)
+        val lca = diffProcessor.findLCA(currentVersion,  rollbackVersionId)
         val nearestSnapshotVersion = diffProcessor.findNearestSnapShotBefore(lca)
 
-        val diffPathIdList = diffProcessor.findDiffPathBetween(nearestSnapshotVersion, rollbackVersion)
+        val diffPathIdList = diffProcessor.findDiffPathBetween(nearestSnapshotVersion, rollbackVersionId)
         val diffList = articleDiffRepository.findAllByIdsIn(diffPathIdList)
 
         val fullContent = buildFullContentFromHistory(diffList)
 
         return article.copy(
             content = fullContent,
-            currentVersion = rollbackVersion,
+            currentVersion = rollbackVersionId,
             updatedAt = Instant.now()
         )
     }

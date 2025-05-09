@@ -14,9 +14,13 @@ class ArticleService (
     @Transactional
     fun create(article: Article): Article {
         val saved = articleRepository.save(article)
-        //diff 계산 및 저장
-        val diff = articleHistoryService.calculateDiff(null, saved);
-        articleHistoryService.save(diff!!)
+
+        val calculated = articleHistoryService.calculateDiff(null, saved)
+                ?:throw Exception("something went wrong") //TODO
+
+        val diff = articleHistoryService.save(calculated)
+
+        saved.currentVersion = diff.id ?: throw Exception("something went wrong")//TODO
 
         return saved
     }
