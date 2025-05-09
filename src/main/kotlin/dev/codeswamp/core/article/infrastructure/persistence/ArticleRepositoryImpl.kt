@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository
 @Repository
 class ArticleRepositoryImpl (
     private val articleJpaRepository: ArticleJpaRepository,
-    private val articleDiffJpaRepository: ArticleDiffJpaRepository,
 ) : ArticleRepository {
 
     @Transactional
