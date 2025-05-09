@@ -1,7 +1,6 @@
 package dev.codeswamp.core.article.domain.support
 
-import dev.codeswamp.core.article.domain.model.Article
-
-interface ArticleDiffCalculator {
+interface ArticleDiffProcessor {
     fun calculateDiff(old: String, new: String) : String?
+    fun buildFullContentFromHistory(history: List<String>) : String
 }

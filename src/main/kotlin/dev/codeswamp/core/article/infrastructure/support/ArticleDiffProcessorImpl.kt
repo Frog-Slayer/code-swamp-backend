@@ -2,12 +2,11 @@ package dev.codeswamp.core.article.infrastructure.support
 
 import com.github.difflib.DiffUtils
 import com.github.difflib.UnifiedDiffUtils
-import dev.codeswamp.core.article.domain.support.ArticleDiffCalculator
+import dev.codeswamp.core.article.domain.support.ArticleDiffProcessor
 import org.springframework.stereotype.Component
-import org.springframework.stereotype.Service
 
 @Component
-class ArticleDiffCalculatorImpl : ArticleDiffCalculator {
+class ArticleDiffProcessorImpl : ArticleDiffProcessor {
     override fun calculateDiff(old: String, new: String): String? {
         val oldLines = old?.lines()
         val newLines = new.lines()
@@ -25,5 +24,9 @@ class ArticleDiffCalculatorImpl : ArticleDiffCalculator {
             patch,
             3
         ).joinToString("\n")
+    }
+
+    override fun buildFullContentFromHistory(history: List<String>): String {
+        TODO("Not yet implemented")
     }
 }
