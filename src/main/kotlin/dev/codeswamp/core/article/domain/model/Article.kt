@@ -17,6 +17,7 @@ data class Article (
     var createdAt: Instant = Instant.now(),
     var updatedAt: Instant = Instant.now(),
 
+    var currentVersion: Long = 0,
     //content(raw Markdown document)
     var content: String,
 ) {

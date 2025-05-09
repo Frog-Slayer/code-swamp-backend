@@ -6,5 +6,7 @@ interface ArticleDiffRepository {
     fun save(articleDiff: ArticleDiff): ArticleDiff
     fun findById(id: Long) : ArticleDiff?
     fun findByArticleId(articleId: Long) : List<ArticleDiff>
+
+    fun findAllByIdsIn(diffs: List<Long>) : List<ArticleDiff>
     fun deleteByArticleId(articleId: Long)
 }

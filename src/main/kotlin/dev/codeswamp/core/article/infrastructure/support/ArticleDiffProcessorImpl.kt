@@ -29,4 +29,12 @@ class ArticleDiffProcessorImpl : ArticleDiffProcessor {
     override fun buildFullContentFromHistory(history: List<String>): String {
         TODO("Not yet implemented")
     }
+
+    override fun findLCA(versionAId: Long, versionBId: Long): Long {
+        TODO("Not yet implemented")
+    }
+
+    override fun findNearestSnapShotBefore(versionId: Long): Long {
+        TODO("Not yet implemented")
+    }
 }

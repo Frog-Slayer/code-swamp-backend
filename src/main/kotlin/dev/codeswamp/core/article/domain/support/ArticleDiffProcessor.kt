@@ -5,4 +5,5 @@ interface ArticleDiffProcessor {
     fun buildFullContentFromHistory(history: List<String>) : String
     fun findLCA(versionAId: Long, versionBId: Long): Long
     fun findNearestSnapShotBefore(versionId: Long): Long
+    fun findDiffPathBetween(from: Long, to: Long): List<Long>
 }
