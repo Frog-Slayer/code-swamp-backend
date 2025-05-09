@@ -11,8 +11,10 @@ import org.springframework.data.neo4j.core.schema.Relationship
 data class HistoryNode(
     @Id @GeneratedValue val id: Long? = null,
 
+    val diffId: Long,
+
     @Relationship(type = "NEXT", direction = Relationship.Direction.INCOMING)
-    var previous: HistoryNode? = null,
+    val previous: HistoryNode? = null,
 
     @Relationship(type = "NEXT", direction = Relationship.Direction.OUTGOING)
     var next: List<HistoryNode> = emptyList()
