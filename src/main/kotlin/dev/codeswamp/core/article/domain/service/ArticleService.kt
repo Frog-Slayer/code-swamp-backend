@@ -15,14 +15,14 @@ class ArticleService (
     fun create(article: Article): Article {
         val saved = articleRepository.save(article)
 
-        val calculated = articleHistoryService.calculateDiff(null, saved)
+        val calculated = articleHistoryService.calculateDiff(null, article)
                 ?:throw Exception("something went wrong") //TODO
 
         val diff = articleHistoryService.save(calculated)
 
         saved.currentVersion = diff.id ?: throw Exception("something went wrong")//TODO
 
-        return saved
+        return articleRepository.save(saved)
     }
 
     @Transactional

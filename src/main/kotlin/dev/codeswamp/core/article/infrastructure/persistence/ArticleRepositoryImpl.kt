@@ -32,29 +32,7 @@ class ArticleRepositoryImpl (
             folderId = article.folderId,
         )
 
-        val savedEntity = articleJpaRepository.save(articleEntity)
-
-        //diff 확인 및 저장
-        val diff : String? = ArticleDiffUtil.generateDiff(savedEntity.content, article.content)
-
-        return if (diff == null) {
-            savedEntity.toDomain()
-        }
-        else {
-            val latestVersion = articleDiffJpaRepository.findLatestVersionByArticleId(savedEntity.id!!)
-            val history = articleDiffJpaRepository.save (
-                ArticleDiffEntity(
-                    id = null,
-                    article = savedEntity,
-                    version = latestVersion + 1,
-                    diffData = diff,
-                    createdAt = article.createdAt
-                )
-            )
-
-            savedEntity.currentVersion = history.version
-            savedEntity.toDomain()
-        }
+        return articleJpaRepository.save(articleEntity).toDomain()
     }
 
     override fun delete(article: Article) {

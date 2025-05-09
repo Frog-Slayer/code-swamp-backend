@@ -9,12 +9,4 @@ import org.springframework.stereotype.Repository
 interface ArticleDiffJpaRepository : JpaRepository<ArticleDiffEntity, Long>{
     fun findByArticleIdAndVersion(articleId: Long, version: Long): ArticleDiffEntity?
     fun findAllByArticleId(articleId: Long): List<ArticleDiffEntity>
-
-
-    @Query ("""
-        SELECT COALESCE(MAX(a.version), 0)
-        FROM ArticleDiffEntity a
-        WHERE a.article.id = :articleId
-    """)
-    fun findLatestVersionByArticleId(articleId: Long): Int
 }
