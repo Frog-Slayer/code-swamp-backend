@@ -15,5 +15,5 @@ data class HistoryNode(
     var previous: HistoryNode? = null,
 
     @Relationship(type = "NEXT", direction = Relationship.Direction.OUTGOING)
-    var next: HistoryNode? = null
+    var next: List<HistoryNode> = emptyList()
 )
