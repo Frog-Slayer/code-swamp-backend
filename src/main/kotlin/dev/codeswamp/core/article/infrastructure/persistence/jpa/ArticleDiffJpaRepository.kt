@@ -9,5 +9,7 @@ import org.springframework.stereotype.Repository
 interface ArticleDiffJpaRepository : JpaRepository<ArticleDiffEntity, Long>{
     fun findAllByArticleId(articleId: Long): List<ArticleDiffEntity>
     fun findAllByIdIsIn(diffs: List<Long>): List<ArticleDiffEntity>
+
+    fun countByArticleId(articleId: Long) : Long
     fun deleteAllByArticleId(articleId: Long)
 }

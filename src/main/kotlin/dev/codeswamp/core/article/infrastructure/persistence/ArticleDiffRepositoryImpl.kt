@@ -34,6 +34,10 @@ class ArticleDiffRepositoryImpl(
         return diffJpaRepository.findAllByArticleId(articleId).map { it.toDomain() }
     }
 
+    override fun countByArticleId(articleId: Long): Long {
+        return diffJpaRepository.countByArticleId(articleId)
+    }
+
     override fun findAllByIdsIn(diffs: List<Long>): List<ArticleDiff> {
         return diffJpaRepository.findAllByIdIsIn(diffs).map { it.toDomain() }
     }

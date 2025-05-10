@@ -14,12 +14,17 @@ class ArticleHistoryService(
 ) {
     fun calculateDiff(original: Article?, updated: Article) : ArticleDiff? {
         val originalContent = original?.content
+        val versionCount = original?.id?.let{ articleDiffRepository.countByArticleId(it)} ?: 0
+
         val diff = diffProcessor.calculateDiff(originalContent, updated.content)
         val prevVersion = original?.currentVersion
+        val isSnapshot = (versionCount % 10 == 0L)
 
         return diff?.let {
             ArticleDiff(
                 diffData = it,
+                isSnapshot = isSnapshot,
+                snapshotContent = if (isSnapshot) updated.content else null,
                 previousVersionId = prevVersion,
                 articleId = updated.id!!,
                 createdAt = updated.updatedAt,
