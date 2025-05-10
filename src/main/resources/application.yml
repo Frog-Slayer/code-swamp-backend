@@ -6,4 +6,4 @@ spring:
   config:
     import: application-secret.yml
   jpa:
-    show-sql: true
+    show-sql: false
