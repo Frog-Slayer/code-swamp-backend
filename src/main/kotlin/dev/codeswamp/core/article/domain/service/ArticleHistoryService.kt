@@ -43,9 +43,9 @@ class ArticleHistoryService(
         articleDiffRepository.deleteByArticleId(articleId)
     }
 
-    fun buildFullContentFromHistory(history: List<ArticleDiff>) : String {
+    fun buildFullContentFromHistory(snapshot: String, history: List<ArticleDiff>) : String {
         val sortedHistoryDiffList = history.sortedBy {  it.createdAt }.map{ it.diffData }
-        return diffProcessor.buildFullContentFromHistory( sortedHistoryDiffList)
+        return diffProcessor.buildFullContentFromHistory(snapshot, sortedHistoryDiffList)
     }
 
     fun rollbackTo(article: Article, rollbackVersionId: Long): Article {
@@ -59,7 +59,7 @@ class ArticleHistoryService(
         val diffPathIdList = diffProcessor.findDiffPathBetween(nearestSnapshotVersion, rollbackVersionId)
         val diffList = articleDiffRepository.findAllByIdsIn(diffPathIdList)
 
-        val fullContent = buildFullContentFromHistory(diffList)
+        val fullContent = buildFullContentFromHistory(diffList[0].snapshotContent!!, diffList)
 
         return article.copy(
             content = fullContent,

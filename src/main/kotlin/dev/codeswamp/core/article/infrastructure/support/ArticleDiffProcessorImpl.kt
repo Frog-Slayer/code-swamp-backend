@@ -29,15 +29,12 @@ class ArticleDiffProcessorImpl(
         ).joinToString("\n")
     }
 
-    override fun buildFullContentFromHistory(history: List<String>): String {
+    override fun buildFullContentFromHistory(snapshot: String, history: List<String>): String {
         if (history.isEmpty()) return ""
 
-        var fullContent = "".lines()
+        var fullContent = snapshot.lines()
 
-        //var fullContent = history.first().lines()
-
-        //for (diff in  history.drop(1)) {
-        for (diff in  history) {
+        for (diff in  history.drop(1)) {
             val patch = UnifiedDiffUtils.parseUnifiedDiff(diff.lines())
             fullContent = DiffUtils.patch(fullContent, patch)
         }

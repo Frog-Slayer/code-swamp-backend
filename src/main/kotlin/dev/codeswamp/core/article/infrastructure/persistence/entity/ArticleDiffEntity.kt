@@ -31,7 +31,13 @@ data class ArticleDiffEntity (
     val diffData: String,
 
     @Column(nullable = false, updatable = false)
-    val createdAt: Instant = Instant.now()
+    val createdAt: Instant = Instant.now(),
+
+    val isSnapshot: Boolean = false,
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    val snapshotContent: String? = null,
+
 ) {
 
     fun toDomain(): ArticleDiff {
@@ -40,7 +46,9 @@ data class ArticleDiffEntity (
             articleId = article.id!!,
             previousVersionId = previousVersion?.id,
             diffData = diffData,
-            createdAt = createdAt
+            createdAt = createdAt,
+            isSnapshot = isSnapshot,
+            snapshotContent = snapshotContent
         )
     }
 }
