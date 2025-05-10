@@ -5,6 +5,7 @@ import dev.codeswamp.core.article.domain.repository.ArticleDiffRepository
 import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleDiffEntity
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.ArticleDiffJpaRepository
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.ArticleJpaRepository
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -13,6 +14,7 @@ class ArticleDiffRepositoryImpl(
     private val articleJpaRepository: ArticleJpaRepository
 ) : ArticleDiffRepository {
 
+    @Transactional
     override fun save(articleDiff: ArticleDiff): ArticleDiff {
         return diffJpaRepository.save(
             ArticleDiffEntity(

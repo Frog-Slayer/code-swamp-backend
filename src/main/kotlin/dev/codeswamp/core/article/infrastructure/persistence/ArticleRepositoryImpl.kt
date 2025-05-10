@@ -22,6 +22,7 @@ class ArticleRepositoryImpl (
             id = article.id,
             title = article.title,
             authorId = article.authorId,
+            currentVersion =  article.currentVersion ?: 0,
             content = article.content,
             createdAt = article.createdAt,
             updatedAt = article.updatedAt,

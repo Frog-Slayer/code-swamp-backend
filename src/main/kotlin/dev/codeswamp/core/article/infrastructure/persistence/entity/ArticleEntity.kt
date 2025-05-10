@@ -28,7 +28,7 @@ data class ArticleEntity (
     val authorId: Long,
 
     @Column(nullable = false)
-    var currentVersion: Int = 0,
+    var currentVersion: Long = 0,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     val content: String,
@@ -60,6 +60,7 @@ data class ArticleEntity (
             isPublic = isPublic,
             createdAt = createdAt,
             updatedAt = updatedAt,
+            currentVersion = currentVersion,
             content = content
         )
     }
