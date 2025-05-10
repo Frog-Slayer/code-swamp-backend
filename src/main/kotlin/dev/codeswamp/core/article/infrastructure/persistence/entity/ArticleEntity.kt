@@ -1,5 +1,6 @@
 package dev.codeswamp.core.article.infrastructure.persistence.entity
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import dev.codeswamp.core.article.domain.model.Article
 import dev.codeswamp.core.article.domain.model.ArticleType
 import jakarta.persistence.Column
@@ -12,6 +13,7 @@ import jakarta.persistence.Table
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 @Entity
 @Table(name = "article")
@@ -33,10 +35,10 @@ data class ArticleEntity (
     @Column(nullable = false, columnDefinition = "TEXT")
     val content: String,
 
-    @CreatedDate
+    @Column(columnDefinition = "TIMESTAMP(3)")
     val createdAt: Instant = Instant.now(),
 
-    @LastModifiedDate
+    @Column(columnDefinition = "TIMESTAMP(3)")
     var updatedAt: Instant = Instant.now(),
 
     var isPublic: Boolean,
@@ -58,8 +60,8 @@ data class ArticleEntity (
             authorId = authorId,
             folderId = folderId,
             isPublic = isPublic,
-            createdAt = createdAt,
-            updatedAt = updatedAt,
+            createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
+            updatedAt = updatedAt.truncatedTo(ChronoUnit.MILLIS),
             currentVersion = currentVersion,
             content = content
         )

@@ -1,5 +1,6 @@
 package dev.codeswamp.core.article.domain.model
 
+import com.fasterxml.jackson.annotation.JsonFormat
 import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
 import java.time.Instant
 
@@ -14,7 +15,8 @@ data class Article (
 
     var isPublic: Boolean = true,
 
-    var createdAt: Instant = Instant.now(),
+    val createdAt: Instant = Instant.now(),
+
     var updatedAt: Instant = Instant.now(),
 
     var currentVersion: Long? = null,
@@ -35,7 +37,6 @@ data class Article (
     fun publish() {
         if (this.type != ArticleType.DRAFT) {
             this.type = ArticleType.PUBLISHED
-            createdAt = Instant.now()
         }
     }
 

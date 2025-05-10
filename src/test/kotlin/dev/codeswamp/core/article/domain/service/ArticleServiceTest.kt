@@ -69,9 +69,23 @@ class ArticleServiceTest (
         assertThat(saved.currentVersion).isEqualTo(1L)
     }
 
-
     @Test
     fun findById() {
+        val article = Article(
+            title = "title",
+            type = ArticleType.NEW,
+            authorId = 1L,
+            folderId = 1L,
+            isPublic = true,
+            createdAt = Instant.now(),
+            updatedAt = Instant.now(),
+            content = "this is my content"
+        )
+
+        val saved = articleService.create(article)
+        val found = articleService.findById(2L) ?: throw Exception("something went wrong")
+
+        assertThat(saved).isEqualTo(found)
     }
 
     @Test
