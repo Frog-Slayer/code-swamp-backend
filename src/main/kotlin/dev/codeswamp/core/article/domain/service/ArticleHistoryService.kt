@@ -58,7 +58,9 @@ class ArticleHistoryService(
         if (rollbackVersion.articleId != article.id) throw IllegalArgumentException("version does not match")
 
         val currentVersion = article.currentVersion
-        val lca = diffProcessor.findLCA(currentVersion,  rollbackVersionId)
+        val lca = diffProcessor.findLCA(currentVersion
+            ?:throw Exception("there's no current version'"),
+            rollbackVersionId)
         val nearestSnapshotVersion = diffProcessor.findNearestSnapShotBefore(lca)
 
         val diffPathIdList = diffProcessor.findDiffPathBetween(nearestSnapshotVersion, rollbackVersionId)

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class ArticleDiffProcessorImpl(
-    private val historyService: HistoryNodeService,
+    private val historyNodeService: HistoryNodeService,
 ) : ArticleDiffProcessor {
     override fun calculateDiff(old: String?, new: String): String? {
         val oldLines = old?.lines() ?: emptyList()
@@ -42,16 +42,14 @@ class ArticleDiffProcessorImpl(
     }
 
     override fun findLCA(versionAId: Long, versionBId: Long): Long {
-        TODO("Not yet implemented")
-        //return historyService.findLCA(versionAId, versionAId)
+        return historyNodeService.findLCA(versionAId, versionAId)
     }
 
     override fun findNearestSnapShotBefore(versionId: Long): Long {
-        TODO("Not yet implemented")
+        return historyNodeService.findNearestSnapShotBefore(versionId)
     }
 
     override fun findDiffPathBetween(from: Long, to: Long): List<Long> {
-        TODO("Not yet implemented")
-        //return historyService.findPathBetweenNodes(from, to)
+        return historyNodeService.findPathBetweenNodes(from, to)
     }
 }

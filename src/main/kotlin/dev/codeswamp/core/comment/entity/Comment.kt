@@ -1,5 +1,6 @@
 package dev.codeswamp.core.comment.entity
 
+import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleEntity
 import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -24,7 +25,7 @@ data class Comment(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id")
-    var articleId: Long,
+    var articleId: ArticleEntity,
 
     var content: String,
 

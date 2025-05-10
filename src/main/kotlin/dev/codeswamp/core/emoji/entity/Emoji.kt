@@ -1,5 +1,6 @@
 package dev.codeswamp.core.emoji.entity
 
+import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleEntity
 import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
@@ -16,7 +17,7 @@ data class Emoji (
 
     @ManyToOne
     @JoinColumn(name = "article_id")
-    val articleId: Long,
+    val articleId: ArticleEntity,
 
     @ManyToOne
     @JoinColumn(name = "user_id")
