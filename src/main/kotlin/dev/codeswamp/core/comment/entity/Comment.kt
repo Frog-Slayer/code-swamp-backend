@@ -1,6 +1,5 @@
 package dev.codeswamp.core.comment.entity
 
-import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleMetadataEntity
 import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -24,8 +23,8 @@ data class Comment(
     val author: UserEntity,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "article_metadata_id")
-    var articleMetadataEntity: ArticleMetadataEntity,
+    @JoinColumn(name = "article_id")
+    var articleId: Long,
 
     var content: String,
 

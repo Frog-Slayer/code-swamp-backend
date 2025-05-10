@@ -1,14 +1,14 @@
 package dev.codeswamp.core.article.infrastructure.graph.service
 
-import dev.codeswamp.core.article.infrastructure.graph.node.HistoryNode
 import dev.codeswamp.core.article.infrastructure.graph.repository.HistoryNodeRepository
-import io.jsonwebtoken.impl.security.EdwardsCurve.findById
+import org.springframework.stereotype.Service
 
+@Service
 class HistoryNodeServiceImpl(
     private val historyNodeRepository: HistoryNodeRepository,
     ) : HistoryNodeService {
 
-    override fun findLCA(diffId1: Long, diffId2: Long): Long? {
+    override fun findLCA(diffId1: Long, diffId2: Long): Long {
         val node1 = historyNodeRepository.findByDiffId(diffId1) ?: throw Exception("No node found")
         val node2 = historyNodeRepository.findByDiffId(diffId2) ?: throw Exception("No node found")
 
