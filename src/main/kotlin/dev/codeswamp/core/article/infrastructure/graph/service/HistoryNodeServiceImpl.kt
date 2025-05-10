@@ -9,7 +9,7 @@ class HistoryNodeServiceImpl(
     private val historyNodeRepository: HistoryNodeRepository,
     ) : HistoryNodeService {
     override fun addNode(node: HistoryNode) {
-        TODO("Not yet implemented")
+        historyNodeRepository.save(node)
     }
 
     override fun findLCA(diffId1: Long, diffId2: Long): Long {
