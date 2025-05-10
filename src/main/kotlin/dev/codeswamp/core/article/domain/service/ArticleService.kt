@@ -48,7 +48,7 @@ class ArticleService (
 
     @Transactional
     fun deleteById(articleId: Long) {
-        val article = articleRepository.findById(articleId) ?: throw IllegalArgumentException("Article not found")
-        articleRepository.delete(article)
+        articleHistoryService.deleteArticle(articleId)
+        articleRepository.deleteById(articleId)
     }
 }

@@ -35,8 +35,8 @@ class ArticleRepositoryImpl (
         return articleJpaRepository.save(articleEntity).toDomain()
     }
 
-    override fun delete(article: Article) {
-        articleJpaRepository.deleteById(article.id!!)
+    override fun deleteById(id: Long) {
+        articleJpaRepository.deleteById(id)
     }
 
     override fun findAllByIds(articleIds: List<Long>): List<Article> {
@@ -45,7 +45,7 @@ class ArticleRepositoryImpl (
 
     override fun findById(articleId: Long): Article? {
         return articleJpaRepository.findById(articleId)
+            .map { it.toDomain() }
             .orElse(null)
-            .toDomain()
     }
 }
