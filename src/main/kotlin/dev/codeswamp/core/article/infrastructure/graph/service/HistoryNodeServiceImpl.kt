@@ -9,6 +9,7 @@ class HistoryNodeServiceImpl(
     private val historyNodeRepository: HistoryNodeRepository,
     ) : HistoryNodeService {
     override fun addNode(node: HistoryNode) {
+
         historyNodeRepository.save(node)
     }
 

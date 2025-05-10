@@ -46,7 +46,7 @@ class ArticleDiffProcessorImpl(
     }
 
     override fun findNearestSnapShotBefore(versionId: Long): Long {
-        return historyNodeService.findNearestSnapShotBefore(versionId)
+        return historyNodeService.findNearestSnapshotBefore(versionId)
     }
 
     override fun findDiffPathBetween(from: Long, to: Long): List<Long> {

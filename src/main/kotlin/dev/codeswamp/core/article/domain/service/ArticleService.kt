@@ -15,7 +15,7 @@ class ArticleService (
     fun create(article: Article): Article {
         val saved = articleRepository.save(article)
 
-        val calculated = articleHistoryService.calculateDiff(null, article)
+        val calculated = articleHistoryService.calculateDiff(null,saved)
                 ?:throw Exception("something went wrong") //TODO
 
         val diff = articleHistoryService.save(calculated)

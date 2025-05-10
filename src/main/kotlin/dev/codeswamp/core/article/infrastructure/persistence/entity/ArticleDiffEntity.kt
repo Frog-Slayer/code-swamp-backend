@@ -35,7 +35,7 @@ data class ArticleDiffEntity (
 
     val isSnapshot: Boolean = false,
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     val snapshotContent: String? = null,
 
 ) {
