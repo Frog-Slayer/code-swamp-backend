@@ -1,12 +1,9 @@
-package dev.codeswamp.core.article.infrastructure.persistence
+package dev.codeswamp.core.article.infrastructure
 
 import dev.codeswamp.core.article.domain.model.Article
 import dev.codeswamp.core.article.domain.repository.ArticleRepository
-import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleDiffEntity
 import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleEntity
-import dev.codeswamp.core.article.infrastructure.persistence.jpa.ArticleDiffJpaRepository
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.ArticleJpaRepository
-import jakarta.transaction.Transactional
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -14,9 +11,9 @@ class ArticleRepositoryImpl (
     private val articleJpaRepository: ArticleJpaRepository,
 ) : ArticleRepository {
 
-    @Transactional
     override fun save(article: Article): Article {
         val existingArticleEntity = article.id?.let { articleJpaRepository.findById(it).orElse(null) }
+        //노드 생성 필요
 
         val articleEntity = ArticleEntity(
             id = article.id,
@@ -37,6 +34,7 @@ class ArticleRepositoryImpl (
 
     override fun deleteById(id: Long) {
         articleJpaRepository.deleteById(id)
+        //노드 삭제 필요
     }
 
     override fun findAllByIds(articleIds: List<Long>): List<Article> {

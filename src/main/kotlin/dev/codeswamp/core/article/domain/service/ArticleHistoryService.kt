@@ -6,7 +6,6 @@ import dev.codeswamp.core.article.domain.repository.ArticleDiffRepository
 import dev.codeswamp.core.article.domain.support.ArticleDiffProcessor
 import org.springframework.stereotype.Service
 import java.time.Instant
-import kotlin.math.E
 
 @Service
 class ArticleHistoryService(
@@ -57,6 +56,7 @@ class ArticleHistoryService(
             updatedAt = Instant.now()
         )
     }
+
     fun calculateDiff(original: Article?, updated: Article) : ArticleDiff? {
         val originalContent = original?.content
         val versionCount = original?.id?.let{ articleDiffRepository.countByArticleId(it)} ?: 0

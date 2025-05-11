@@ -2,8 +2,8 @@ package dev.codeswamp.core.article.domain.service
 
 import dev.codeswamp.core.article.domain.model.Article
 import dev.codeswamp.core.article.domain.repository.ArticleRepository
-import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class ArticleService (
@@ -11,7 +11,6 @@ class ArticleService (
     private val articleHistoryService: ArticleHistoryService
 ){
 
-    @Transactional
     fun create(article: Article): Article {
         val saved = articleRepository.save(article)
 
@@ -25,7 +24,6 @@ class ArticleService (
         return articleRepository.save(saved)
     }
 
-    @Transactional
     fun update(article: Article): Article {
         val original = articleRepository.findById(article.id!!) ?: throw IllegalArgumentException("Article does not exist")
 
@@ -46,7 +44,6 @@ class ArticleService (
         return articleRepository.findAllByIds(articleIds)
     }
 
-    @Transactional
     fun deleteById(articleId: Long) {
         articleHistoryService.deleteArticle(articleId)
         articleRepository.deleteById(articleId)

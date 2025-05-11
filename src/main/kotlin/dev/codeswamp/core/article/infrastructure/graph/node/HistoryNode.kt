@@ -1,6 +1,5 @@
 package dev.codeswamp.core.article.infrastructure.graph.node
 
-import dev.codeswamp.core.article.domain.model.Article
 import dev.codeswamp.core.article.domain.model.ArticleDiff
 import org.springframework.data.neo4j.core.schema.GeneratedValue
 import org.springframework.data.neo4j.core.schema.Id
@@ -13,16 +12,17 @@ data class HistoryNode(
     @Id @GeneratedValue
     val id: Long? = null,
 
+    val articleId: Long,
+
     val diffId: Long,
 
     @Relationship(type = "NEXT", direction = Relationship.Direction.INCOMING)
     val previous: HistoryNode? = null,
 
-    @Relationship(type = "NEXT", direction = Relationship.Direction.OUTGOING)
-    var next: List<HistoryNode> = emptyList()
 ) {
     companion object {
         fun fromDomain(diff: ArticleDiff, previous: HistoryNode?) = HistoryNode(
+            articleId = diff.articleId,
             diffId = diff.id!!,
             previous = previous
         )

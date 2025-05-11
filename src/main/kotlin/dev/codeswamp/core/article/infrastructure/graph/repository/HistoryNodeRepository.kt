@@ -9,6 +9,13 @@ import org.springframework.stereotype.Repository
 interface HistoryNodeRepository : Neo4jRepository<HistoryNode, Long> {
     fun findByDiffId(diffId: Long): HistoryNode?
 
+    @Query ("""
+        MATCH (n:HistoryNode) 
+        WHERE n.articleId = {articleId}
+        DETACH DELETE n 
+    """)
+    fun deleteAllByArticleId(articleId: Long)
+
     @Query("""
         MATCH (n1:HistoryNode)-[:NEXT*]->(ancestor:HistoryNode)<-[:NEXT*]-(n2:HistoryNode)
         WHERE n1.id = {node1Id} AND n2.id = {node2Id}
