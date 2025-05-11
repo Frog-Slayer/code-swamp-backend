@@ -5,6 +5,7 @@ import dev.codeswamp.core.article.domain.repository.ArticleRepository
 import dev.codeswamp.core.article.infrastructure.persistence.entity.ArticleEntity
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.ArticleJpaRepository
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 
 @Repository
 class ArticleRepositoryImpl (

@@ -28,7 +28,6 @@ class ArticleHistoryService(
         articleDiffRepository.deleteByArticleId(articleId)
     }
 
-
     fun rollbackTo(article: Article, rollbackVersionId: Long): Article {
         val rollbackVersion = findById(rollbackVersionId) ?: throw IllegalArgumentException("Rollback not found")
         if (rollbackVersion.articleId != article.id) throw IllegalArgumentException("version does not match")

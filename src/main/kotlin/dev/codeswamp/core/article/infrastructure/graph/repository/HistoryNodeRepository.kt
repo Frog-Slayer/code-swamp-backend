@@ -4,16 +4,13 @@ import dev.codeswamp.core.article.infrastructure.graph.node.HistoryNode
 import org.springframework.data.neo4j.repository.Neo4jRepository
 import org.springframework.data.neo4j.repository.query.Query
 import org.springframework.stereotype.Repository
+import org.springframework.transaction.annotation.Transactional
 
 @Repository
 interface HistoryNodeRepository : Neo4jRepository<HistoryNode, Long> {
     fun findByDiffId(diffId: Long): HistoryNode?
 
-    @Query ("""
-        MATCH (n:HistoryNode) 
-        WHERE n.articleId = {articleId}
-        DETACH DELETE n 
-    """)
+    @Transactional(transactionManager = "neo4jTransactionManager")
     fun deleteAllByArticleId(articleId: Long)
 
     @Query("""

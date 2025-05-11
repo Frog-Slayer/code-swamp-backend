@@ -11,6 +11,7 @@ class ArticleService (
     private val articleHistoryService: ArticleHistoryService
 ){
 
+    @Transactional
     fun create(article: Article): Article {
         val saved = articleRepository.save(article)
 
@@ -24,6 +25,7 @@ class ArticleService (
         return articleRepository.save(saved)
     }
 
+    @Transactional
     fun update(article: Article): Article {
         val original = articleRepository.findById(article.id!!) ?: throw IllegalArgumentException("Article does not exist")
 

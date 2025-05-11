@@ -26,4 +26,5 @@ spring:
 
 logging:
   level:
-    root: WARN
+    #root: WARN
+    org.springframework.data.neo4j: DEBUG

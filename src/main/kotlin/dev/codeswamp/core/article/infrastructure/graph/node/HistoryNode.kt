@@ -7,7 +7,7 @@ import org.springframework.data.neo4j.core.schema.Node
 import org.springframework.data.neo4j.core.schema.Relationship
 
 
-@Node("History")
+@Node("HistoryNode")
 data class HistoryNode(
     @Id @GeneratedValue
     val id: Long? = null,
