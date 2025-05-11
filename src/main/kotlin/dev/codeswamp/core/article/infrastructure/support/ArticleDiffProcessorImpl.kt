@@ -3,13 +3,10 @@ package dev.codeswamp.core.article.infrastructure.support
 import com.github.difflib.DiffUtils
 import com.github.difflib.UnifiedDiffUtils
 import dev.codeswamp.core.article.domain.support.ArticleDiffProcessor
-import dev.codeswamp.core.article.infrastructure.graph.service.HistoryNodeService
 import org.springframework.stereotype.Component
 
 @Component
-class ArticleDiffProcessorImpl(
-    private val historyNodeService: HistoryNodeService,
-) : ArticleDiffProcessor {
+class ArticleDiffProcessorImpl : ArticleDiffProcessor {
     override fun calculateDiff(old: String?, new: String): String? {
         val oldLines = old?.lines() ?: emptyList()
         val newLines = new.lines()
@@ -39,17 +36,5 @@ class ArticleDiffProcessorImpl(
             fullContent = DiffUtils.patch(fullContent, patch)
         }
         return fullContent.joinToString("\n")
-    }
-
-    override fun findLCA(versionAId: Long, versionBId: Long): Long {
-        return historyNodeService.findLCA(versionAId, versionAId)
-    }
-
-    override fun findNearestSnapShotBefore(versionId: Long): Long {
-        return historyNodeService.findNearestSnapshotBefore(versionId)
-    }
-
-    override fun findDiffPathBetween(from: Long, to: Long): List<Long> {
-        return historyNodeService.findPathBetweenNodes(from, to)
     }
 }

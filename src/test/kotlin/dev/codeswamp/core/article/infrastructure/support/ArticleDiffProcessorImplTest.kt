@@ -1,25 +1,13 @@
 package dev.codeswamp.core.article.infrastructure.support
 
-import dev.codeswamp.core.article.infrastructure.graph.service.HistoryNodeService
-import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import kotlin.test.assertEquals
 
-@ExtendWith(MockKExtension::class)
 class ArticleDiffProcessorImplTest {
 
-    @MockK
-    private lateinit var historyNodeService: HistoryNodeService
-
     private lateinit var processor: ArticleDiffProcessorImpl
-
-    @BeforeEach
-    fun setUp() {
-        processor = ArticleDiffProcessorImpl(historyNodeService)
-    }
 
     @Test
     fun calculateDiff() {

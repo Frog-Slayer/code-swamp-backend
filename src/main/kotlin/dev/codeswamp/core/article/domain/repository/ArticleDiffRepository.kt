@@ -11,4 +11,8 @@ interface ArticleDiffRepository {
 
     fun findAllByIdsIn(diffs: List<Long>) : List<ArticleDiff>
     fun deleteByArticleId(articleId: Long)
+
+    fun findLCA(version1Id: Long, version2Id: Long) : ArticleDiff?
+    fun findNearestSnapshotBefore(versionId: Long) : ArticleDiff
+    fun findDiffPathBetween(version1Id: Long, version2Id: Long) : List<ArticleDiff>
 }
