@@ -1,17 +1,15 @@
-package dev.codeswamp.core.article.application.service
+package dev.codeswamp.core.article.application.service.impl
 
+import dev.codeswamp.core.article.application.service.ArticleCommandService
 import dev.codeswamp.core.article.domain.service.ArticleService
-import dev.codeswamp.core.article.infrastructure.search.ArticleSearchRepository
 import dev.codeswamp.core.article.presentation.dto.request.ArticleMetadataDto
 import dev.codeswamp.core.article.presentation.dto.response.ArticleReadResponseDto
-import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
 import org.springframework.stereotype.Service
 
 @Service
-class ArticleApplicationServiceImpl(
+class ArticleCommandServiceImpl(
     private val articleService: ArticleService,
-    private val articleSearchRepository: ArticleSearchRepository,
-    ) : ArticleApplicationService {
+) : ArticleCommandService {
 
     override fun create(
         userId: Long,
@@ -36,19 +34,4 @@ class ArticleApplicationServiceImpl(
     override fun delete(userId: Long, articleId: Long) {
         TODO("Not yet implemented")
     }
-
-    override fun findByArticleId(
-        userId: Long?,
-        articleId: Long
-    ): ArticleReadResponseDto {
-        TODO("Not yet implemented")
-    }
-
-    override fun findAllByKeywords(
-        userId: Long?,
-        keywords: List<String>
-    ): List<ArticleReadResponseDto> {
-        TODO("Not yet implemented")
-    }
-
 }

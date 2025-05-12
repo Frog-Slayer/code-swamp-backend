@@ -99,10 +99,6 @@ class ArticleServiceTest (
     }
 
     @Test
-    fun findAllByIds() {
-    }
-
-    @Test
     fun deleteById() {
         articleService.deleteById(1L)
         assertNull(articleService.findById(1L))
