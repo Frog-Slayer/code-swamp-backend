@@ -47,6 +47,7 @@ dependencies {
 	implementation "io.jsonwebtoken:jjwt-jackson:0.12.6"
 
 	implementation "io.github.java-diff-utils:java-diff-utils:4.15"
+	implementation "com.vladsch.flexmark:flexmark-all:0.64.8"
 
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	runtimeOnly 'com.h2database:h2'

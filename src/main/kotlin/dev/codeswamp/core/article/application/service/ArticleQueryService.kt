@@ -4,6 +4,6 @@ import dev.codeswamp.core.article.presentation.dto.response.ArticleReadResponseD
 
 interface ArticleQueryService {
     fun findByArticleId(userId: Long?, articleId: Long): ArticleReadResponseDto
-    fun findAllByKeywords(userId: Long?, keywords: List<String>): List<ArticleReadResponseDto>
+    fun findAllByKeywords(userId: Long?, keywords: List<String>): List<ArticleReadResponseDto>//TODO
 
 }
