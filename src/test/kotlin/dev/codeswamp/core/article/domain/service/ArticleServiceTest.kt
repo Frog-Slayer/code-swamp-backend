@@ -137,4 +137,31 @@ class ArticleServiceTest (
         assertNotNull(currentPrev?.id)
         assertThat(currentPrev?.id).isEqualTo(1L)
     }
+
+    @Test
+    fun treebuildTest() {
+        fun roll(version: Long) : Long {
+            val saved= articleService.findById( 1L) ?: throw Exception("something went wrong")
+            saved.changeContent("updated $version")
+            val updated = articleService.update(saved)
+            val rollbacked = articleService.rollbackTo(updated, version)
+            rollbacked.changeContent("updated after rollback $version")
+
+            return articleService.update(rollbacked).currentVersion!!
+        }
+
+        val depth = 3;
+
+        fun build(current: Long, currentDepth: Int) {
+            if (currentDepth >= depth) return
+
+            val leftVer = roll(current)
+            val rightVer = roll(current)
+
+            build(leftVer, currentDepth + 1)
+            build(rightVer, currentDepth + 1)
+        }
+
+        build(1L, 0)
+    }
 }
