@@ -55,9 +55,8 @@ class ArticleServiceTest (
         assertThat(saved.content).isEqualTo(updateString)
         assertThat(saved.id).isEqualTo(1L)
 
-        val currentVersion = saved.currentVersion
-        val currentDiffId = historyService.findById(currentVersion!!)?.id ?: throw Exception("something went wrong")
-        val node = historyNodeRepository.findByDiffId(currentDiffId)
+        val currentVersion = saved.currentVersion?:throw Exception("something went wrong")
+        val node = historyNodeRepository.findByDiffId(currentVersion)
 
         assertThat(node?.previous).isNotNull()
     }
@@ -109,4 +108,33 @@ class ArticleServiceTest (
         assertNull(articleService.findById(1L))
     }
 
+    @Test
+    fun rollback() {
+        val saved = articleService.findById(1L) ?: throw Exception("something went wrong")
+        println(saved)
+        saved.changeContent("second version")
+
+        val updated = articleService.update(saved)
+        assertNotNull(updated.currentVersion)
+        assertThat(updated.currentVersion).isEqualTo(2L)
+        println(updated)
+
+        val rollbacked = articleService.rollbackTo(updated, 1L)
+        assertNotNull(rollbacked.currentVersion)
+        assertThat(rollbacked.currentVersion).isEqualTo(1L)
+        println(rollbacked)
+        rollbacked.changeContent("third version")
+
+        val doubleUpdated = articleService.update(rollbacked)
+        assertNotNull(doubleUpdated.currentVersion)
+        assertThat(doubleUpdated.currentVersion).isEqualTo(3L)
+        println(doubleUpdated)
+
+        val currentPrevId = historyService.findById(doubleUpdated.currentVersion!!)!!.previousVersionId
+        assertNotNull(currentPrevId)
+
+        val currentPrev = historyService.findById(currentPrevId!!)
+        assertNotNull(currentPrev?.id)
+        assertThat(currentPrev?.id).isEqualTo(1L)
+    }
 }

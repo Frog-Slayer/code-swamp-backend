@@ -26,6 +26,8 @@ class ArticleDiffRepositoryImpl(
         val saved = diffJpaRepository.save(
             ArticleDiffEntity(
                 article = article,
+                isSnapshot = articleDiff.isSnapshot,
+                snapshotContent = articleDiff.snapshotContent,
                 previousVersion = prevVersion,
                 diffData = articleDiff.diffData,
                 createdAt = articleDiff.createdAt,
@@ -36,6 +38,7 @@ class ArticleDiffRepositoryImpl(
             HistoryNode(
                 diffId = saved.id!!,
                 articleId = article.id!!,
+                isSnapshot = saved.isSnapshot,
                 previous = prevVersion?.id?.let { historyNodeRepository.findByDiffId(it) }
             )
         )
@@ -66,11 +69,8 @@ class ArticleDiffRepositoryImpl(
     }
 
     override fun findLCA(version1Id: Long, version2Id: Long): ArticleDiff? {
-        val node1Id = historyNodeRepository.findByDiffId(version1Id)?.id?: throw Exception("No node found")
-        val node2Id = historyNodeRepository.findByDiffId(version2Id)?.id?: throw Exception("No node found")
-
-        val lca = historyNodeRepository.findLCA(node1Id, node2Id)
-            ?: throw IllegalArgumentException("No LCA found between nodes $node1Id $node2Id")
+        val lca = historyNodeRepository.findLCA(version1Id, version2Id)
+            ?: throw IllegalArgumentException("No LCA found between nodes $version1Id $version2Id")
 
         val lcaDiffId= lca.diffId
 
@@ -78,9 +78,7 @@ class ArticleDiffRepositoryImpl(
     }
 
     override fun findNearestSnapshotBefore(versionId: Long): ArticleDiff {
-        val nodeId = historyNodeRepository.findByDiffId(versionId)?.id?: throw Exception("No node found")
-
-        val nearestSnapshotId =  historyNodeRepository.findNearestSnapshotBefore(nodeId).diffId
+        val nearestSnapshotId =  historyNodeRepository.findNearestSnapshotBefore(versionId).diffId
 
         return findById(nearestSnapshotId) ?: throw Exception("cannot find nearest snapshot")
     }
@@ -89,10 +87,7 @@ class ArticleDiffRepositoryImpl(
         version1Id: Long,
         version2Id: Long
     ): List<ArticleDiff> {
-        val node1Id = historyNodeRepository.findByDiffId(version1Id)?.id?: throw Exception("No node found")
-        val node2Id = historyNodeRepository.findByDiffId(version2Id)?.id?: throw Exception("No node found")
-
-        val path = historyNodeRepository.findPathBetween(node1Id, node2Id).map{ it.diffId }
+        val path = historyNodeRepository.findPathBetween(version1Id, version2Id).map{ it.diffId }
 
         return findAllByIdsIn(path)
     }

@@ -28,22 +28,17 @@ class ArticleHistoryService(
         articleDiffRepository.deleteByArticleId(articleId)
     }
 
-    fun rollbackTo(article: Article, rollbackVersionId: Long): Article {
+    fun getRollbackedArticle(article: Article, rollbackVersionId: Long): Article {
         val rollbackVersion = findById(rollbackVersionId) ?: throw IllegalArgumentException("Rollback not found")
         if (rollbackVersion.articleId != article.id) throw IllegalArgumentException("version does not match")
 
-        val currentVersion = article.currentVersion
-        val lca = articleDiffRepository.findLCA(currentVersion
-            ?:throw Exception("there's no current version'"),
-            rollbackVersionId)
+        val currentVersion = article.currentVersion ?: throw Exception("currentVersion is not set")
 
-        val nearestSnapshotVersion = articleDiffRepository.findNearestSnapshotBefore(lca?.id
-            ?:throw Exception("The two versions do not belong to the same article.")
-        )
+        val lca = articleDiffRepository.findLCA(currentVersion, rollbackVersionId)?.id ?: throw Exception("The two versions do not belong to the same article")
 
-        val diffList = articleDiffRepository.findDiffPathBetween(nearestSnapshotVersion.id
-            ?: throw Exception("The two versions do not belong to the same article.")
-            , rollbackVersionId)
+        val nearestSnapshotVersion = articleDiffRepository.findNearestSnapshotBefore(lca).id ?: throw Exception("id not set")
+
+        val diffList = articleDiffRepository.findDiffPathBetween(nearestSnapshotVersion,rollbackVersionId)
 
         val fullContent = buildFullContentFromHistory(diffList[0].snapshotContent
             ?: throw Exception("Failed to load snapshot content")

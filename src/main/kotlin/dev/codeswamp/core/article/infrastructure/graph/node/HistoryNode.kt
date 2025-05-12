@@ -1,6 +1,7 @@
 package dev.codeswamp.core.article.infrastructure.graph.node
 
 import dev.codeswamp.core.article.domain.model.ArticleDiff
+import jakarta.validation.Constraint
 import org.springframework.data.neo4j.core.schema.GeneratedValue
 import org.springframework.data.neo4j.core.schema.Id
 import org.springframework.data.neo4j.core.schema.Node
@@ -15,6 +16,8 @@ data class HistoryNode(
     val articleId: Long,
 
     val diffId: Long,
+
+    val isSnapshot: Boolean = false,
 
     @Relationship(type = "NEXT", direction = Relationship.Direction.INCOMING)
     val previous: HistoryNode? = null,

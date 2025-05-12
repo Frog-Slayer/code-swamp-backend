@@ -30,6 +30,7 @@ class ArticleService (
         val original = articleRepository.findById(article.id!!) ?: throw IllegalArgumentException("Article does not exist")
 
         val diff = articleHistoryService.calculateDiff(original, article)
+
         if (diff != null) {
             val savedDiff = articleHistoryService.save(diff)
             article.currentVersion = savedDiff.id!!
@@ -49,5 +50,11 @@ class ArticleService (
     fun deleteById(articleId: Long) {
         articleHistoryService.deleteArticle(articleId)
         articleRepository.deleteById(articleId)
+    }
+
+    @Transactional
+    fun rollbackTo(article: Article,  rollbackVersionId: Long): Article {
+        val rollbackedArticle = articleHistoryService.getRollbackedArticle(article, rollbackVersionId)
+        return articleRepository.save(rollbackedArticle)
     }
 }
