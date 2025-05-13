@@ -1,4 +1,7 @@
 package dev.codeswamp.core.article.application.dto
 
-class ArticleSearchDTO {
-}
+//TODO 페이지네이션
+data class ArticleSearchDTO (
+    val keyword: String,
+)
+
