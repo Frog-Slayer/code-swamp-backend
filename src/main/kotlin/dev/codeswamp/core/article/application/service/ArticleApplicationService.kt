@@ -5,7 +5,6 @@ import dev.codeswamp.core.article.presentation.dto.response.ArticleReadResponseD
 import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
 
 interface ArticleApplicationService {
-
     fun create(userId: Long, metadata: ArticleMetadataDto, content: String)
 
     fun updateArticleMetadata(userId: Long, articleId: Long, metadata: ArticleMetadataDto)

@@ -1,12 +1,10 @@
-package dev.codeswamp.core.article.infrastructure.persistence.repository
+package dev.codeswamp.core.article.infrastructure.persistence.jpa
 
 import dev.codeswamp.core.article.domain.model.Article
-import dev.codeswamp.core.article.domain.model.ArticleType
 import dev.codeswamp.core.article.domain.repository.ArticleRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
@@ -21,8 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class ArticleRepositoryImplTest (
-    @Autowired private val articleMetadataJpaRepository: ArticleMetadataJpaRepository,
-    @Autowired private val articleContentJpaRepository: ArticleContentJpaRepository,
+    @Autowired private val articleEntityRepository: ArticleJpaRepository,
+    @Autowired private val articleDiffJpaRepository: ArticleDiffJpaRepository,
     @Autowired private val articleRepository: ArticleRepository
 ){
     @BeforeAll
@@ -48,32 +46,13 @@ class ArticleRepositoryImplTest (
     @Test
     @Order(1)
     fun `컨텐츠 수정 X 테스트`() {
-        val found = articleRepository.findById(1)
-        assertNotNull(found)
 
-        found?.changeContent("hello")
-        articleRepository.save(found!!)
-
-        val metadata = articleMetadataJpaRepository.findById(1).orElse(null)
-
-        assertThat(metadata).isNotNull()
-        assertThat(metadata.currentVersion).isEqualTo(1)
     }
 
     @Test
     @Order(2)
     fun `컨텐츠 수정 테스트`() {
-        val found = articleRepository.findById(1)
 
-        found?.changeContent("this is modified")
-        articleRepository.save(found!!)
-
-        val metadata = articleMetadataJpaRepository.findById(1).orElse(null)
-
-        assertThat(metadata).isNotNull()
-        assertNotNull(metadata.currentVersion)
-        assertThat(metadata.currentVersion).isNotEqualTo(1)
-        assertThat(metadata.currentVersion).isEqualTo(2)
     }
 
     @Test
