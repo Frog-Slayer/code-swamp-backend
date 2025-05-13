@@ -38,15 +38,16 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'
     implementation 'io.projectreactor.kotlin:reactor-kotlin-extensions'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-reactor'
-	implementation "org.springframework.boot:spring-boot-starter-validation"
-	implementation "com.fasterxml.jackson.module:jackson-module-kotlin"
-	implementation "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
-	implementation "io.jsonwebtoken:jjwt-api:0.12.6"
-	implementation "io.jsonwebtoken:jjwt-impl:0.12.6"
-	implementation "io.jsonwebtoken:jjwt-jackson:0.12.6"
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+	implementation 'io.jsonwebtoken:jjwt-impl:0.12.6'
+	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.6'
 
-	implementation "io.github.java-diff-utils:java-diff-utils:4.15"
+	implementation 'io.github.java-diff-utils:java-diff-utils:4.15'
+	implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
 
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	runtimeOnly 'com.h2database:h2'
@@ -56,8 +57,8 @@ dependencies {
 	testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
 	testImplementation 'org.springframework.graphql:spring-graphql-test'
 	testImplementation 'org.springframework.security:spring-security-test'
-	testImplementation "io.mockk:mockk:1.14.2"
-	testImplementation "org.assertj:assertj-core:3.27.3"
+	testImplementation 'io.mockk:mockk:1.14.2'
+	testImplementation 'org.assertj:assertj-core:3.27.3'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 

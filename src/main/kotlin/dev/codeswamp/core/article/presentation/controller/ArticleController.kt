@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.presentation.controller
 
-import dev.codeswamp.core.article.application.service.ArticleApplicationService
+import dev.codeswamp.core.article.application.service.ArticleCommandService
 import dev.codeswamp.core.article.domain.model.Article
 import dev.codeswamp.core.article.presentation.dto.request.ArticleMetadataDto
 import dev.codeswamp.core.article.presentation.dto.response.ArticleReadResponseDto
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/articles")
 class ArticleController(
-    private val articleApplicationService: ArticleApplicationService
+    private val articleCommandService: ArticleCommandService
 ){
     @GetMapping("/{id}")
     fun getArticle(@AuthenticationPrincipal user: UserEntity, @PathVariable id:Long): ArticleReadResponseDto? {
