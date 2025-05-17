@@ -1,7 +1,7 @@
 package dev.codeswamp.global.auth.infrastructure.config
 
 import ch.qos.logback.classic.spi.ConfiguratorRank
-import dev.codeswamp.global.auth.infrastructure.oauth2.CustomOAuth2Service
+import dev.codeswamp.global.auth.infrastructure.oauth2.service.CustomOAuth2Service
 import dev.codeswamp.global.auth.infrastructure.oauth2.handler.OAuth2LoginFailureHandler
 import dev.codeswamp.global.auth.infrastructure.oauth2.handler.OAuth2LoginSuccessHandler
 import org.springframework.context.annotation.Bean
