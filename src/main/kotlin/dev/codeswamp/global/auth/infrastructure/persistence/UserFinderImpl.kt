@@ -20,10 +20,20 @@ class UserFinderImpl(
     }
 
     override fun findById(id: Long): AuthUser? {
-                val user = userRepository.findById(id) ?: throw IllegalStateException("User not found")//TODO
+        val user = userRepository.findById(id) ?: throw IllegalStateException("User not found")//TODO
 
         return AuthUser(
             id = user.id!!,
+            username = user.email,
+            roles = setOf(user.role.name),//TODO
+        )
+    }
+
+    override fun findByEmail(email: String): AuthUser? {
+        val user = userRepository.findByEmail(email)
+
+        return AuthUser(
+            id = user?.id!!,
             username = user.email,
             roles = setOf(user.role.name),//TODO
         )
