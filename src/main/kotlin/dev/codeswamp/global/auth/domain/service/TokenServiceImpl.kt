@@ -53,6 +53,14 @@ class TokenServiceImpl(
         )
     }
 
+    override fun parseAccessToken(accessToken: String): RawAccessToken {
+        return tokenParser.parseAccessToken(accessToken)
+    }
+
+    override fun parseRefreshToken(refreshToken: String): RawRefreshToken {
+        return tokenParser.parseRefreshToken(refreshToken)
+    }
+
     override fun storeRefreshToken(token: ValidatedRefreshToken) {
         tokenRepository.storeRefreshToken(token)
     }
