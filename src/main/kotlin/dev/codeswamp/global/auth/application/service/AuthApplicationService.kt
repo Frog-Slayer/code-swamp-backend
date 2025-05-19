@@ -1,7 +1,7 @@
 package dev.codeswamp.global.auth.application.service
 
 import dev.codeswamp.global.auth.application.dto.rawHttp.RawHttpRequest
-import dev.codeswamp.global.auth.application.dto.RawHttpResponse
+import dev.codeswamp.global.auth.application.dto.rawHttp.RawHttpResponse
 import dev.codeswamp.global.auth.domain.model.authToken.ValidatedRefreshToken
 import org.springframework.stereotype.Service
 

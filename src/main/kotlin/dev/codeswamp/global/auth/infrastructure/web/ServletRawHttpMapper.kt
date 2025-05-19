@@ -1,7 +1,7 @@
 package dev.codeswamp.global.auth.infrastructure.web
 
 import dev.codeswamp.global.auth.application.dto.rawHttp.RawHttpRequest
-import dev.codeswamp.global.auth.application.dto.RawHttpResponse
+import dev.codeswamp.global.auth.application.dto.rawHttp.RawHttpResponse
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
