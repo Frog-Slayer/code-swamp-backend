@@ -1,13 +1,10 @@
 package dev.codeswamp.global.auth.infrastructure.oauth2.handler
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.nimbusds.openid.connect.sdk.claims.UserInfo
 import dev.codeswamp.global.auth.domain.model.AuthUser
 import dev.codeswamp.global.auth.domain.service.TokenService
 import dev.codeswamp.global.auth.domain.service.UserFinder
 import dev.codeswamp.global.auth.infrastructure.oauth2.dto.ProviderUserInfo
 import dev.codeswamp.global.auth.infrastructure.oauth2.factory.UserInfoFactory
-import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication
@@ -75,8 +72,8 @@ class OAuth2LoginSuccessHandler(
             .queryParam("isNewUser", false)
             .queryParam("accessToken", accessToken)
             .queryParam("email", userInfo.email)
-            .queryParam("name", userInfo.name)
-            .queryParam("profileImage", userInfo.profileImage)
+            .queryParam("name", userInfo.name)//여기
+            .queryParam("profileImage", userInfo.profileImage)//여기
         .build().toUriString()
 
         response.sendRedirect(redirectUrl)
