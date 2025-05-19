@@ -1,8 +1,11 @@
 package dev.codeswamp.global.auth.infrastructure.oauth2.handler
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.nimbusds.openid.connect.sdk.claims.UserInfo
+import dev.codeswamp.global.auth.domain.model.AuthUser
 import dev.codeswamp.global.auth.domain.service.TokenService
 import dev.codeswamp.global.auth.domain.service.UserFinder
+import dev.codeswamp.global.auth.infrastructure.oauth2.dto.ProviderUserInfo
 import dev.codeswamp.global.auth.infrastructure.oauth2.factory.UserInfoFactory
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
@@ -14,15 +17,18 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler
 import org.springframework.stereotype.Component
+import org.springframework.web.util.UriComponentsBuilder
 
 @Component
 class OAuth2LoginSuccessHandler(
     private val userFinder: UserFinder,
-    private val objectMapper: ObjectMapper,
     private val tokenService: TokenService,
     private val userInfoFactory: UserInfoFactory,
     private val authorizedClientService: OAuth2AuthorizedClientService
 ) : AuthenticationSuccessHandler {
+
+    val frontendCallbackUrl: String = "http://localhost:3000/auth/callback"
+
     override fun onAuthenticationSuccess(
         request: HttpServletRequest,
         response: HttpServletResponse,
@@ -36,30 +42,43 @@ class OAuth2LoginSuccessHandler(
             oauth2Token.name
         ).accessToken.tokenValue
 
-        println(oAuth2User.attributes)
-
         val userInfo = userInfoFactory.extract(registrationId, oAuth2User, oauth2AccessToken)
         val user = userFinder.findByEmail(userInfo.email)
 
         if  (user == null) {
-            response?.status = 401
-            response.contentType = "application/json"
-            response.writer.write(objectMapper.writeValueAsString(userInfo))
+            handleNewUser(response, userInfo)
             return;
         }
 
-        //TODO -> 별도의 로직으로 분리
+        handleRegisteredUserAndPassTokens(response, user, userInfo)
+    }
+
+    private fun handleNewUser(response: HttpServletResponse, userInfo: ProviderUserInfo) {
+        val redirectUrl = UriComponentsBuilder
+            .fromUriString(frontendCallbackUrl)
+            .queryParam("isNewUser", true)
+            .queryParam("email", userInfo.email)
+            .queryParam("name", userInfo.name)
+            .queryParam("profileImage",userInfo.profileImage)
+            .build().toUriString()
+
+        response.sendRedirect(redirectUrl)
+        return;
+    }
+
+    //TODO: ProviderUserInfo가 아니라, 저장된 정보를 가지고 와야 함
+    private fun handleRegisteredUserAndPassTokens(response: HttpServletResponse, user: AuthUser, userInfo: ProviderUserInfo) {
         val accessToken = tokenService.issueAccessToken(user)
-        val refreshToken = tokenService.issueRefreshToken(user)
 
-        response.setHeader("Authorization", "Bearer $accessToken")
-        val refreshTokenCookie = Cookie("refresh_token", refreshToken.value).apply {
-            path = "/"
-            isHttpOnly = true
-            secure = true
-            maxAge = 60 * 60 * 24 * 14
-        }
+        val redirectUrl = UriComponentsBuilder
+            .fromUriString(frontendCallbackUrl)
+            .queryParam("isNewUser", false)
+            .queryParam("accessToken", accessToken)
+            .queryParam("email", userInfo.email)
+            .queryParam("name", userInfo.name)
+            .queryParam("profileImage", userInfo.profileImage)
+        .build().toUriString()
 
-        response.addCookie(refreshTokenCookie)
+        response.sendRedirect(redirectUrl)
     }
 }
