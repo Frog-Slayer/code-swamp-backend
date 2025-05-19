@@ -13,7 +13,7 @@ class MeiliSearchConfig {
     private val apikey = "Uyflv5mWWF3Apyp23PhvAPyFpVnJB6CC_coToMPFcrk" //TODO
 
     @Bean
-    fun meiliWebclient(): WebClient {
+    fun meiliWebClient(): WebClient {
         return WebClient.builder()
             .baseUrl(baseUrl)
             .defaultHeader(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)

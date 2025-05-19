@@ -19,4 +19,8 @@ interface TokenService {
     //validate
     fun validateAccessToken(accessToken: RawAccessToken) : ValidatedAccessToken
     fun validateRefreshToken(refreshToken: RawRefreshToken) : ValidatedRefreshToken
+
+    //parse
+    fun parseAccessToken(accessToken: String): RawAccessToken
+    fun parseRefreshToken(refreshToken: String): RawRefreshToken
 }

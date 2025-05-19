@@ -4,6 +4,7 @@ import dev.codeswamp.core.article.application.dto.ArticleIndexDTO
 import dev.codeswamp.core.article.application.dto.ArticleSearchDTO
 import dev.codeswamp.core.article.application.support.ArticleSearchIndexer
 import jakarta.annotation.PostConstruct
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
@@ -12,7 +13,7 @@ import kotlin.collections.emptyList
 
 @Component
 class MeiliSearchIndexer(
-    private val meiliClient : WebClient,
+    @Qualifier("meiliWebClient") private val meiliClient : WebClient,
 ) : ArticleSearchIndexer {
 
     @PostConstruct
