@@ -5,9 +5,11 @@ import dev.codeswamp.global.auth.domain.model.token.Subject
 import dev.codeswamp.global.auth.domain.model.token.SubjectType
 import dev.codeswamp.global.auth.domain.repository.AuthUserRepository
 import dev.codeswamp.global.auth.domain.service.AuthUserService
+import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 
 @Service
+@Primary
 class AuthUserServiceImpl(
     private val authUserRepository: AuthUserRepository
 ): AuthUserService {

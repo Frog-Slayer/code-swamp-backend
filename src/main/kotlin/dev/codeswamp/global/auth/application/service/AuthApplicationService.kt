@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 
 @Service
-@Primary
 class AuthApplicationService (
     private val tokenService: TokenService,
     private val authUserService: AuthUserService,
