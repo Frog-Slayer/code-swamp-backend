@@ -1,7 +1,9 @@
 package dev.codeswamp.global.auth.application.service
 
+import dev.codeswamp.global.auth.application.dto.UserProfile
 import dev.codeswamp.global.auth.application.dto.rawHttp.RawHttpRequest
 import dev.codeswamp.global.auth.application.dto.rawHttp.RawHttpResponse
+import dev.codeswamp.global.auth.domain.model.AuthUser
 import dev.codeswamp.global.auth.domain.model.authToken.RawAccessToken
 import dev.codeswamp.global.auth.domain.model.authToken.RawRefreshToken
 import dev.codeswamp.global.auth.domain.model.authToken.ValidatedRefreshToken
@@ -30,4 +32,18 @@ class AuthApplicationService (
         return response.copy(cookies = updatedCookies)
     }
 
+    fun refresh(rawRefreshToken: RawRefreshToken) : ValidatedRefreshToken {
+        val oldToken = tokenService.validateRefreshToken(rawRefreshToken)
+        val authUser = oldToken.authUser
+
+        val newToken = tokenService.issueRefreshToken(authUser)
+
+        tokenService.rotateRefreshToken(newToken)
+        return newToken;
+    }
+
+    fun getUserProfile(authUser: AuthUser): UserProfile {
+
+
+    }
 }
