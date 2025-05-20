@@ -17,7 +17,7 @@ class AuthApplicationService (
     private val tokenService: TokenService,
     private val authUserService: AuthUserService,
 ) : TokenService by tokenService,
-    AuthUserService by authUserService,
+    AuthUserService by authUserService
 {
     fun extractAccessToken(request: RawHttpRequest): RawAccessToken? {
         return request.headers["Authorization"]

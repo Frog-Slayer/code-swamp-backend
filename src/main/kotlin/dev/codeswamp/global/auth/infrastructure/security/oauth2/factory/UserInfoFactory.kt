@@ -1,9 +1,9 @@
-package dev.codeswamp.global.auth.infrastructure.oauth2.factory
+package dev.codeswamp.global.auth.infrastructure.security.oauth2.factory
 
-import dev.codeswamp.global.auth.infrastructure.oauth2.client.GithubClient
-import dev.codeswamp.global.auth.infrastructure.oauth2.dto.GithubUserInfo
-import dev.codeswamp.global.auth.infrastructure.oauth2.dto.GoogleUserInfo
-import dev.codeswamp.global.auth.infrastructure.oauth2.dto.ProviderUserInfo
+import dev.codeswamp.global.auth.infrastructure.security.oauth2.client.GithubClient
+import dev.codeswamp.global.auth.infrastructure.security.oauth2.dto.GithubUserInfo
+import dev.codeswamp.global.auth.infrastructure.security.oauth2.dto.GoogleUserInfo
+import dev.codeswamp.global.auth.infrastructure.security.oauth2.dto.ProviderUserInfo
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Component
 

@@ -1,4 +1,4 @@
-package dev.codeswamp.global.auth.infrastructure.oauth2.service
+package dev.codeswamp.global.auth.infrastructure.security.oauth2.service
 
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService

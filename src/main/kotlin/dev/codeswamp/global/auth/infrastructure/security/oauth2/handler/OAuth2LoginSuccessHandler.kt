@@ -1,11 +1,11 @@
-package dev.codeswamp.global.auth.infrastructure.oauth2.handler
+package dev.codeswamp.global.auth.infrastructure.security.oauth2.handler
 
 import dev.codeswamp.global.auth.application.service.UserProfileFetcher
 import dev.codeswamp.global.auth.domain.model.AuthUser
 import dev.codeswamp.global.auth.domain.service.AuthUserService
 import dev.codeswamp.global.auth.domain.service.TokenService
-import dev.codeswamp.global.auth.infrastructure.oauth2.dto.ProviderUserInfo
-import dev.codeswamp.global.auth.infrastructure.oauth2.factory.UserInfoFactory
+import dev.codeswamp.global.auth.infrastructure.security.oauth2.dto.ProviderUserInfo
+import dev.codeswamp.global.auth.infrastructure.security.oauth2.factory.UserInfoFactory
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication

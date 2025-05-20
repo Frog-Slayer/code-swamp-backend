@@ -1,10 +1,12 @@
-package dev.codeswamp.global.auth.infrastructure
+package dev.codeswamp.global.auth.infrastructure.security.filter
 
 import dev.codeswamp.global.auth.application.service.AuthApplicationService
+import dev.codeswamp.global.auth.infrastructure.security.token.AuthenticationToken
 import dev.codeswamp.global.auth.infrastructure.web.ServletRawHttpMapper
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.security.authentication.AuthenticationServiceException
 import org.springframework.security.core.Authentication
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
 import org.springframework.security.web.util.matcher.RequestMatcher
@@ -18,10 +20,12 @@ class TokenAuthenticationFilter(
         request: HttpServletRequest,
         response: HttpServletResponse
     ): Authentication? {
-        val rawAccessToken = authApplicationService.extractAccessToken(ServletRawHttpMapper.toRawRequest(request))
+        val rawAccessToken = authApplicationService.extractAccessToken(ServletRawHttpMapper.toRawRequest(request)) ?: throw AuthenticationServiceException(
+            "cannot extract access token"
+        )
 
-        val preAuthenticated = AuthenticationToken.unAuthenticated(rawAccessToken, null)
-        return this.authenticationManager().authenticate(preAuthenticated)
+        val preAuthenticated = AuthenticationToken.Companion.unAuthenticated(rawAccessToken, null)
+        return authenticationManager.authenticate(preAuthenticated)
     }
 
     override fun successfulAuthentication(

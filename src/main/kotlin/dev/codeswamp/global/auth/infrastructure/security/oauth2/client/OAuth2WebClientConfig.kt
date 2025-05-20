@@ -1,4 +1,4 @@
-package dev.codeswamp.global.auth.infrastructure.oauth2.client
+package dev.codeswamp.global.auth.infrastructure.security.oauth2.client
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

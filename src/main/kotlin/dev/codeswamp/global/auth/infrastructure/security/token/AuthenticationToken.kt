@@ -1,4 +1,4 @@
-package dev.codeswamp.global.auth.infrastructure
+package dev.codeswamp.global.auth.infrastructure.security.token
 
 import dev.codeswamp.global.auth.domain.model.token.RawAccessToken
 import org.springframework.security.authentication.AbstractAuthenticationToken
@@ -13,7 +13,7 @@ sealed class Principal {
 class AuthenticationToken private constructor(
     private val principal: Principal,
     private val credentials: Any?,
-    authorities: Collection<GrantedAuthority>? = null,
+    authorities: Collection<GrantedAuthority?>? = null,
     isAuthenticated: Boolean
 ): AbstractAuthenticationToken(authorities) {
 
@@ -31,18 +31,19 @@ class AuthenticationToken private constructor(
 
     companion object {
         fun authenticated (
-            principal: Principal.AuthenticatedUser,
+            principal: UserDetails,
             credentials: Any?,
-            authorities: Collection<GrantedAuthority>
+            authorities: Collection<GrantedAuthority?>?
         ) : AuthenticationToken {
-            return AuthenticationToken(principal, credentials, authorities, true)
+            return AuthenticationToken(Principal.AuthenticatedUser(principal),
+                credentials, authorities, true)
         }
 
         fun unAuthenticated (
-            principal: Principal. AccessToken,
+            principal: RawAccessToken,
             credentials: Any?,
         ) : AuthenticationToken {
-            return AuthenticationToken(principal, credentials, null, false)
+            return AuthenticationToken(Principal.AccessToken(principal), credentials, null, false)
         }
     }
 
