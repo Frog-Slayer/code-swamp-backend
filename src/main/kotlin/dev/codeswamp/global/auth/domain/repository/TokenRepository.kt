@@ -1,6 +1,6 @@
 package dev.codeswamp.global.auth.domain.repository
 
-import dev.codeswamp.global.auth.domain.model.authToken.ValidatedRefreshToken
+import dev.codeswamp.global.auth.domain.model.token.ValidatedRefreshToken
 
 interface TokenRepository {
     fun storeRefreshToken(refreshToken: ValidatedRefreshToken)

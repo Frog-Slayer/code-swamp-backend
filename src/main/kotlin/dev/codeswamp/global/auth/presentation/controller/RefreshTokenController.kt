@@ -20,8 +20,6 @@ class RefreshTokenController(
         val rawRequest = ServletRawHttpMapper.toRawRequest(request)
         val refreshToken = authApplicationService.extractRefreshToken(rawRequest) ?: throw Exception("Invalid refresh token")
 
-        val reissuedToken = authApplicationService.refresh(refreshToken);
-
         TODO("not implemented")
     }
 }

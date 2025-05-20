@@ -1,7 +1,7 @@
 package dev.codeswamp.core.user.application.service
 
 import dev.codeswamp.core.user.domain.model.Nickname
-import dev.codeswamp.core.user.domain.model.Role
+import dev.codeswamp.global.auth.domain.model.Role
 import dev.codeswamp.core.user.domain.model.User
 import dev.codeswamp.core.user.domain.model.Username
 import dev.codeswamp.core.user.domain.repository.UserRepository
@@ -28,10 +28,8 @@ class UserApplicationServiceImplTest (
         val user = User(
             id = null,
             username = Username.of(null),
-            email = "test@email.com",
             nickname = Nickname.of(null),
             profileUrl = null,
-            role = Role.GUEST
         )
 
         val dto = UserSignUpRequestDto(

@@ -1,21 +1,22 @@
-package dev.codeswamp.global.auth.domain.service
+package dev.codeswamp.global.auth.domain.service.impl
 
 import dev.codeswamp.global.auth.domain.model.AuthUser
-import dev.codeswamp.global.auth.domain.model.authToken.RawAccessToken
-import dev.codeswamp.global.auth.domain.model.authToken.ValidatedAccessToken
-import dev.codeswamp.global.auth.domain.model.authToken.RawRefreshToken
-import dev.codeswamp.global.auth.domain.model.authToken.ValidatedRefreshToken
+import dev.codeswamp.global.auth.domain.model.token.RawAccessToken
+import dev.codeswamp.global.auth.domain.model.token.ValidatedAccessToken
+import dev.codeswamp.global.auth.domain.model.token.RawRefreshToken
+import dev.codeswamp.global.auth.domain.model.token.ValidatedRefreshToken
 import dev.codeswamp.global.auth.domain.repository.TokenRepository
+import dev.codeswamp.global.auth.domain.service.AuthUserService
+import dev.codeswamp.global.auth.domain.service.TokenService
 import dev.codeswamp.global.auth.domain.util.TokenGenerator
 import dev.codeswamp.global.auth.domain.util.TokenParser
 import org.springframework.stereotype.Service
-import java.time.Instant
 
 @Service
 class TokenServiceImpl(
+    private val authUserService: AuthUserService,
     private val tokenParser: TokenParser,
     private val tokenGenerator: TokenGenerator,
-    private val userFinder: UserFinder,
     private val tokenRepository: TokenRepository
 ) : TokenService {
 
@@ -30,7 +31,7 @@ class TokenServiceImpl(
     override fun validateAccessToken(accessToken: RawAccessToken): ValidatedAccessToken {
         require( !accessToken.expired()) {"Token expired!"}
 
-        val authUser = userFinder.findBySubject(accessToken.sub)
+        val authUser = authUserService.findBySubject(accessToken.sub)
             ?: throw IllegalStateException("No user found for token sub")//TODO
 
         return ValidatedAccessToken(
@@ -46,9 +47,12 @@ class TokenServiceImpl(
         val savedRefreshToken = tokenRepository.findRefreshTokenByToken(refreshToken.value)
             ?: throw IllegalStateException("No user found for token")//TODO
 
+        val authUserId = savedRefreshToken.authUser.id ?: throw IllegalStateException("No user found")
+        val authUser = authUserService.findById(authUserId) ?: throw IllegalStateException("No user found")
+
         return ValidatedRefreshToken(
             value = refreshToken.value,
-            authUser = savedRefreshToken.authUser,//TODO: 취약점 존재. 리프레시 토큰이 저장된 상태에서 사용자가 사라지는 경우 처리 필요
+            authUser = authUser,
             expiration = refreshToken.expiration
         )
     }
@@ -67,9 +71,9 @@ class TokenServiceImpl(
 
     override fun rotateRefreshToken(newToken: ValidatedRefreshToken)
     {
-        tokenRepository.findRefreshTokenByUserId(newToken.authUser.id)?.let {
-            tokenRepository.delete(it)
-        }
+        tokenRepository.findRefreshTokenByUserId(
+            newToken.authUser.id ?: throw IllegalStateException("not a valid token"))
+            ?.let { tokenRepository.delete(it) }
 
         tokenRepository.storeRefreshToken(newToken)
     }

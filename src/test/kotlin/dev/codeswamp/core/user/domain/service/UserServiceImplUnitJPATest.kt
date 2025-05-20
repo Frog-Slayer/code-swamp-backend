@@ -2,7 +2,7 @@ package dev.codeswamp.core.user.domain.service
 
 
 import dev.codeswamp.core.user.domain.model.Nickname
-import dev.codeswamp.core.user.domain.model.Role
+import dev.codeswamp.global.auth.domain.model.Role
 import dev.codeswamp.core.user.domain.model.User
 import dev.codeswamp.core.user.domain.model.Username
 import dev.codeswamp.core.user.domain.repository.UserRepository
@@ -35,10 +35,8 @@ class UserServiceImplJPAUnitTest(
         user1 = User(
             id = null,
             username = Username.of("name"),
-            email = "test@email.com",
             nickname = Nickname.of("nick"),
             profileUrl = null,
-            role = Role.GUEST
         )
         userService.save(user1)
     }
@@ -48,16 +46,6 @@ class UserServiceImplJPAUnitTest(
         val foundUser = userService.findById(1L)
 
         assertThat(foundUser).isNotNull()
-        assertThat(foundUser?.id).isEqualTo(1L)
-    }
-
-    @Test
-    fun `이메일 조회`() {
-        val email = "test@email.com"
-        val foundUser = userService.findUserByEmail(email)
-
-        assertThat(foundUser).isNotNull()
-        assertThat(foundUser?.email).isEqualTo(email)
         assertThat(foundUser?.id).isEqualTo(1L)
     }
 
@@ -76,25 +64,8 @@ class UserServiceImplJPAUnitTest(
         user2 = User(
             id = null,
             username = Username.of("name"),
-            email = "test2@email.com",
             nickname = Nickname.of("nick2"),
             profileUrl = null,
-            role = Role.GUEST
-        )
-
-        assertThatThrownBy { userService.save(user2) }
-            .isInstanceOf(DataIntegrityViolationException::class.java)
-    }
-
-    @Test
-    fun `중복 이메일 테스트`() {
-        user2 = User(
-            id = null,
-            username = Username.of("name2"),
-            email = "test@email.com",
-            nickname = Nickname.of("nick2"),
-            profileUrl = null,
-            role = Role.GUEST
         )
 
         assertThatThrownBy { userService.save(user2) }
@@ -106,10 +77,8 @@ class UserServiceImplJPAUnitTest(
         user2 = User(
             id = null,
             username = Username.of("name2"),
-            email = "test2@email.com",
             nickname = Nickname.of("nick"),
             profileUrl = null,
-            role = Role.GUEST
         )
 
         assertThatThrownBy { userService.save(user2) }
@@ -121,10 +90,8 @@ class UserServiceImplJPAUnitTest(
         user2 = User(
             id = null,
             username = Username.of("name2"),
-            email = "test2@email.com",
             nickname = Nickname.of("nick2"),
             profileUrl = null,
-            role = Role.GUEST
         )
 
         assertDoesNotThrow{ userService.save(user2) }

@@ -1,8 +1,8 @@
 package dev.codeswamp.global.auth.infrastructure.jwt.util
 
 import dev.codeswamp.global.auth.domain.model.AuthUser
-import dev.codeswamp.global.auth.domain.model.authToken.ValidatedAccessToken
-import dev.codeswamp.global.auth.domain.model.authToken.ValidatedRefreshToken
+import dev.codeswamp.global.auth.domain.model.token.ValidatedAccessToken
+import dev.codeswamp.global.auth.domain.model.token.ValidatedRefreshToken
 import dev.codeswamp.global.auth.domain.util.TokenGenerator
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys

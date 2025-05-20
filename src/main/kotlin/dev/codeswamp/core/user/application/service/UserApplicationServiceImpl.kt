@@ -1,7 +1,7 @@
 package dev.codeswamp.core.user.application.service
 
 import dev.codeswamp.core.user.domain.model.Nickname
-import dev.codeswamp.core.user.domain.model.Role
+import dev.codeswamp.global.auth.domain.model.Role
 import dev.codeswamp.core.user.domain.model.User
 import dev.codeswamp.core.user.domain.model.Username
 import dev.codeswamp.core.user.domain.service.UserService
@@ -24,7 +24,6 @@ class UserApplicationServiceImpl(
                 username = Username.of(dto.username),
                 nickname = Nickname.of(dto.nickname),
                 profileUrl = dto.profileImageUrl,
-                role = Role.USER
         )
 
         userService.save(signUpUser)

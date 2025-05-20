@@ -1,8 +1,9 @@
 package dev.codeswamp.global.auth.infrastructure.oauth2.handler
 
+import dev.codeswamp.global.auth.application.service.UserProfileFetcher
 import dev.codeswamp.global.auth.domain.model.AuthUser
+import dev.codeswamp.global.auth.domain.service.AuthUserService
 import dev.codeswamp.global.auth.domain.service.TokenService
-import dev.codeswamp.global.auth.domain.service.UserFinder
 import dev.codeswamp.global.auth.infrastructure.oauth2.dto.ProviderUserInfo
 import dev.codeswamp.global.auth.infrastructure.oauth2.factory.UserInfoFactory
 import jakarta.servlet.http.HttpServletRequest
@@ -18,8 +19,9 @@ import org.springframework.web.util.UriComponentsBuilder
 
 @Component
 class OAuth2LoginSuccessHandler(
-    private val userFinder: UserFinder,
     private val tokenService: TokenService,
+    private val userProfileFetcher: UserProfileFetcher,
+    private val authUserService: AuthUserService,
     private val userInfoFactory: UserInfoFactory,
     private val authorizedClientService: OAuth2AuthorizedClientService
 ) : AuthenticationSuccessHandler {
@@ -39,15 +41,15 @@ class OAuth2LoginSuccessHandler(
             oauth2Token.name
         ).accessToken.tokenValue
 
-        val userInfo = userInfoFactory.extract(registrationId, oAuth2User, oauth2AccessToken)
-        val user = userFinder.findByEmail(userInfo.email)
+        val providerUserInfo = userInfoFactory.extract(registrationId, oAuth2User, oauth2AccessToken)
+        val authUser = authUserService.findByUsername(providerUserInfo.email)
 
-        if  (user == null) {
-            handleNewUser(response, userInfo)
+        if  (authUser == null) {
+            handleNewUser(response, providerUserInfo)
             return;
         }
 
-        handleRegisteredUserAndPassTokens(response, user, userInfo)
+        handleRegisteredUserAndPassTokens(response, authUser)
     }
 
     private fun handleNewUser(response: HttpServletResponse, userInfo: ProviderUserInfo) {
@@ -64,16 +66,17 @@ class OAuth2LoginSuccessHandler(
     }
 
     //TODO: ProviderUserInfo가 아니라, 저장된 정보를 가지고 와야 함
-    private fun handleRegisteredUserAndPassTokens(response: HttpServletResponse, user: AuthUser, userInfo: ProviderUserInfo) {
+    private fun handleRegisteredUserAndPassTokens(response: HttpServletResponse, user: AuthUser) {
         val accessToken = tokenService.issueAccessToken(user)
+        val userProfile = userProfileFetcher.fetchUserProfile(user.id!!)
 
         val redirectUrl = UriComponentsBuilder
             .fromUriString(frontendCallbackUrl)
             .queryParam("isNewUser", false)
             .queryParam("accessToken", accessToken)
-            .queryParam("email", userInfo.email)
-            .queryParam("name", userInfo.name)//여기
-            .queryParam("profileImage", userInfo.profileImage)//여기
+            .queryParam("email", user.username)
+            .queryParam("name",userProfile.nickname)//여기
+            .queryParam("profileImage", userProfile.profileImage)//여기
         .build().toUriString()
 
         response.sendRedirect(redirectUrl)
