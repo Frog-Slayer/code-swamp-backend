@@ -65,7 +65,6 @@ class OAuth2LoginSuccessHandler(
         return;
     }
 
-    //TODO: ProviderUserInfo가 아니라, 저장된 정보를 가지고 와야 함
     private fun handleRegisteredUserAndPassTokens(response: HttpServletResponse, user: AuthUser) {
         val accessToken = tokenService.issueAccessToken(user)
         val userProfile = userProfileFetcher.fetchUserProfile(user.id!!)
