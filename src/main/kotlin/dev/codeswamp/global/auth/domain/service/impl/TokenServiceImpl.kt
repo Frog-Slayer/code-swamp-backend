@@ -10,9 +10,11 @@ import dev.codeswamp.global.auth.domain.service.AuthUserService
 import dev.codeswamp.global.auth.domain.service.TokenService
 import dev.codeswamp.global.auth.domain.util.TokenGenerator
 import dev.codeswamp.global.auth.domain.util.TokenParser
+import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 
 @Service
+@Primary
 class TokenServiceImpl(
     private val authUserService: AuthUserService,
     private val tokenParser: TokenParser,
