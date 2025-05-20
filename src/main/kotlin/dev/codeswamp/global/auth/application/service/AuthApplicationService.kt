@@ -1,7 +1,7 @@
 package dev.codeswamp.global.auth.application.service
 
+import dev.codeswamp.global.auth.application.dto.ValidatedTokenPair
 import dev.codeswamp.global.auth.domain.model.token.RawRefreshToken
-import dev.codeswamp.global.auth.domain.model.token.ValidatedRefreshToken
 import dev.codeswamp.global.auth.domain.service.AuthUserService
 import dev.codeswamp.global.auth.domain.service.TokenService
 import org.springframework.stereotype.Service
@@ -14,14 +14,18 @@ class AuthApplicationService (
     AuthUserService by authUserService
 {
 
+    fun refresh(rawRefreshToken: RawRefreshToken) : ValidatedTokenPair {
+        val oldRefreshToken = validateRefreshToken(rawRefreshToken)
+        val authUser = oldRefreshToken.authUser
 
-    fun refresh(rawRefreshToken: RawRefreshToken) : ValidatedRefreshToken {
-        val oldToken = tokenService.validateRefreshToken(rawRefreshToken)
-        val authUser = oldToken.authUser
+        val newRefreshToken = issueRefreshToken(authUser)
+        tokenService.rotateRefreshToken(newRefreshToken)
 
-        val newToken = tokenService.issueRefreshToken(authUser)
+        val newAccessToken = issueAccessToken(authUser)
 
-        tokenService.rotateRefreshToken(newToken)
-        return newToken;
+        return ValidatedTokenPair(
+            accessToken = newAccessToken,
+            refreshToken = newRefreshToken,
+        )
     }
 }
