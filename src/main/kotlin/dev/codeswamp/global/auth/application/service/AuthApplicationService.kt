@@ -6,6 +6,7 @@ import dev.codeswamp.global.auth.application.dto.rawHttp.RawHttpResponse
 import dev.codeswamp.global.auth.domain.model.token.RawAccessToken
 import dev.codeswamp.global.auth.domain.model.token.RawRefreshToken
 import dev.codeswamp.global.auth.domain.model.token.ValidatedRefreshToken
+import dev.codeswamp.global.auth.domain.service.AuthUserService
 import dev.codeswamp.global.auth.domain.service.TokenService
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
@@ -14,9 +15,9 @@ import org.springframework.stereotype.Service
 @Primary
 class AuthApplicationService (
     private val tokenService: TokenService,
-    private val userService: UserService,
+    private val authUserService: AuthUserService,
 ) : TokenService by tokenService,
-    UserService by userService
+    AuthUserService by authUserService,
 {
     fun extractAccessToken(request: RawHttpRequest): RawAccessToken? {
         return request.headers["Authorization"]
