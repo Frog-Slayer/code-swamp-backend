@@ -10,11 +10,17 @@ sealed class Principal {
     data class AuthenticatedUser(val userDetails: UserDetails) : Principal()
 }
 
-class AuthenticationToken(
+class AuthenticationToken private constructor(
     private val principal: Principal,
     private val credentials: Any?,
-    authorities: Collection<GrantedAuthority>? = null
+    authorities: Collection<GrantedAuthority>? = null,
+    isAuthenticated: Boolean
 ): AbstractAuthenticationToken(authorities) {
+
+    init {
+        this.isAuthenticated = isAuthenticated
+    }
+
     override fun getCredentials(): Any? {
         return  credentials
     }
@@ -29,14 +35,14 @@ class AuthenticationToken(
             credentials: Any?,
             authorities: Collection<GrantedAuthority>
         ) : AuthenticationToken {
-            return AuthenticationToken(principal, credentials, authorities)
+            return AuthenticationToken(principal, credentials, authorities, true)
         }
 
         fun unAuthenticated (
             principal: Principal. AccessToken,
             credentials: Any?,
         ) : AuthenticationToken {
-            return AuthenticationToken(principal, credentials, null)
+            return AuthenticationToken(principal, credentials, null, false)
         }
     }
 
