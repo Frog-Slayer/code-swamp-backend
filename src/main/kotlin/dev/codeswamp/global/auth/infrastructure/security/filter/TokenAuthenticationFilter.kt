@@ -1,8 +1,7 @@
 package dev.codeswamp.global.auth.infrastructure.security.filter
 
-import dev.codeswamp.global.auth.application.service.AuthApplicationService
 import dev.codeswamp.global.auth.infrastructure.security.token.AuthenticationToken
-import dev.codeswamp.global.auth.infrastructure.web.ServletRawHttpMapper
+import dev.codeswamp.global.auth.infrastructure.web.HttpTokenAccessor
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -13,14 +12,14 @@ import org.springframework.security.web.util.matcher.RequestMatcher
 
 class TokenAuthenticationFilter(
     private val requestMatcher: RequestMatcher,
-    private val authApplicationService: AuthApplicationService
+    private val httpTokenAccessor: HttpTokenAccessor
 ) : AbstractAuthenticationProcessingFilter(requestMatcher){
 
     override fun attemptAuthentication(
         request: HttpServletRequest,
         response: HttpServletResponse
     ): Authentication? {
-        val rawAccessToken = authApplicationService.extractAccessToken(ServletRawHttpMapper.toRawRequest(request)) ?: throw AuthenticationServiceException(
+        val rawAccessToken = httpTokenAccessor.extractAccessToken(request) ?: throw AuthenticationServiceException(
             "cannot extract access token"
         )
 
