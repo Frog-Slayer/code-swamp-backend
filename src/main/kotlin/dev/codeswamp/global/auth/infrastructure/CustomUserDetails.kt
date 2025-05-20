@@ -9,7 +9,7 @@ class CustomUserDetails (
     private val user : AuthUser?
 ) : UserDetails {
     override fun getAuthorities(): Collection<GrantedAuthority?>? {
-        return user?.roles?.map { SimpleGrantedAuthority(it) }?.toSet()
+        return user?.role?.let { listOf(SimpleGrantedAuthority(it.toString())) }
     }
 
     override fun getPassword(): String? {

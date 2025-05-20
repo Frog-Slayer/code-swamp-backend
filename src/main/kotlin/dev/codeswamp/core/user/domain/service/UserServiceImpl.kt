@@ -18,10 +18,6 @@ class UserServiceImpl(
         return userRepository.findById(id)
     }
 
-    override fun findUserByEmail(email: String): User? {
-        return userRepository.findByEmail(email)
-    }
-
     override fun findUserByUsername(username: Username): User? {
         return userRepository.findByUsername(username)
     }

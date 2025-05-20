@@ -24,10 +24,6 @@ class UserRepositoryImpl(
         return username.value?.let { userJpaRepository.findByUsername(it)?.toDomain()}
     }
 
-    override fun findByEmail(email: String): User? {
-        return userJpaRepository.findByEmail(email)?.toDomain()
-    }
-
     override fun findByNickname(nickname: Nickname): User? {
         return nickname.value?.let { userJpaRepository.findByNickname(it)?.toDomain()}
     }

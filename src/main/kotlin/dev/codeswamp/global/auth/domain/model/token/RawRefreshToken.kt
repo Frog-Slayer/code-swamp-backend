@@ -1,4 +1,4 @@
-package dev.codeswamp.global.auth.domain.model.authToken
+package dev.codeswamp.global.auth.domain.model.token
 
 import java.time.Instant
 

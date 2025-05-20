@@ -2,9 +2,9 @@ package dev.codeswamp.global.auth.application.service
 
 import dev.codeswamp.global.auth.application.dto.rawHttp.RawHttpRequest
 import dev.codeswamp.global.auth.application.dto.rawHttp.RawHttpResponse
-import dev.codeswamp.global.auth.domain.model.authToken.RawAccessToken
-import dev.codeswamp.global.auth.domain.model.authToken.RawRefreshToken
-import dev.codeswamp.global.auth.domain.model.authToken.ValidatedRefreshToken
+import dev.codeswamp.global.auth.domain.model.token.RawAccessToken
+import dev.codeswamp.global.auth.domain.model.token.RawRefreshToken
+import dev.codeswamp.global.auth.domain.model.token.ValidatedRefreshToken
 import dev.codeswamp.global.auth.domain.service.TokenService
 import org.springframework.stereotype.Service
 

@@ -1,10 +1,6 @@
 package dev.codeswamp.global.auth.domain.service
 
-import dev.codeswamp.core.user.domain.model.Nickname
-import dev.codeswamp.core.user.domain.model.Role
-import dev.codeswamp.core.user.domain.model.User
-import dev.codeswamp.core.user.domain.model.Username
-import dev.codeswamp.core.user.domain.service.UserService
+import dev.codeswamp.global.auth.domain.model.Role
 import dev.codeswamp.global.auth.domain.model.AuthUser
 import dev.codeswamp.global.auth.domain.util.TokenParser
 import org.assertj.core.api.Assertions.assertThat
@@ -25,29 +21,26 @@ import kotlin.test.assertNotNull
 class TokenServiceImplTest (
     @Autowired private val tokenParser: TokenParser,
     @Autowired private val tokenService: TokenService,
-    @Autowired private val userFinder: UserFinder,
-    @Autowired private val userService: UserService
+    @Autowired private val authUserService: AuthUserService,
 ){
 
-    private lateinit var user1: User
+    private lateinit var user: AuthUser
     private lateinit var authUser: AuthUser
 
     @BeforeAll
     fun beforeAll() {
-        user1 = User(
+        user = AuthUser(
             id = null,
-            username = Username.of("name"),
-            email = "test@email.com",
-            nickname = Nickname.of("nick"),
-            profileUrl = null,
+            username = "name",
             role = Role.GUEST
         )
-        userService.save(user1).id
+
+        authUserService.save(user)
     }
 
     @BeforeEach
     fun findAuthUserTest() {
-        authUser = assertNotNull(userFinder.findById(1L)!!)
+        authUser = assertNotNull(authUserService.findById(1L)!!)
         assertThat(authUser.id).isEqualTo(1L)
     }
 
@@ -124,11 +117,5 @@ class TokenServiceImplTest (
 
         assertThatThrownBy { tokenService.validateRefreshToken(rawOldToken) }
             .isInstanceOf(IllegalStateException::class.java)
-
-
-
     }
-
-
-
 }

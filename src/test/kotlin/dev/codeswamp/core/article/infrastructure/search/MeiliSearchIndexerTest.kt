@@ -12,7 +12,7 @@ import kotlin.test.Test
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class MeiliSearchIndexerTest {
-    val meiliClient = MeiliSearchConfig().meiliWebclient()
+    val meiliClient = MeiliSearchConfig().meiliWebClient()
     val indexer = MeiliSearchIndexer(meiliClient)
 
     @BeforeAll

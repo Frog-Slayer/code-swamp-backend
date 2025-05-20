@@ -1,7 +1,7 @@
 package dev.codeswamp.core.user.domain.service
 
 import dev.codeswamp.core.user.domain.model.Nickname
-import dev.codeswamp.core.user.domain.model.Role
+import dev.codeswamp.global.auth.domain.model.Role
 import dev.codeswamp.core.user.domain.model.User
 import dev.codeswamp.core.user.domain.model.Username
 import dev.codeswamp.core.user.domain.repository.UserRepository
@@ -30,10 +30,8 @@ class UserServiceImplMockUnitTest {
         user = User(
             id = null,
             username = Username.of("name"),
-            email = "test@email.com",
             nickname = Nickname.of("nick"),
             profileUrl = null,
-            role = Role.GUEST
         )
     }
 
@@ -45,20 +43,6 @@ class UserServiceImplMockUnitTest {
         assertThat(savedUser.id).isEqualTo(1L)
 
         verify(exactly = 1) { userRepository.save(user) }
-    }
-
-    @Test
-    fun `이메일 조회`() {
-        val email = "test@email.com"
-        every { userRepository.findByEmail(email) } returns user.copy(id = 1L)
-
-        val foundUser = userService.findUserByEmail(email)
-
-        assertThat(foundUser).isNotNull()
-        assertThat(foundUser?.email).isEqualTo(email)
-        assertThat(foundUser?.id).isEqualTo(1L)
-
-        verify(exactly = 1) { userRepository.findByEmail(email) }
     }
 
     @Test

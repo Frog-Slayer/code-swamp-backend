@@ -1,8 +1,8 @@
 package dev.codeswamp.global.auth.domain.util
 
 import dev.codeswamp.global.auth.domain.model.AuthUser
-import dev.codeswamp.global.auth.domain.model.authToken.ValidatedAccessToken
-import dev.codeswamp.global.auth.domain.model.authToken.ValidatedRefreshToken
+import dev.codeswamp.global.auth.domain.model.token.ValidatedAccessToken
+import dev.codeswamp.global.auth.domain.model.token.ValidatedRefreshToken
 
 interface TokenGenerator {
     fun generateAccessToken(user: AuthUser): ValidatedAccessToken

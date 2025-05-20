@@ -1,7 +1,8 @@
 package dev.codeswamp.global.auth.infrastructure.jwt.util
 
-import dev.codeswamp.global.auth.domain.model.authToken.RawAccessToken
-import dev.codeswamp.global.auth.domain.model.authToken.RawRefreshToken
+import dev.codeswamp.global.auth.domain.model.token.RawAccessToken
+import dev.codeswamp.global.auth.domain.model.token.RawRefreshToken
+import dev.codeswamp.global.auth.domain.model.token.Subject
 import dev.codeswamp.global.auth.domain.util.TokenParser
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
@@ -27,7 +28,7 @@ class JwtParser (
 
         return RawAccessToken(
             value = accessToken,
-            sub = claims.subject,
+            sub = Subject(value = claims.subject),
             expiration = claims.expiration.toInstant().truncatedTo(ChronoUnit.SECONDS)
         )
     }
