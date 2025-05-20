@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 
 class ArticleDiffProcessorImplTest {
 
-    private lateinit var processor: ArticleDiffProcessorImpl
+    private val processor = ArticleDiffProcessorImpl()
 
     @Test
     fun calculateDiff() {
