@@ -4,6 +4,7 @@ import dev.codeswamp.global.auth.application.service.AuthApplicationService
 import dev.codeswamp.global.auth.domain.model.token.RawAccessToken
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.userdetails.UserDetails
 
 class TokenAuthenticationProvider(
     private val authApplication : AuthApplicationService,
@@ -15,6 +16,13 @@ class TokenAuthenticationProvider(
         return AuthenticationToken(
 
         )
+    }
+
+    private fun retrieveUser(rawAccessToken: RawAccessToken?): UserDetails? {
+        return CustomUserDetails (
+
+        )
+
     }
 
     override fun supports(authentication: Class<*>?): Boolean {

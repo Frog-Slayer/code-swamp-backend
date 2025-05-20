@@ -1,27 +1,32 @@
 package dev.codeswamp.global.auth.application.service
 
+import dev.codeswamp.core.user.domain.service.UserService
 import dev.codeswamp.global.auth.application.dto.rawHttp.RawHttpRequest
 import dev.codeswamp.global.auth.application.dto.rawHttp.RawHttpResponse
 import dev.codeswamp.global.auth.domain.model.token.RawAccessToken
 import dev.codeswamp.global.auth.domain.model.token.RawRefreshToken
 import dev.codeswamp.global.auth.domain.model.token.ValidatedRefreshToken
 import dev.codeswamp.global.auth.domain.service.TokenService
+import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Service
 
 @Service
+@Primary
 class AuthApplicationService (
-   private val tokenService: TokenService,
-) {
-
+    private val tokenService: TokenService,
+    private val userService: UserService,
+) : TokenService by tokenService,
+    UserService by userService
+{
     fun extractAccessToken(request: RawHttpRequest): RawAccessToken? {
         return request.headers["Authorization"]
             ?.removePrefix("Bearer ")
-            ?.let { tokenService.parseAccessToken(it) }
+            ?.let { parseAccessToken(it) }
     }
 
     fun extractRefreshToken(request: RawHttpRequest): RawRefreshToken? {
         return request.cookies["refreshToken"]
-            ?.let { tokenService.parseRefreshToken(it) }
+            ?.let { parseRefreshToken(it) }
     }
 
     fun injectRefreshToken(response: RawHttpResponse, refreshToken: ValidatedRefreshToken) : RawHttpResponse {
