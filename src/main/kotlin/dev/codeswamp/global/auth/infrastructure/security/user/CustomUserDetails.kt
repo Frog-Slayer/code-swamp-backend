@@ -1,4 +1,4 @@
-package dev.codeswamp.global.auth.infrastructure
+package dev.codeswamp.global.auth.infrastructure.security.user
 
 import dev.codeswamp.global.auth.domain.model.AuthUser
 import org.springframework.security.core.GrantedAuthority

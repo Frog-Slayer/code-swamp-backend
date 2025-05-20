@@ -1,4 +1,4 @@
-package dev.codeswamp.global.auth.infrastructure.oauth2.dto
+package dev.codeswamp.global.auth.infrastructure.security.oauth2.dto
 
 interface ProviderUserInfo {
     val email: String

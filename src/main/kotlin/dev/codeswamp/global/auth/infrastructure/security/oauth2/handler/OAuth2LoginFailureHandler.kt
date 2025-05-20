@@ -1,4 +1,4 @@
-package dev.codeswamp.global.auth.infrastructure.oauth2.handler
+package dev.codeswamp.global.auth.infrastructure.security.oauth2.handler
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.http.HttpServletRequest
