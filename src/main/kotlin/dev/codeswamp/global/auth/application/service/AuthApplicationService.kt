@@ -46,9 +46,4 @@ class AuthApplicationService (
         tokenService.rotateRefreshToken(newToken)
         return newToken;
     }
-
-    fun getUserProfile(authUser: AuthUser): UserProfile {
-
-
-    }
 }
