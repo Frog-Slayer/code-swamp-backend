@@ -64,7 +64,7 @@ class OAuth2LoginSuccessHandler(
             .queryParam("email", userInfo.email)
             .queryParam("name", userInfo.name)
             .queryParam("profileImage",userInfo.profileImage)
-            .build().toUriString()
+            .build().encode().toUriString()
 
         response.sendRedirect(redirectUrl)
         return;
@@ -81,7 +81,7 @@ class OAuth2LoginSuccessHandler(
             .queryParam("email", user.username)
             .queryParam("name",userProfile.nickname)//여기
             .queryParam("profileImage", userProfile.profileImage)//여기
-        .build().toUriString()
+        .build().encode().toUriString()
 
         response.sendRedirect(redirectUrl)
     }
