@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -22,7 +23,7 @@ class UserController(
 ) {
 
     @PostMapping("/signup")
-    fun signup(signUpRequestDto: SignUpRequestDto) {
+    fun signup(@RequestBody signUpRequestDto: SignUpRequestDto) {
         val userId = authServiceAcl.verifyTokenAndCreateAuthUser(signUpRequestDto.token, signUpRequestDto.email)
 
         userApplicationService.signUp(SignUpCommand(
