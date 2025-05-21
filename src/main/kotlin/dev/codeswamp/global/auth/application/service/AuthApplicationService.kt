@@ -13,7 +13,6 @@ class AuthApplicationService (
 ) : TokenService by tokenService,
     AuthUserService by authUserService
 {
-
     fun refresh(rawRefreshToken: RawRefreshToken) : ValidatedTokenPair {
         val oldRefreshToken = validateRefreshToken(rawRefreshToken)
         val authUser = oldRefreshToken.authUser

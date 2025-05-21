@@ -4,7 +4,12 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 import jakarta.validation.constraints.Size
 
-data class UserSignUpRequestDto (
+data class SignUpRequestDto (
+    val token : String,
+
+    @field:NotBlank
+    val email: String,
+
     @field:NotBlank
     @field:Size(min = 2, max = 12)
     @field:Pattern(regexp = "^[a-zA-Z0-9]+$")

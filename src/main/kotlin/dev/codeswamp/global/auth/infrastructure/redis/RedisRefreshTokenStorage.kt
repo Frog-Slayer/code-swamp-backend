@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 import java.util.concurrent.TimeUnit
 
 @Repository
-class RedisTokenStorage(
+class RedisRefreshTokenStorage(
     private val redisTemplate: RedisTemplate<String, ValidatedRefreshToken>,
     @Value("\${jwt.refresh-token-exp}") private val refreshTokenExpiration : Long
 ) : TokenRepository {

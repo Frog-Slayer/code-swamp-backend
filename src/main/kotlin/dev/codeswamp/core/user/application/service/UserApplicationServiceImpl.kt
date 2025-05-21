@@ -1,12 +1,12 @@
 package dev.codeswamp.core.user.application.service
 
+import dev.codeswamp.core.user.application.dto.SignUpCommand
 import dev.codeswamp.core.user.domain.model.Nickname
-import dev.codeswamp.global.auth.domain.model.Role
 import dev.codeswamp.core.user.domain.model.User
 import dev.codeswamp.core.user.domain.model.Username
 import dev.codeswamp.core.user.domain.service.UserService
 import dev.codeswamp.core.user.presentation.dto.request.NicknameChangeRequestDto
-import dev.codeswamp.core.user.presentation.dto.request.UserSignUpRequestDto
+import dev.codeswamp.core.user.presentation.dto.request.SignUpRequestDto
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
@@ -16,21 +16,19 @@ class UserApplicationServiceImpl(
 ) : UserApplicationService {
 
     @Transactional
-    override fun signUp(user: User, dto: UserSignUpRequestDto): User {
-        requireNotNull(dto.username ) { "$dto.username is required" }
-        requireNotNull(dto.nickname ) { "$dto.nickname is required" }
+    override fun signUp(command: SignUpCommand): User {
+        requireNotNull(command.username ) { "$command.username is required" }
+        requireNotNull(command.nickname ) { "$command.nickname is required" }
 
-        val signUpUser =  user.copy(
-                username = Username.of(dto.username),
-                nickname = Nickname.of(dto.nickname),
-                profileUrl = dto.profileImageUrl,
+        val signUpUser =  User(
+                username = Username.of(command.username),
+                nickname = Nickname.of(command.nickname),
+                profileUrl = command.profileImageUrl,
         )
-
-        userService.save(signUpUser)
 
         //TODO 루트 폴더 생성
 
-        return signUpUser
+        return userService.save(signUpUser)
     }
 
     @Transactional

@@ -1,6 +1,8 @@
 package dev.codeswamp.global.auth.infrastructure.security.oauth2.handler
 
-import dev.codeswamp.global.auth.application.service.UserProfileFetcher
+import dev.codeswamp.global.auth.application.acl.UserProfileFetcher
+import dev.codeswamp.global.auth.application.service.AuthApplicationService
+import dev.codeswamp.global.auth.application.signup.TemporaryTokenService
 import dev.codeswamp.global.auth.domain.model.AuthUser
 import dev.codeswamp.global.auth.domain.service.AuthUserService
 import dev.codeswamp.global.auth.domain.service.TokenService
@@ -19,10 +21,10 @@ import org.springframework.web.util.UriComponentsBuilder
 
 @Component
 class OAuth2LoginSuccessHandler(
-    private val tokenService: TokenService,
     private val userProfileFetcher: UserProfileFetcher,
-    private val authUserService: AuthUserService,
     private val userInfoFactory: UserInfoFactory,
+    private val authApplicationService: AuthApplicationService,
+    private val temporaryTokenService: TemporaryTokenService,
     private val authorizedClientService: OAuth2AuthorizedClientService
 ) : AuthenticationSuccessHandler {
 
@@ -42,7 +44,7 @@ class OAuth2LoginSuccessHandler(
         ).accessToken.tokenValue
 
         val providerUserInfo = userInfoFactory.extract(registrationId, oAuth2User, oauth2AccessToken)
-        val authUser = authUserService.findByUsername(providerUserInfo.email)
+        val authUser = authApplicationService.findByUsername(providerUserInfo.email)
 
         if  (authUser == null) {
             handleNewUser(response, providerUserInfo)
@@ -53,9 +55,12 @@ class OAuth2LoginSuccessHandler(
     }
 
     private fun handleNewUser(response: HttpServletResponse, userInfo: ProviderUserInfo) {
+        val signupToken = temporaryTokenService.generateSignupToken(userInfo.email)
+
         val redirectUrl = UriComponentsBuilder
             .fromUriString(frontendCallbackUrl)
             .queryParam("isNewUser", true)
+            .queryParam("signupToken", signupToken)
             .queryParam("email", userInfo.email)
             .queryParam("name", userInfo.name)
             .queryParam("profileImage",userInfo.profileImage)
@@ -66,7 +71,7 @@ class OAuth2LoginSuccessHandler(
     }
 
     private fun handleRegisteredUserAndPassTokens(response: HttpServletResponse, user: AuthUser) {
-        val accessToken = tokenService.issueAccessToken(user)
+        val accessToken = authApplicationService.issueAccessToken(user)
         val userProfile = userProfileFetcher.fetchUserProfile(user.id!!)
 
         val redirectUrl = UriComponentsBuilder

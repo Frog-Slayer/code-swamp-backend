@@ -42,4 +42,14 @@ class RefreshTokenRedisConfig {
         return template
     }
 
+    @Bean(name = ["temporaryTokenTemplate"])
+    fun temporaryTokenTemplate(): RedisTemplate<String, String> {
+        val template = RedisTemplate<String, String>()
+        template.connectionFactory = refreshTokenRedisConnectionFactory()
+
+        template.keySerializer = StringRedisSerializer()
+        template.valueSerializer = StringRedisSerializer()
+
+        return template
+    }
 }
