@@ -37,5 +37,6 @@ class ServletHttpTokenAccessor (
         }
 
         response.addCookie(cookie)
+        println(response)
     }
 }

@@ -33,4 +33,10 @@ class RefreshTokenController(
             userProfile,
         )
     }
+
+
+    @GetMapping("/test")
+    fun test() : String {
+        return "success"
+    }
 }

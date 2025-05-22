@@ -8,6 +8,7 @@ import dev.codeswamp.global.auth.domain.service.AuthUserService
 import dev.codeswamp.global.auth.domain.service.TokenService
 import dev.codeswamp.global.auth.infrastructure.security.oauth2.dto.ProviderUserInfo
 import dev.codeswamp.global.auth.infrastructure.security.oauth2.factory.UserInfoFactory
+import dev.codeswamp.global.auth.infrastructure.web.HttpTokenAccessor
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication
@@ -25,7 +26,8 @@ class OAuth2LoginSuccessHandler(
     private val userInfoFactory: UserInfoFactory,
     private val authApplicationService: AuthApplicationService,
     private val temporaryTokenService: TemporaryTokenService,
-    private val authorizedClientService: OAuth2AuthorizedClientService
+    private val authorizedClientService: OAuth2AuthorizedClientService,
+    private val tokenAccessor: HttpTokenAccessor
 ) : AuthenticationSuccessHandler {
 
     val frontendCallbackUrl: String = "http://localhost:3000/auth/callback"
@@ -72,12 +74,19 @@ class OAuth2LoginSuccessHandler(
 
     private fun handleRegisteredUserAndPassTokens(response: HttpServletResponse, user: AuthUser) {
         val accessToken = authApplicationService.issueAccessToken(user)
+        val refreshToken = authApplicationService.issueRefreshToken(user)
+
+        authApplicationService.storeRefreshToken(refreshToken)
+
+        println("here")
+        tokenAccessor.injectRefreshToken(response, refreshToken)
+
         val userProfile = userProfileFetcher.fetchUserProfile(user.id!!)
 
         val redirectUrl = UriComponentsBuilder
             .fromUriString(frontendCallbackUrl)
             .queryParam("isNewUser", false)
-            .queryParam("accessToken", accessToken)
+            .queryParam("accessToken", accessToken.value)
             .queryParam("email", user.username)
             .queryParam("name",userProfile.nickname)//여기
             .queryParam("profileImage", userProfile.profileImage)//여기

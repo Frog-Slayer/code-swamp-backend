@@ -30,7 +30,7 @@ class UserController(
             userId = userId,
             username = signUpRequestDto.username,
             nickname = signUpRequestDto.nickname,
-            profileImageUrl = signUpRequestDto.nickname
+            profileImageUrl = signUpRequestDto.nickname//TODO (임시)
         ))
     }
 
