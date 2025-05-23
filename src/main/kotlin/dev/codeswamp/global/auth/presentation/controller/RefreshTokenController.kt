@@ -36,7 +36,11 @@ class RefreshTokenController(
 
 
     @GetMapping("/test")
-    fun test() : String {
-        return "success"
+    fun test() : TestJSON {
+        return TestJSON()
     }
 }
+
+data class TestJSON (
+    val testVal : String = "success"
+)

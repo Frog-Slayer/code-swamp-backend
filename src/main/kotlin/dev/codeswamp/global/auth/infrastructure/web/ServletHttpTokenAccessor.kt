@@ -11,10 +11,10 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class ServletHttpTokenAccessor (
+class HttpTokenAccessor (
     private val authApplicationService: AuthApplicationService,
     @Value("\${jwt.access-token-exp}") private val refreshTokenExpiration: Long,
-) : HttpTokenAccessor {
+) {
 
     override fun extractAccessToken(request: HttpServletRequest): RawAccessToken? {
         return request.getHeader("Authorization")

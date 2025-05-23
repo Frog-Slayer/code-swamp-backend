@@ -7,6 +7,7 @@ import dev.codeswamp.global.auth.infrastructure.security.user.CustomUserDetails
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.AuthenticationServiceException
 import org.springframework.security.core.Authentication
+import org.springframework.stereotype.Component
 
 class TokenAuthenticationProvider(
     private val authApplication : AuthApplicationService,

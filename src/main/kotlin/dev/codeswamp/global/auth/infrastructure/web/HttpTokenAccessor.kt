@@ -10,5 +10,5 @@ interface HttpTokenAccessor {
     fun extractAccessToken(request: HttpServletRequest): RawAccessToken?
     fun extractRefreshToken(request: HttpServletRequest): RawRefreshToken?
     fun injectRefreshToken(response: HttpServletResponse, refreshToken: ValidatedRefreshToken)
-
+    fun invalidateRefreshToken(response: HttpServletResponse)
 }
