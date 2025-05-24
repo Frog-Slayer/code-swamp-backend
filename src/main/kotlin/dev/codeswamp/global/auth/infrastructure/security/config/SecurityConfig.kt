@@ -40,6 +40,7 @@ class SecurityConfig (
     fun skipPathList(): List<String> = listOf(
         "/users/signup",
         "/auth/refresh",
+        "/auth/temp-login",
         "/oauth2/authorization/**",
         "/login/**",
         "/error/**",

@@ -15,8 +15,12 @@ class TemporaryTokenService(
         return token
     }
 
-    fun authenticate(signupToken: String, email: String) : Boolean {
-        val savedEmail = temporaryTokenStore.get(signupToken)
+    fun authenticate(temporaryToken: String, email: String) : Boolean {
+        val savedEmail = temporaryTokenStore.get(temporaryToken)
         return savedEmail == email
+    }
+
+    fun deleteTemporaryToken(temporaryToken: String) {
+        temporaryTokenStore.delete(temporaryToken)
     }
 }
