@@ -38,4 +38,15 @@ class ServletHttpTokenAccessor (
 
         response.addCookie(cookie)
     }
+
+    override fun invalidateRefreshToken(response: HttpServletResponse) {
+        val cookie = Cookie("refresh_token", null).apply {
+            path = "/"
+            isHttpOnly = true
+            secure = false //TODO
+            maxAge = 0
+        }
+
+        response.addCookie(cookie)
+    }
 }

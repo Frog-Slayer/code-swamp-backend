@@ -15,6 +15,7 @@ interface TokenService {
     fun storeRefreshToken(token: ValidatedRefreshToken)
     fun rotateRefreshToken(newToken: ValidatedRefreshToken)
     fun findRefreshTokenByUserId(userId: Long): ValidatedRefreshToken?
+    fun deleteRefreshTokenByUserId(userId: Long)
 
     //validate
     fun validateAccessToken(accessToken: RawAccessToken) : ValidatedAccessToken

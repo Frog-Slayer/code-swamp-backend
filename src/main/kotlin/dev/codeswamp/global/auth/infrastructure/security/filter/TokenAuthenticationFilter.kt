@@ -7,11 +7,12 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.authentication.AuthenticationServiceException
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter
 import org.springframework.security.web.util.matcher.RequestMatcher
 
 class TokenAuthenticationFilter(
-    private val requestMatcher: RequestMatcher,
+    requestMatcher: RequestMatcher,
     private val httpTokenAccessor: HttpTokenAccessor
 ) : AbstractAuthenticationProcessingFilter(requestMatcher){
 
@@ -28,12 +29,13 @@ class TokenAuthenticationFilter(
     }
 
     override fun successfulAuthentication(
-        request: HttpServletRequest?,
-        response: HttpServletResponse?,
-        chain: FilterChain?,
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+        chain: FilterChain,
         authResult: Authentication?
     ) {
-        super.successfulAuthentication(request, response, chain, authResult)
+        SecurityContextHolder.getContext().authentication = authResult
+        chain.doFilter(request, response)
     }
 
 }

@@ -16,6 +16,7 @@ data class AuthUserEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
+    @Column(unique = true)
     val username: String,
 
     @Enumerated(EnumType.STRING)

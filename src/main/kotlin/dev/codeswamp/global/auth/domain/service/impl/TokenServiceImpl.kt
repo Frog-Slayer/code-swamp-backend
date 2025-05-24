@@ -47,7 +47,7 @@ class TokenServiceImpl(
         require( !refreshToken.expired()) {"Token expired!"}
 
         val savedRefreshToken = tokenRepository.findRefreshTokenByToken(refreshToken.value)
-            ?: throw IllegalStateException("No user found for token")//TODO
+            ?: throw IllegalStateException("No user found for token ${refreshToken.value}")//TODO
 
         val authUserId = savedRefreshToken.authUser.id ?: throw IllegalStateException("No user found")
         val authUser = authUserService.findById(authUserId) ?: throw IllegalStateException("No user found")
@@ -82,5 +82,9 @@ class TokenServiceImpl(
 
     override fun findRefreshTokenByUserId(userId: Long): ValidatedRefreshToken? {
         return tokenRepository.findRefreshTokenByUserId(userId)
+    }
+
+    override fun deleteRefreshTokenByUserId(userId: Long) {
+        tokenRepository.findRefreshTokenByUserId(userId)?.let { tokenRepository.delete(it) }
     }
 }

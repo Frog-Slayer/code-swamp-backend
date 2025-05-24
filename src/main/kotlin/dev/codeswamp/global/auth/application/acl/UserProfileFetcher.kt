@@ -1,4 +1,4 @@
-package dev.codeswamp.global.auth.application.service
+package dev.codeswamp.global.auth.application.acl
 
 import dev.codeswamp.global.auth.application.dto.UserProfile
 

@@ -2,7 +2,7 @@ package dev.codeswamp.core.user.infrastructure.auth
 
 import dev.codeswamp.core.user.domain.service.UserService
 import dev.codeswamp.global.auth.application.dto.UserProfile
-import dev.codeswamp.global.auth.application.service.UserProfileFetcher
+import dev.codeswamp.global.auth.application.acl.UserProfileFetcher
 import org.springframework.stereotype.Component
 
 @Component

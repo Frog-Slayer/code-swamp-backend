@@ -1,13 +1,12 @@
 package dev.codeswamp.core.user.application.service
 
 import dev.codeswamp.core.user.domain.model.Nickname
-import dev.codeswamp.global.auth.domain.model.Role
 import dev.codeswamp.core.user.domain.model.User
 import dev.codeswamp.core.user.domain.model.Username
 import dev.codeswamp.core.user.domain.repository.UserRepository
 import dev.codeswamp.core.user.domain.service.UserService
 import dev.codeswamp.core.user.infrastructure.persistence.repository.UserJpaRepository
-import dev.codeswamp.core.user.presentation.dto.request.UserSignUpRequestDto
+import dev.codeswamp.core.user.presentation.dto.request.SignUpRequestDto
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -32,7 +31,7 @@ class UserApplicationServiceImplTest (
             profileUrl = null,
         )
 
-        val dto = UserSignUpRequestDto(
+        val dto = SignUpRequestDto(
             username = "username",
             nickname = "nick",
         )
