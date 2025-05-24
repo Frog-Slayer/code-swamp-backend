@@ -83,4 +83,8 @@ class TokenServiceImpl(
     override fun findRefreshTokenByUserId(userId: Long): ValidatedRefreshToken? {
         return tokenRepository.findRefreshTokenByUserId(userId)
     }
+
+    override fun deleteRefreshTokenByUserId(userId: Long) {
+        tokenRepository.findRefreshTokenByUserId(userId)?.let { tokenRepository.delete(it) }
+    }
 }

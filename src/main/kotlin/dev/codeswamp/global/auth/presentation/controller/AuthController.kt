@@ -1,6 +1,5 @@
 package dev.codeswamp.global.auth.presentation.controller
 
-import dev.codeswamp.global.auth.application.dto.UserProfile
 import dev.codeswamp.global.auth.application.service.AuthApplicationService
 import dev.codeswamp.global.auth.application.acl.UserProfileFetcher
 import dev.codeswamp.global.auth.infrastructure.web.HttpTokenAccessor

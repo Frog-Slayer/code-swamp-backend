@@ -77,8 +77,6 @@ class OAuth2LoginSuccessHandler(
         val refreshToken = authApplicationService.issueRefreshToken(user)
 
         authApplicationService.storeRefreshToken(refreshToken)
-
-        println("here")
         tokenAccessor.injectRefreshToken(response, refreshToken)
 
         val userProfile = userProfileFetcher.fetchUserProfile(user.id!!)

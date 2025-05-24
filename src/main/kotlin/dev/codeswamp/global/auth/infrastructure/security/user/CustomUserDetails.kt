@@ -19,4 +19,8 @@ class CustomUserDetails (
     override fun getUsername(): String? {
         return user?.username
     }
+
+    fun getId(): Long? {
+        return user?.id
+    }
 }

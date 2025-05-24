@@ -2,6 +2,8 @@ package dev.codeswamp.global.auth.infrastructure.security.config
 
 import dev.codeswamp.global.auth.application.service.AuthApplicationService
 import dev.codeswamp.global.auth.infrastructure.security.filter.TokenAuthenticationFilter
+import dev.codeswamp.global.auth.infrastructure.security.handler.CustomLogoutHandler
+import dev.codeswamp.global.auth.infrastructure.security.handler.CustomLogoutSuccessHandler
 import dev.codeswamp.global.auth.infrastructure.security.oauth2.service.CustomOAuth2Service
 import dev.codeswamp.global.auth.infrastructure.security.oauth2.handler.OAuth2LoginFailureHandler
 import dev.codeswamp.global.auth.infrastructure.security.oauth2.handler.OAuth2LoginSuccessHandler
@@ -20,7 +22,6 @@ import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.logout.LogoutFilter
 import org.springframework.security.web.util.matcher.RequestMatcher
 import org.springframework.web.cors.CorsConfiguration
-import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 
@@ -30,6 +31,9 @@ class SecurityConfig (
     private val customOAuth2Service: CustomOAuth2Service,
     private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler,
     private val oAuth2LoginFailureHandler: OAuth2LoginFailureHandler,
+    private val httpTokenAccessor: HttpTokenAccessor,
+    private val customLogoutHandler: CustomLogoutHandler,
+    private val customLogoutSuccessHandler: CustomLogoutSuccessHandler,
 ) {
 
     @Bean
@@ -56,7 +60,6 @@ class SecurityConfig (
     fun httpFilterChain(
         http: HttpSecurity,
         skipPathList: List<String>,
-        httpTokenAccessor: HttpTokenAccessor,
         authenticationManager: AuthenticationManager
     ): SecurityFilterChain? {
 
@@ -68,6 +71,11 @@ class SecurityConfig (
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .formLogin { it.disable() }
             .httpBasic { it.disable() }
+            .logout {
+                it.logoutUrl("/logout")
+                    .addLogoutHandler(customLogoutHandler)
+                    .logoutSuccessHandler(customLogoutSuccessHandler)
+            }
             .authorizeHttpRequests {
                 it.requestMatchers(*skipPathList.toTypedArray()).permitAll()
                 it.anyRequest().authenticated()
@@ -85,7 +93,7 @@ class SecurityConfig (
             }
         }
 
-        http.addFilterBefore(tokenAuthenticationFilter(httpTokenAccessor, authenticationManager, filterSkipMatcher),
+        http.addFilterBefore(tokenAuthenticationFilter( filterSkipMatcher, authenticationManager),
             LogoutFilter::class.java)
 
         return http.build()
@@ -95,10 +103,7 @@ class SecurityConfig (
     fun authenticationManager(authApplicationService: AuthApplicationService):  AuthenticationManager =
         ProviderManager(TokenAuthenticationProvider(authApplicationService))
 
-    fun tokenAuthenticationFilter(httpTokenAccessor: HttpTokenAccessor,
-                                  authenticationManager: AuthenticationManager,
-                                  requestMatcher: RequestMatcher,
-    )
+    fun tokenAuthenticationFilter(requestMatcher: RequestMatcher, authenticationManager: AuthenticationManager)
     : TokenAuthenticationFilter {
         val filter = TokenAuthenticationFilter(requestMatcher, httpTokenAccessor)
         filter.setAuthenticationManager(authenticationManager)

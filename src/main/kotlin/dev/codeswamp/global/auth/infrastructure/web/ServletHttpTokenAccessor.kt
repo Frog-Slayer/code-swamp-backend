@@ -11,10 +11,10 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 
 @Component
-class HttpTokenAccessor (
+class ServletHttpTokenAccessor (
     private val authApplicationService: AuthApplicationService,
     @Value("\${jwt.access-token-exp}") private val refreshTokenExpiration: Long,
-) {
+) : HttpTokenAccessor {
 
     override fun extractAccessToken(request: HttpServletRequest): RawAccessToken? {
         return request.getHeader("Authorization")
@@ -37,6 +37,16 @@ class HttpTokenAccessor (
         }
 
         response.addCookie(cookie)
-        println(response)
+    }
+
+    override fun invalidateRefreshToken(response: HttpServletResponse) {
+        val cookie = Cookie("refresh_token", null).apply {
+            path = "/"
+            isHttpOnly = true
+            secure = false //TODO
+            maxAge = 0
+        }
+
+        response.addCookie(cookie)
     }
 }
