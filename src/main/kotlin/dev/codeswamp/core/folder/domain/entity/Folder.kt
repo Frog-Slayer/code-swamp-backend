@@ -3,8 +3,8 @@ package dev.codeswamp.core.folder.domain.entity
 data class Folder(
     val id: Long? = null,
     val ownerId: Long,//user?UserId?
-    private var name: String,
-    private var parentId: Long? = null,
+    var name: String,
+    var parentId: Long? = null,//root = null
     val articles: MutableList<Long> = mutableListOf(),
 ) {
     fun rename(newName: String) {

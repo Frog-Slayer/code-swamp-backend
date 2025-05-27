@@ -1,5 +1,6 @@
 package dev.codeswamp.core.user.application.service
 
+import dev.codeswamp.core.user.application.acl.FolderServiceAcl
 import dev.codeswamp.core.user.application.dto.SignUpCommand
 import dev.codeswamp.core.user.domain.model.Nickname
 import dev.codeswamp.core.user.domain.model.User
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service
 @Service
 class UserApplicationServiceImpl(
     private val userService: UserService,
+    private val folderServiceAcl: FolderServiceAcl,
 ) : UserApplicationService {
 
     @Transactional
@@ -26,9 +28,10 @@ class UserApplicationServiceImpl(
                 profileUrl = command.profileImageUrl,
         )
 
-        //TODO 루트 폴더 생성
+        val user = userService.save(signUpUser)
 
-        return userService.save(signUpUser)
+        folderServiceAcl.createRootFolder(user.id!!)//TODO
+        return user
     }
 
     @Transactional

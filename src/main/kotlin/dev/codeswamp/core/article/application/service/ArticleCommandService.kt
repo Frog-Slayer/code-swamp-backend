@@ -1,9 +1,10 @@
 package dev.codeswamp.core.article.application.service
 
+import dev.codeswamp.core.article.application.dto.command.ArticleWriteCommand
 import dev.codeswamp.core.article.presentation.dto.request.ArticleMetadataDto
 
 interface ArticleCommandService {
-    fun create(userId: Long, metadata: ArticleMetadataDto, content: String)
+    fun create(articleWriteCommand: ArticleWriteCommand)
 
     fun updateArticleMetadata(userId: Long, articleId: Long, metadata: ArticleMetadataDto)
 

@@ -44,6 +44,7 @@ class SecurityConfig (
         "/oauth2/authorization/**",
         "/login/**",
         "/error/**",
+        "/h2-console/**"
     )
 
     @Bean
@@ -70,6 +71,7 @@ class SecurityConfig (
             .csrf{ it.disable() }
             .cors {}
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .headers { it.frameOptions { frame -> frame.sameOrigin() } }
             .formLogin { it.disable() }
             .httpBasic { it.disable() }
             .logout {
