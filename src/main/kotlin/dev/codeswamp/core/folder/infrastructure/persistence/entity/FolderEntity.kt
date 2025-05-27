@@ -1,5 +1,6 @@
 package dev.codeswamp.core.folder.infrastructure.persistence.entity
 
+import dev.codeswamp.core.folder.domain.entity.Folder
 import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -18,11 +19,25 @@ data class FolderEntity(
 
     var name: String,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
-    val owner: UserEntity,
+    val ownerId: Long,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     val parent: FolderEntity? = null,
-)
+) {
+    companion object {
+        fun from(folder: Folder, parent: FolderEntity?) = FolderEntity(
+            id = folder.id,
+            name = folder.name,
+            ownerId = folder.ownerId,
+            parent = parent
+        )
+    }
+
+    fun toDomain() = Folder (
+        id = id,
+        name = name,
+        ownerId = ownerId,
+        parentId = parent?.id
+    )
+}

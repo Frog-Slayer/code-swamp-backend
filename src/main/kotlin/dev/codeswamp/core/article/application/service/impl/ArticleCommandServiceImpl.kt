@@ -1,6 +1,8 @@
 package dev.codeswamp.core.article.application.service.impl
 
+import dev.codeswamp.core.article.application.dto.command.ArticleWriteCommand
 import dev.codeswamp.core.article.application.service.ArticleCommandService
+import dev.codeswamp.core.article.domain.model.Article
 import dev.codeswamp.core.article.domain.service.ArticleService
 import dev.codeswamp.core.article.presentation.dto.request.ArticleMetadataDto
 import dev.codeswamp.core.article.presentation.dto.response.ArticleReadResponseDto
@@ -11,12 +13,16 @@ class ArticleCommandServiceImpl(
     private val articleService: ArticleService,
 ) : ArticleCommandService {
 
-    override fun create(
-        userId: Long,
-        metadata: ArticleMetadataDto,
-        content: String
-    ) {
-        TODO("Not yet implemented")
+    override fun create(articleWriteCommand: ArticleWriteCommand) {
+        val (authorId, title, content, isPublic) = articleWriteCommand
+
+        articleService.create(Article(
+            title =  title,
+            authorId = authorId,
+            folderId = 1,//TODO
+            isPublic = isPublic,
+            content = content
+        ))
     }
 
     override fun updateArticleMetadata(

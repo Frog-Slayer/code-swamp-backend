@@ -2,6 +2,8 @@ package dev.codeswamp.core.folder.infrastructure.persistence.repository
 
 import dev.codeswamp.core.folder.domain.entity.Folder
 import dev.codeswamp.core.folder.domain.repository.FolderRepository
+import dev.codeswamp.core.folder.infrastructure.persistence.entity.FolderEntity
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 import java.util.Optional
 
@@ -11,7 +13,8 @@ class FolderRepositoryImpl(
 ) : FolderRepository {
 
     override fun save(folder: Folder): Folder {
-        TODO("Not yet implemented")
+        val parent = folder.parentId?.let{folderJpaRepository.findByIdOrNull(folder.parentId)}
+        return folderJpaRepository.save(FolderEntity.from(folder, parent)).toDomain()
     }
 
     override fun delete(folder: Folder) {

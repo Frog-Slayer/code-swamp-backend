@@ -8,8 +8,7 @@ import org.springframework.stereotype.Service
 class FolderService (
     private val folderRepository: FolderRepository
 ){
-
-    fun create(ownerId: Long, name: String, parentId: Long) : Folder {
+    fun create(ownerId: Long, name: String, parentId: Long?) : Folder {
         val folder = Folder(
             ownerId = ownerId,
             name = name,
