@@ -4,7 +4,7 @@ data class ArticleWriteRequestDto (
     val title: String,
     val content: String,
     val isPublic: Boolean,
-    val thumbnailUrl: String,
+    val thumbnailUrl: String?,
     val slug: String,
     val summary: String,
 )

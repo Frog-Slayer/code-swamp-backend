@@ -5,7 +5,8 @@ data class ArticleWriteCommand (
     val title: String,
     val content: String,
     val isPublic: Boolean,
-    val thumbnailUrl: String,
+    val thumbnailUrl: String?,
+    val folderId: Long,
     val slug: String,
     val summary: String,
 )

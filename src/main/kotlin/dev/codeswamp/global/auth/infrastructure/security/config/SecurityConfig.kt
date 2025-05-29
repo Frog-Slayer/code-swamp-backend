@@ -11,6 +11,7 @@ import dev.codeswamp.global.auth.infrastructure.security.provider.TokenAuthentic
 import dev.codeswamp.global.auth.infrastructure.security.util.FilterSkipMatcher
 import dev.codeswamp.global.auth.infrastructure.web.HttpTokenAccessor
 import jakarta.servlet.http.HttpServletResponse
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -35,6 +36,8 @@ class SecurityConfig (
     private val customLogoutHandler: CustomLogoutHandler,
     private val customLogoutSuccessHandler: CustomLogoutSuccessHandler,
 ) {
+    private val logger = LoggerFactory.getLogger(this::class.java)
+
 
     @Bean
     fun skipPathList(): List<String> = listOf(
@@ -91,10 +94,15 @@ class SecurityConfig (
                 it.failureHandler(oAuth2LoginFailureHandler)
             }
             .exceptionHandling {
+                logger.warn("auth failed")
+
                 it.authenticationEntryPoint { request, response, authException ->
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized")
             }
         }
+
+        logger.debug("authenticationManager {}", authenticationManager.javaClass)
+        logger.debug("provider {}", (authenticationManager as? ProviderManager)?.providers)
 
         http.addFilterBefore(tokenAuthenticationFilter( filterSkipMatcher, authenticationManager),
             LogoutFilter::class.java)

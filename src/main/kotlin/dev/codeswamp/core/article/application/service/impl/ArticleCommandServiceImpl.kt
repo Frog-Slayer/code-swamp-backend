@@ -13,14 +13,16 @@ class ArticleCommandServiceImpl(
 ) : ArticleCommandService {
 
     override fun create(articleWriteCommand: ArticleWriteCommand) {
-        //parse slug
 
         articleService.create(Article(
             title = articleWriteCommand.title,
             authorId = articleWriteCommand.userId,
-            folderId = 1,//TODO
+            folderId = articleWriteCommand.folderId,
             isPublic = articleWriteCommand.isPublic,
             content = articleWriteCommand.content,
+            summary = articleWriteCommand.summary,
+            thumbnailUrl = articleWriteCommand.thumbnailUrl,
+            slug = articleWriteCommand.slug,
         ))
     }
 

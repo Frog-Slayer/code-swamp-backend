@@ -52,6 +52,6 @@ class ArticleRepositoryImpl (
     }
 
     override fun findByFolderIdAndSlug(folderId: Long, slug: String): Article? {
-        return articleJpaRepository.findByFolderIdAndSlug(folderId, slug)
+        return articleJpaRepository.findByFolderIdAndSlug(folderId, slug)?.toDomain()
     }
 }
