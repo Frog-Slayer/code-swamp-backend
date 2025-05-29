@@ -39,6 +39,10 @@ class ArticleService (
         return articleRepository.save(article)
     }
 
+    fun findByFolderIdAndSlug(folderId: Long, slug: String): Article? {
+        return articleRepository.findByFolderIdAndSlug(folderId, slug)
+    }
+
     fun findById(articleId: Long): Article? {
         return articleRepository.findById(articleId)
     }

@@ -10,13 +10,16 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
 @Entity
-@Table(name = "article")
+@Table(name = "article",
+    uniqueConstraints = [UniqueConstraint(columnNames = ["folder_id", "slug"])]
+)
 data class ArticleEntity (
 
     @Id
@@ -45,17 +48,24 @@ data class ArticleEntity (
 
     val comments: MutableList<Long> = mutableListOf(),
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "folder_id")
     var folderId: Long,
 
     @OneToMany
     val views: MutableList<ArticleView> = mutableListOf(),
 
+    @Column(nullable = false, name = "slug")
+    val slug: String,
+
+    val summary: String = "",
+    val thumbnailUrl : String? = null,
+
+
 ) {
     fun toDomain(): Article {
         return Article(
             id = id,
-            title =  title,
+            title = title,
             type = ArticleType.NEW,//TODO
             authorId = authorId,
             folderId = folderId,
@@ -63,7 +73,10 @@ data class ArticleEntity (
             createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
             updatedAt = updatedAt.truncatedTo(ChronoUnit.MILLIS),
             currentVersion = currentVersion,
-            content = content
+            content = content,
+            slug = slug,
+            summary = summary,
+            thumbnailUrl = thumbnailUrl
         )
     }
 }

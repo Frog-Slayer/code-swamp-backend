@@ -5,7 +5,6 @@ import dev.codeswamp.core.article.application.service.ArticleCommandService
 import dev.codeswamp.core.article.domain.model.Article
 import dev.codeswamp.core.article.domain.service.ArticleService
 import dev.codeswamp.core.article.presentation.dto.request.ArticleMetadataDto
-import dev.codeswamp.core.article.presentation.dto.response.ArticleReadResponseDto
 import org.springframework.stereotype.Service
 
 @Service
@@ -14,14 +13,14 @@ class ArticleCommandServiceImpl(
 ) : ArticleCommandService {
 
     override fun create(articleWriteCommand: ArticleWriteCommand) {
-        val (authorId, title, content, isPublic) = articleWriteCommand
+        //parse slug
 
         articleService.create(Article(
-            title =  title,
-            authorId = authorId,
+            title = articleWriteCommand.title,
+            authorId = articleWriteCommand.userId,
             folderId = 1,//TODO
-            isPublic = isPublic,
-            content = content
+            isPublic = articleWriteCommand.isPublic,
+            content = articleWriteCommand.content,
         ))
     }
 

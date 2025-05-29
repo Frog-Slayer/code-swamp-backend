@@ -20,7 +20,7 @@ class ArticleRepositoryImpl (
             id = article.id,
             title = article.title,
             authorId = article.authorId,
-            currentVersion =  article.currentVersion ?: 0,
+            currentVersion = article.currentVersion ?: 0,
             content = article.content,
             createdAt = article.createdAt,
             updatedAt = article.updatedAt,
@@ -28,6 +28,9 @@ class ArticleRepositoryImpl (
             views = existingArticleEntity?.views ?: mutableListOf(),
             comments = existingArticleEntity?.comments ?: mutableListOf(),
             folderId = article.folderId,
+            slug = article.slug,
+            summary = article.summary,
+            thumbnailUrl = article.thumbnailUrl,
         )
 
         return articleJpaRepository.save(articleEntity).toDomain()
@@ -46,5 +49,9 @@ class ArticleRepositoryImpl (
         return articleJpaRepository.findById(articleId)
             .map { it.toDomain() }
             .orElse(null)
+    }
+
+    override fun findByFolderIdAndSlug(folderId: Long, slug: String): Article? {
+        return articleJpaRepository.findByFolderIdAndSlug(folderId, slug)
     }
 }
