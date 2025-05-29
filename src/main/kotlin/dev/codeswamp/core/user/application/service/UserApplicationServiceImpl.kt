@@ -29,8 +29,9 @@ class UserApplicationServiceImpl(
         )
 
         val user = userService.save(signUpUser)
+        val userId = requireNotNull(user.id)
 
-        folderServiceAcl.createRootFolder(user.id!!)//TODO
+        folderServiceAcl.createRootFolder(userId, command.username)
         return user
     }
 

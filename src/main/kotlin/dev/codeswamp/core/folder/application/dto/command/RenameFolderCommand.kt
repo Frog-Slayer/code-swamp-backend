@@ -1,7 +1,7 @@
 package dev.codeswamp.core.folder.application.dto.command
 
-data class CreateFolderCommand (
+data class RenameFolderCommand (
     val userId: Long,
-    val name: String,
-    val parentId: Long
+    val folderId: Long,
+    val newName: String
 )

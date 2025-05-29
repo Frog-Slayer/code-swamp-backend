@@ -19,29 +19,22 @@ class TokenAuthenticationProvider(
     override fun authenticate(authentication: Authentication?): Authentication {
         log.debug("authenticate()")
 
-        try {
-            val accessToken = authentication?.principal as? RawAccessToken
-                ?: throw AuthenticationServiceException("Invalid principal")
+        val accessToken = authentication?.principal as? RawAccessToken
+            ?: throw AuthenticationServiceException("Invalid principal")
 
 
-            log.info("Authenticate with token $accessToken")
+        log.info("Authenticate with token $accessToken")
 
-            val validatedAccessToken = authApplication.validateAccessToken(accessToken)
+        val validatedAccessToken = authApplication.validateAccessToken(accessToken)
 
-            val userDetails = CustomUserDetails(
-                validatedAccessToken.authUser
-            )
+        val userDetails = CustomUserDetails(
+            validatedAccessToken.authUser
+        )
 
-            log.info("authenticated")
+        log.info("authenticated")
 
-            return AuthenticationToken.authenticated(userDetails, null, userDetails.authorities)
-        }catch(e: Exception) {
-            log.error(e.message, e)
-        }
-
-        throw AuthenticationServiceException("Invalid token")
-
-    }
+        return AuthenticationToken.authenticated(userDetails, null, userDetails.authorities)
+}
     override fun supports(authentication: Class<*>?): Boolean {
         log.debug("Checking support for: ${authentication?.simpleName}")
         return authentication != null && AuthenticationToken::class.java.isAssignableFrom(authentication)

@@ -1,7 +1,6 @@
 package dev.codeswamp.core.folder.application.dto.command
 
-data class CreateFolderCommand (
+data class CreateRootFolderCommand (
     val userId: Long,
     val name: String,
-    val parentId: Long
 )

@@ -1,6 +1,7 @@
 package dev.codeswamp.core.folder.infrastructure.graph.node
 
 import dev.codeswamp.core.article.infrastructure.graph.node.ArticleNode
+import dev.codeswamp.core.folder.domain.entity.Folder
 import org.springframework.data.neo4j.core.schema.GeneratedValue
 import org.springframework.data.neo4j.core.schema.Id
 import org.springframework.data.neo4j.core.schema.Node
@@ -12,13 +13,16 @@ data class FolderNode (
     var id: Long? = null,
 
     val folderId: Long,
-
-    @Relationship(value = "CONTAINS", direction = Relationship.Direction.OUTGOING)
-    val articles: List<ArticleNode> = mutableListOf(),
-
-    @Relationship(value = "HAS_CHILD", direction = Relationship.Direction.OUTGOING)
-    val children: List<FolderNode> = mutableListOf(),
+    val name: String,
 
     @Relationship(value = "HAS_CHILD", direction = Relationship.Direction.INCOMING)
     val parent: FolderNode? = null,
-)
+) {
+    companion object {
+        fun from(folder: Folder, parent: FolderNode?): FolderNode =  FolderNode(
+            folderId = folder.id!!,
+            name = folder.name,
+            parent = parent
+        )
+    }
+}
