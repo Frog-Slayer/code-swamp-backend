@@ -8,19 +8,13 @@ import org.springframework.stereotype.Service
 class FolderService (
     private val folderRepository: FolderRepository
 ){
-    fun create(ownerId: Long, name: String, parentId: Long?) : Folder {
-        val folder = Folder(
-            ownerId = ownerId,
-            name = name,
-            parentId = parentId
-        )
+    fun create(folder: Folder) : Folder {
         return folderRepository.save(folder)
     }
 
     //TODO - Exception 구체화
-    fun findById(id: Long): Folder {
+    fun findById(id: Long): Folder? {
         return folderRepository.findById(id)
-            .orElseThrow{ NoSuchElementException("no")}
     }
 
     fun findAllByIds(folderIds: List<Long>) : List<Folder> {
@@ -28,30 +22,21 @@ class FolderService (
     }
 
     //TODO - Exception 구체화
-    fun rename(folderId: Long, newName: String) {
-        val folder = folderRepository.findById(folderId)
-            .orElseThrow{ IllegalArgumentException("Folder with id $folderId not found") }
-
-        folder.rename(newName)
+    fun moveTo(folder: Folder, newParent: Folder) {
+        newParent.id?.let{ folder.parentId = it}
         folderRepository.save(folder)
     }
 
-    //TODO - Exception 구체화
-    fun moveTo(folderId: Long, newParentId: Long) {
-       val folder = folderRepository.findById(folderId)
-            .orElseThrow{ IllegalArgumentException("Folder with id $folderId not found") }
-
-        folder.moveTo(newParentId)
-        folderRepository.save(folder)
-    }
-
-    fun delete(folderId: Long) {
-        val folder = folderRepository.findById(folderId)
-            .orElseThrow{ IllegalArgumentException("Folder with id $folderId not found") }
-
+    fun delete(folder: Folder) {
         folderRepository.delete(folder)
     }
 
+    fun findFolderByFullPath(rootName: String, paths: List<String>): Folder? {
+        return folderRepository.findFolderByFullPath(rootName, paths)
+    }
 
-
+    fun checkDuplicatedFolderNameInSameLevel(parent: Folder, name: String) : Boolean{
+        requireNotNull(parent.id) {"parent folder id required"}
+        return folderRepository.existsByParentIdAndName(parent.id, name)
+    }
 }

@@ -1,13 +1,14 @@
 package dev.codeswamp.global.auth.infrastructure.security.token
 
 import dev.codeswamp.global.auth.domain.model.token.RawAccessToken
+import dev.codeswamp.global.auth.infrastructure.security.user.CustomUserDetails
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
 sealed class Principal {
     data class AccessToken(val token: RawAccessToken) : Principal()
-    data class AuthenticatedUser(val userDetails: UserDetails) : Principal()
+    data class AuthenticatedUser(val userDetails: CustomUserDetails) : Principal()
 }
 
 class AuthenticationToken private constructor(
@@ -26,12 +27,15 @@ class AuthenticationToken private constructor(
     }
 
     override fun getPrincipal(): Any? {
-        return principal
+        return when (principal) {
+            is Principal.AuthenticatedUser -> principal.userDetails
+            is Principal.AccessToken -> principal.token
+        }
     }
 
     companion object {
         fun authenticated (
-            principal: UserDetails,
+            principal: CustomUserDetails,
             credentials: Any?,
             authorities: Collection<GrantedAuthority?>?
         ) : AuthenticationToken {

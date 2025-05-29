@@ -8,4 +8,5 @@ interface ArticleRepository {
 
     fun findAllByIds(articleIds : List<Long>): List<Article>
     fun findById(articleId : Long): Article?
+    fun findByFolderIdAndSlug(folderId: Long, slug: String): Article?
 }
