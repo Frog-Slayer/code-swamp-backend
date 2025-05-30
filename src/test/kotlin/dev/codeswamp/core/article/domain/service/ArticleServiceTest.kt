@@ -32,7 +32,11 @@ class ArticleServiceTest (
             isPublic = true,
             createdAt = Instant.now(),
             updatedAt = Instant.now(),
-            content = "this is my content"
+            content = "this is my content",
+            summary = TODO(),
+            thumbnailUrl = TODO(),
+            slug = TODO(),
+            currentVersion = TODO()
         )
 
         val saved = articleService.create(article)

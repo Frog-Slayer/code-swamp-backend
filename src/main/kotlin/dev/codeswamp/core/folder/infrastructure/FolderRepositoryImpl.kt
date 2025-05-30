@@ -8,7 +8,6 @@ import dev.codeswamp.core.folder.infrastructure.persistence.entity.FolderEntity
 import dev.codeswamp.core.folder.infrastructure.persistence.repository.FolderJpaRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
-import java.util.Optional
 
 @Repository
 class FolderRepositoryImpl(

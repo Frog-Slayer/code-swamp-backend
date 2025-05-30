@@ -38,3 +38,4 @@ out/
 
 ### screet ###
 **/application-secret.yml
+**/code-swamp-**.json
