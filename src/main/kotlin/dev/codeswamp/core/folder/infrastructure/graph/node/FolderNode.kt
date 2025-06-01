@@ -1,6 +1,5 @@
 package dev.codeswamp.core.folder.infrastructure.graph.node
 
-import dev.codeswamp.core.article.infrastructure.graph.node.ArticleNode
 import dev.codeswamp.core.folder.domain.entity.Folder
 import org.springframework.data.neo4j.core.schema.GeneratedValue
 import org.springframework.data.neo4j.core.schema.Id
