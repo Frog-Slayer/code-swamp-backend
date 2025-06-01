@@ -33,7 +33,9 @@ class ArticleRepositoryImpl (
             thumbnailUrl = article.thumbnailUrl,
         )
 
-        return articleJpaRepository.save(articleEntity).toDomain()
+        val saved = articleJpaRepository.save(articleEntity).toDomain()
+
+        return saved
     }
 
     override fun deleteById(id: Long) {

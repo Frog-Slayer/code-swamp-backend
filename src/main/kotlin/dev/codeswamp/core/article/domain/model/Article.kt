@@ -1,7 +1,6 @@
 package dev.codeswamp.core.article.domain.model
 
-import com.fasterxml.jackson.annotation.JsonFormat
-import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
+import org.springframework.security.access.AccessDeniedException
 import java.time.Instant
 
 data class Article (
@@ -36,4 +35,14 @@ data class Article (
     fun updateDate() {
         updatedAt = Instant.now()
     }
+
+    fun checkOwnership(userId: Long) {
+        if (authorId != userId) throw AccessDeniedException("You are not the owner of this article")
+    }
+
+    fun assertReadableBy(userId: Long?) {
+        if (!isPublic && (userId == null || authorId != userId))
+            throw AccessDeniedException("cannot read private article")
+    }
+
 }
