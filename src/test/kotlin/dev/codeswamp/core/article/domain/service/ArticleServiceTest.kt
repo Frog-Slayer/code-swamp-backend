@@ -1,10 +1,10 @@
 package dev.codeswamp.core.article.domain.service
 
-import dev.codeswamp.core.article.domain.model.Article
-import dev.codeswamp.core.article.domain.model.ArticleType
-import dev.codeswamp.core.article.domain.repository.ArticleDiffRepository
-import dev.codeswamp.core.article.domain.repository.ArticleRepository
-import dev.codeswamp.core.article.infrastructure.graph.repository.HistoryNodeRepository
+import dev.codeswamp.core.article.domain.article.model.Article
+import dev.codeswamp.core.article.domain.article.model.ArticleStatus
+import dev.codeswamp.core.article.domain.article.service.ArticleDomainService
+import dev.codeswamp.core.article.domain.article.service.ArticleHistoryService
+import dev.codeswamp.core.article.infrastructure.persistence.graph.repository.HistoryNodeRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
@@ -19,14 +19,14 @@ import java.time.Instant
 class ArticleServiceTest (
     @Autowired private val historyNodeRepository: HistoryNodeRepository,
     @Autowired private val historyService: ArticleHistoryService,
-    @Autowired private val articleService: ArticleService,
+    @Autowired private val articleDomainService: ArticleDomainService,
 ){
 
     @BeforeAll
     fun create() {
         val article = Article(
             title = "title",
-            type = ArticleType.NEW,
+            status = ArticleStatus.NEW,
             authorId = 1L,
             folderId = 1L,
             isPublic = true,
@@ -39,7 +39,7 @@ class ArticleServiceTest (
             currentVersion = TODO()
         )
 
-        val saved = articleService.create(article)
+        val saved = articleDomainService.create(article)
 
         assertThat(saved).isNotNull()
         assertThat(saved.title).isEqualTo("title")
@@ -48,12 +48,12 @@ class ArticleServiceTest (
 
     @Test
     fun contentUpdateTest() {
-        val article = articleService.findById(1L) ?: throw Exception("something went wrong")
+        val article = articleDomainService.findById(1L) ?: throw Exception("something went wrong")
 
         val updateString = "this content is updated"
         article.content = updateString
 
-        val saved = articleService.update(article)
+        val saved = articleDomainService.update(article)
 
         assertThat(saved).isNotNull()
         assertThat(saved.content).isEqualTo(updateString)
@@ -67,15 +67,15 @@ class ArticleServiceTest (
 
     @Test
     fun metadataChangeTest() {
-        val article = articleService.findById(1L)?.copy(
+        val article = articleDomainService.findById(1L)?.copy(
             title = "title22",
-            type = ArticleType.PUBLISHED,
+            status = ArticleStatus.PUBLISHED,
             authorId = 1L,
             folderId = 1L,
             isPublic = false,
         ) ?: throw Exception("something went wrong")
 
-        val saved = articleService.update(article)
+        val saved = articleDomainService.update(article)
 
         assertThat(saved).isNotNull()
         assertThat(saved.id).isEqualTo(1L)
@@ -87,7 +87,7 @@ class ArticleServiceTest (
     fun findById() {
         val article = Article(
             title = "title",
-            type = ArticleType.NEW,
+            status = ArticleStatus.NEW,
             authorId = 1L,
             folderId = 1L,
             isPublic = true,
@@ -96,36 +96,36 @@ class ArticleServiceTest (
             content = "this is my content"
         )
 
-        val saved = articleService.create(article)
-        val found = articleService.findById(2L) ?: throw Exception("something went wrong")
+        val saved = articleDomainService.create(article)
+        val found = articleDomainService.findById(2L) ?: throw Exception("something went wrong")
 
         assertThat(saved).isEqualTo(found)
     }
 
     @Test
     fun deleteById() {
-        articleService.deleteById(1L)
-        assertNull(articleService.findById(1L))
+        articleDomainService.deleteById(1L)
+        assertNull(articleDomainService.findById(1L))
     }
 
     @Test
     fun rollback() {
-        val saved = articleService.findById(1L) ?: throw Exception("something went wrong")
+        val saved = articleDomainService.findById(1L) ?: throw Exception("something went wrong")
         println(saved)
         saved.changeContent("second version")
 
-        val updated = articleService.update(saved)
+        val updated = articleDomainService.update(saved)
         assertNotNull(updated.currentVersion)
         assertThat(updated.currentVersion).isEqualTo(2L)
         println(updated)
 
-        val rollbacked = articleService.rollbackTo(updated, 1L)
+        val rollbacked = articleDomainService.rollbackTo(updated, 1L)
         assertNotNull(rollbacked.currentVersion)
         assertThat(rollbacked.currentVersion).isEqualTo(1L)
         println(rollbacked)
         rollbacked.changeContent("third version")
 
-        val doubleUpdated = articleService.update(rollbacked)
+        val doubleUpdated = articleDomainService.update(rollbacked)
         assertNotNull(doubleUpdated.currentVersion)
         assertThat(doubleUpdated.currentVersion).isEqualTo(3L)
         println(doubleUpdated)
@@ -141,13 +141,13 @@ class ArticleServiceTest (
     @Test
     fun treebuildTest() {
         fun roll(version: Long) : Long {
-            val saved= articleService.findById( 1L) ?: throw Exception("something went wrong")
+            val saved= articleDomainService.findById( 1L) ?: throw Exception("something went wrong")
             saved.changeContent("updated $version")
-            val updated = articleService.update(saved)
-            val rollbacked = articleService.rollbackTo(updated, version)
+            val updated = articleDomainService.update(saved)
+            val rollbacked = articleDomainService.rollbackTo(updated, version)
             rollbacked.changeContent("updated after rollback $version")
 
-            return articleService.update(rollbacked).currentVersion!!
+            return articleDomainService.update(rollbacked).currentVersion!!
         }
 
         val depth = 3;

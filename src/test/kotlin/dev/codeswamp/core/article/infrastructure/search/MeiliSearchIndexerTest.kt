@@ -1,9 +1,10 @@
 package dev.codeswamp.core.article.infrastructure.search
 
-import dev.codeswamp.core.article.application.dto.ArticleIndexDTO
-import dev.codeswamp.core.article.application.dto.ArticleSearchDTO
-import dev.codeswamp.core.article.domain.model.Article
-import dev.codeswamp.core.article.infrastructure.search.config.MeiliSearchConfig
+import dev.codeswamp.core.article.application.dto.command.ArticleIndexDTO
+import dev.codeswamp.core.article.application.dto.command.ArticleSearchDTO
+import dev.codeswamp.core.article.domain.article.model.Article
+import dev.codeswamp.core.article.infrastructure.persistence.search.config.MeiliSearchConfig
+import dev.codeswamp.core.article.infrastructure.persistence.search.MeiliSearchIndexer
 import dev.codeswamp.core.article.infrastructure.support.FlexMarkdownPreprocessor
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll

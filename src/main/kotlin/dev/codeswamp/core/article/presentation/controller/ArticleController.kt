@@ -1,18 +1,20 @@
 package dev.codeswamp.core.article.presentation.controller
 
 import dev.codeswamp.core.article.application.dto.command.ArticleWriteCommand
+import dev.codeswamp.core.article.application.dto.query.GetArticleByIdQuery
+import dev.codeswamp.core.article.application.dto.query.GetArticleByPathQuery
 import dev.codeswamp.core.article.application.dto.query.GetVersionedArticleQuery
-import dev.codeswamp.core.article.application.service.ArticleCommandService
-import dev.codeswamp.core.article.application.service.ArticleQueryService
-import dev.codeswamp.core.article.domain.model.Article
-import dev.codeswamp.core.article.presentation.dto.request.ArticleWriteRequestDto
-import dev.codeswamp.core.article.presentation.dto.response.ArticleReadResponseDto
+import dev.codeswamp.core.article.application.usecase.ArticleCommandUseCase
+import dev.codeswamp.core.article.application.usecase.ArticleQueryUseCase
+import dev.codeswamp.core.article.domain.article.model.Article
+import dev.codeswamp.core.article.presentation.dto.request.ArticleCreateRequestDto
 import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
 import dev.codeswamp.global.auth.infrastructure.security.user.CustomUserDetails
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -22,14 +24,17 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/articles")
 class ArticleController(
-    private val articleCommandService: ArticleCommandService,
-    private val articleQueryService: ArticleQueryService
+    private val articleCommandUsecase: ArticleCommandUseCase,
+    private val articleQueryService: ArticleQueryUseCase
 ){
-    @GetMapping("/{id}")
-    fun getArticleWithId(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable id:Long): ArticleReadResponseDto? {
-        val userId = user.getId()
+    //TODO(ResponseDTO & 예외 처리)
 
-        TODO()
+    @GetMapping("/{articleId}")
+    fun getArticleWithId(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable articleId:Long): Article {
+        return articleQueryService.findByArticleId(GetArticleByIdQuery(
+            userId = user.getId(),
+            articleId = articleId
+        ))
     }
 
     @GetMapping("/@{username}/**")
@@ -37,16 +42,18 @@ class ArticleController(
         @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable username: String,
         httpServletRequest: HttpServletRequest
-    ) {
+    ) : Article {
+        val fullPath = httpServletRequest.requestURI
 
-
+        return articleQueryService.getArticleByUsernameAndPath(GetArticleByPathQuery(
+            userId = user.getId(),
+            path = fullPath
+        ))
     }
-
 
     @GetMapping("/{articleId}/versions/{versionId}")
     fun getVersionedArticle(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable articleId: Long, @PathVariable versionId: Long) : Article{
         val userId = requireNotNull(user.getId())
-
         return articleQueryService.getVersionedArticle(
             GetVersionedArticleQuery(
                 userId = userId,
@@ -57,27 +64,47 @@ class ArticleController(
     }
 
     @PostMapping
-    fun saveArticle(@AuthenticationPrincipal user: CustomUserDetails, @RequestBody articleWriteRequestDto: ArticleWriteRequestDto) {
+    fun publishNewArticle(@AuthenticationPrincipal user: CustomUserDetails, @RequestBody articleCreateRequestDto: ArticleCreateRequestDto) {
         val userId = requireNotNull(user.getId())
 
         val articleWriteCommand = ArticleWriteCommand(
             userId = userId,
-            title = articleWriteRequestDto.title,
-            content = articleWriteRequestDto.content,
-            isPublic = articleWriteRequestDto.isPublic,
-            thumbnailUrl = articleWriteRequestDto.thumbnailUrl,
-            slug = articleWriteRequestDto.slug,
-            summary = articleWriteRequestDto.summary,
+            title = articleCreateRequestDto.title,
+            content = articleCreateRequestDto.content,
+            isPublic = articleCreateRequestDto.isPublic,
+            thumbnailUrl = articleCreateRequestDto.thumbnailUrl,
+            slug = articleCreateRequestDto.slug,
+            summary = articleCreateRequestDto.summary,
             folderId = 1L
         )
 
-        articleCommandService.create(articleWriteCommand)
+        articleCommandUsecase.create(articleWriteCommand)
+    }
+
+    @PatchMapping("/{articleId}/versions/{versionId}")
+    fun updateArticle (@AuthenticationPrincipal user: CustomUserDetails,
+                       @PathVariable articleId: Long,
+                       @PathVariable versionId: Long,
+                       @RequestBody articleCreateRequestDto: ArticleCreateRequestDto) {
+
+        val userId = requireNotNull(user.getId())
+
+        val articleWriteCommand = ArticleWriteCommand(
+            userId = userId,
+            title = articleCreateRequestDto.title,
+            content = articleCreateRequestDto.content,
+            isPublic = articleCreateRequestDto.isPublic,
+            thumbnailUrl = articleCreateRequestDto.thumbnailUrl,
+            slug = articleCreateRequestDto.slug,
+            summary = articleCreateRequestDto.summary,
+            folderId = 1L
+        )
+
+        articleCommandUsecase.create(articleWriteCommand)
     }
 
     @DeleteMapping("/{id}")
     fun deleteArticle(@AuthenticationPrincipal user: UserEntity, @PathVariable id: Long) {
         TODO("Not yet implemented")
     }
-
-
 }
