@@ -1,20 +1,19 @@
 package dev.codeswamp.core.user.application.service
 
-import dev.codeswamp.core.user.application.acl.FolderServiceAcl
+import dev.codeswamp.core.user.application.acl.FolderAcl
 import dev.codeswamp.core.user.application.dto.SignUpCommand
 import dev.codeswamp.core.user.domain.model.Nickname
 import dev.codeswamp.core.user.domain.model.User
 import dev.codeswamp.core.user.domain.model.Username
 import dev.codeswamp.core.user.domain.service.UserService
 import dev.codeswamp.core.user.presentation.dto.request.NicknameChangeRequestDto
-import dev.codeswamp.core.user.presentation.dto.request.SignUpRequestDto
 import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
 @Service
 class UserApplicationServiceImpl(
     private val userService: UserService,
-    private val folderServiceAcl: FolderServiceAcl,
+    private val folderAcl: FolderAcl,
 ) : UserApplicationService {
 
     @Transactional
@@ -31,7 +30,7 @@ class UserApplicationServiceImpl(
         val user = userService.save(signUpUser)
         val userId = requireNotNull(user.id)
 
-        folderServiceAcl.createRootFolder(userId, command.username)
+        folderAcl.createRootFolder(userId, command.username)
         return user
     }
 
