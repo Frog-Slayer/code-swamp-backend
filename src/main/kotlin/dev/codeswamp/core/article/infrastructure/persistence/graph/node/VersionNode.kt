@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.infrastructure.persistence.graph.node
 
-import dev.codeswamp.core.article.domain.version.model.Version
+import dev.codeswamp.core.article.domain.article.model.Version
 import org.springframework.data.neo4j.core.schema.GeneratedValue
 import org.springframework.data.neo4j.core.schema.Id
 import org.springframework.data.neo4j.core.schema.Node

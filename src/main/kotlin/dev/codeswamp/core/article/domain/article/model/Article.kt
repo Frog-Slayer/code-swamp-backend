@@ -1,29 +1,48 @@
 package dev.codeswamp.core.article.domain.article.model
 
-import dev.codeswamp.core.article.domain.support.IdGenerator
 import org.springframework.security.access.AccessDeniedException
 import java.time.Instant
 
 data class Article (
-    val id: Long = IdGenerator.generate(),
-    val status: ArticleStatus,
-
-    val title: String = "",
+    /**
+     * Metadata: 메타 데이터 변경은 버전 관리에 포함되지 않는다.
+     */
+    val id: Long,
     val authorId: Long,
-
+    val folderId: Long,
     val summary: String,
     val thumbnailUrl: String? = null,
+    val isPublic : Boolean,
 
-    val isPublic: Boolean = true,
-    val content: String, //content(raw Markdown document)
+    /**
+     * isPublished: 한 번 publish된 이후에는 true를 유지.
+     * Draft 상태에서는 false, publish 후에는 변경 금지.
+     */
+    val isPublished : Boolean,//한번 publish된 이후에는 true를 유지
 
-    val slug: String,
-    val folderId: Long,//TODO 의존성..?
+    /**
+     * title & slug:
+     * - publish된 이후에는 반드시 non-empty여야 하며, 각 폴더 내에서 유일해야 한다.
+     * - slug는 식별자로 사용됨.
+     */
+    val title: String? = null,
+    val slug: String? = null,
 
+
+    /**
+     * createdAt: 문서 최초 생성 시점
+     * updatedAt은 currentVersion의 createdAt과 동일하다.
+     */
     val createdAt: Instant = Instant.now(),
-    val updatedAt: Instant = Instant.now(),
-    val currentVersion: Long? = null,
 
+
+    /**
+     * Content 및 버전 관리:
+     * - content(raw Markdown document)는 오직 변경 시에만 새로운 Version 생성됨.
+     * - currentVersion은 현재 버전
+     */
+    val content: String,
+    val currentVersion: Version
     ) {
 
     fun checkOwnership(userId: Long) {

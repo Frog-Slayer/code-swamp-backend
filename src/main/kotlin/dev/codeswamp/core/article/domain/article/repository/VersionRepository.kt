@@ -1,6 +1,6 @@
-package dev.codeswamp.core.article.domain.version.repository
+package dev.codeswamp.core.article.domain.article.repository
 
-import dev.codeswamp.core.article.domain.version.model.Version
+import dev.codeswamp.core.article.domain.article.model.Version
 
 interface VersionRepository {
     fun save(version: Version): Version

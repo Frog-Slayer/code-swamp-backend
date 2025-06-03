@@ -5,7 +5,7 @@ import dev.codeswamp.core.article.application.dto.query.GetArticleByPathQuery
 import dev.codeswamp.core.article.application.dto.query.GetVersionedArticleQuery
 import dev.codeswamp.core.article.application.usecase.ArticleQueryUseCase
 import dev.codeswamp.core.article.domain.article.model.Article
-import dev.codeswamp.core.article.domain.version.service.VersionService
+import dev.codeswamp.core.article.domain.article.service.VersionService
 import dev.codeswamp.core.article.domain.article.service.ArticleDomainService
 import dev.codeswamp.core.article.domain.folder.service.FolderDomainService
 import dev.codeswamp.core.article.presentation.dto.response.ArticleReadResponseDto

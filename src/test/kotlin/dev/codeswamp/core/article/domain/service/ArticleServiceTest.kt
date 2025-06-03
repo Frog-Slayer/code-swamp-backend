@@ -3,7 +3,7 @@ package dev.codeswamp.core.article.domain.service
 import dev.codeswamp.core.article.domain.article.model.Article
 import dev.codeswamp.core.article.domain.article.model.ArticleStatus
 import dev.codeswamp.core.article.domain.article.service.ArticleDomainService
-import dev.codeswamp.core.article.domain.version.service.VersionService
+import dev.codeswamp.core.article.domain.article.service.VersionService
 import dev.codeswamp.core.article.infrastructure.persistence.graph.repository.VersionNodeRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*

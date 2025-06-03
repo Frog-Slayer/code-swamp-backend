@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.infrastructure.persistence.jpa.entity
 
-import dev.codeswamp.core.article.domain.version.model.Version
+import dev.codeswamp.core.article.domain.article.model.Version
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType

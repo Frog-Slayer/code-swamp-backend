@@ -2,7 +2,7 @@ package dev.codeswamp.core.article.domain.article.service
 
 import dev.codeswamp.core.article.domain.article.model.Article
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
-import dev.codeswamp.core.article.domain.version.service.VersionService
+import dev.codeswamp.core.article.domain.article.service.VersionService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

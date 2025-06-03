@@ -1,4 +1,4 @@
-package dev.codeswamp.core.article.domain.version.model
+package dev.codeswamp.core.article.domain.article.model
 
 import java.time.Instant
 

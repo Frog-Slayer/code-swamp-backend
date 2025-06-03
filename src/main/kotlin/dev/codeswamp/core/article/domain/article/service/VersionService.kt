@@ -1,9 +1,9 @@
-package dev.codeswamp.core.article.domain.version.service
+package dev.codeswamp.core.article.domain.article.service
 
 import dev.codeswamp.core.article.domain.article.model.Article
+import dev.codeswamp.core.article.domain.article.model.Version
+import dev.codeswamp.core.article.domain.article.repository.VersionRepository
 import dev.codeswamp.core.article.domain.support.ArticleDiffProcessor
-import dev.codeswamp.core.article.domain.version.model.Version
-import dev.codeswamp.core.article.domain.version.repository.VersionRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
 
