@@ -43,7 +43,23 @@ data class Article (
      */
     val content: String,
     val currentVersion: Version
-    ) {
+) {
+    fun updateMetadata(
+        folderId: Long? = null ,
+        summary: String? = null,
+        thumbnailUrl: String? = null,
+        isPublic : Boolean? = null,
+        title: String? = null,
+        slug: String? = null,
+    ) : Article {
+        TODO()
+    }
+
+    fun updateContent(content: String? = null) : Article {
+        TODO()
+    }
+
+
 
     fun checkOwnership(userId: Long) {
         if (authorId != userId) throw AccessDeniedException("You are not the owner of this article")
@@ -53,5 +69,4 @@ data class Article (
         if (!isPublic && (userId == null || authorId != userId))
             throw AccessDeniedException("cannot read private article")
     }
-
 }
