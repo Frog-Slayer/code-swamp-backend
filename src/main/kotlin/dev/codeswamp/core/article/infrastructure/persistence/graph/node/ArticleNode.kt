@@ -12,5 +12,5 @@ data class ArticleNode (
     val articleId: Long,//PK of RDB entity
 
     @Relationship(type = "HAS_VERSION", direction = Relationship.Direction.OUTGOING)
-    var currentVersion: HistoryNode? = null
+    var currentVersion: VersionNode? = null
 )

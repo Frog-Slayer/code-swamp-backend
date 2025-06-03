@@ -3,8 +3,8 @@ package dev.codeswamp.core.article.domain.service
 import dev.codeswamp.core.article.domain.article.model.Article
 import dev.codeswamp.core.article.domain.article.model.ArticleStatus
 import dev.codeswamp.core.article.domain.article.service.ArticleDomainService
-import dev.codeswamp.core.article.domain.article.service.ArticleHistoryService
-import dev.codeswamp.core.article.infrastructure.persistence.graph.repository.HistoryNodeRepository
+import dev.codeswamp.core.article.domain.version.service.VersionService
+import dev.codeswamp.core.article.infrastructure.persistence.graph.repository.VersionNodeRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeAll
@@ -17,8 +17,8 @@ import java.time.Instant
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ArticleServiceTest (
-    @Autowired private val historyNodeRepository: HistoryNodeRepository,
-    @Autowired private val historyService: ArticleHistoryService,
+    @Autowired private val versionNodeRepository: VersionNodeRepository,
+    @Autowired private val historyService: VersionService,
     @Autowired private val articleDomainService: ArticleDomainService,
 ){
 
@@ -60,7 +60,7 @@ class ArticleServiceTest (
         assertThat(saved.id).isEqualTo(1L)
 
         val currentVersion = saved.currentVersion?:throw Exception("something went wrong")
-        val node = historyNodeRepository.findByDiffId(currentVersion)
+        val node = versionNodeRepository.findByDiffId(currentVersion)
 
         assertThat(node?.previous).isNotNull()
     }

@@ -1,12 +1,12 @@
-package dev.codeswamp.core.article.domain.article.model
+package dev.codeswamp.core.article.domain.version.model
 
 import java.time.Instant
 
-data class ArticleDiff (
+data class Version (
     val id: Long? = null,
     val articleId: Long,
     val previousVersionId: Long? = null,
-    val diffData: String,
+    val diff: String,
     val createdAt: Instant = Instant.now(),
 
     val isSnapshot: Boolean = false,

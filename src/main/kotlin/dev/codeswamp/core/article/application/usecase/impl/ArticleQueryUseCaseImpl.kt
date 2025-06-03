@@ -5,7 +5,7 @@ import dev.codeswamp.core.article.application.dto.query.GetArticleByPathQuery
 import dev.codeswamp.core.article.application.dto.query.GetVersionedArticleQuery
 import dev.codeswamp.core.article.application.usecase.ArticleQueryUseCase
 import dev.codeswamp.core.article.domain.article.model.Article
-import dev.codeswamp.core.article.domain.article.service.ArticleHistoryService
+import dev.codeswamp.core.article.domain.version.service.VersionService
 import dev.codeswamp.core.article.domain.article.service.ArticleDomainService
 import dev.codeswamp.core.article.domain.folder.service.FolderDomainService
 import dev.codeswamp.core.article.presentation.dto.response.ArticleReadResponseDto
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service
 @Service
 class ArticleQueryUseCaseImpl(
     private val articleDomainService: ArticleDomainService,
-    private val articleHistoryService: ArticleHistoryService,
+    private val versionService: VersionService,
     private val folderDomainService: FolderDomainService,
 ): ArticleQueryUseCase {
 
@@ -38,7 +38,7 @@ class ArticleQueryUseCaseImpl(
 
         article.checkOwnership(getVersionedArticleQuery.userId)
 
-        val articleWithVersion = articleHistoryService.getRollbackedArticle(article, getVersionedArticleQuery.versionId)
+        val articleWithVersion = versionService.getRollbackedArticle(article, getVersionedArticleQuery.versionId)
 
         return articleWithVersion
     }

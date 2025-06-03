@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.infrastructure.persistence.jpa.entity
 
-import dev.codeswamp.core.article.domain.article.model.ArticleDiff
+import dev.codeswamp.core.article.domain.version.model.Version
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
@@ -13,8 +13,8 @@ import jakarta.persistence.Table
 import java.time.Instant
 
 @Entity
-@Table(name = "article_diff")
-data class ArticleDiffEntity (
+@Table(name = "versions")
+data class VersionEntity (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
@@ -25,7 +25,7 @@ data class ArticleDiffEntity (
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prev_id")
-    val previousVersion: ArticleDiffEntity?,
+    val previousVersion: VersionEntity?,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     val diffData: String,
@@ -38,14 +38,14 @@ data class ArticleDiffEntity (
     @Column(columnDefinition = "TEXT")
     val snapshotContent: String? = null,
 
-) {
+    ) {
 
-    fun toDomain(): ArticleDiff {
-        return  ArticleDiff(
+    fun toDomain(): Version {
+        return  Version(
             id = id,
             articleId = article.id!!,
             previousVersionId = previousVersion?.id,
-            diffData = diffData,
+            diff = diffData,
             createdAt = createdAt,
             isSnapshot = isSnapshot,
             snapshotContent = snapshotContent

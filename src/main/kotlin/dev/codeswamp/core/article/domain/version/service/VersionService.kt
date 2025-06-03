@@ -1,31 +1,31 @@
-package dev.codeswamp.core.article.domain.article.service
+package dev.codeswamp.core.article.domain.version.service
 
 import dev.codeswamp.core.article.domain.article.model.Article
-import dev.codeswamp.core.article.domain.article.model.ArticleDiff
-import dev.codeswamp.core.article.domain.article.repository.ArticleDiffRepository
 import dev.codeswamp.core.article.domain.support.ArticleDiffProcessor
+import dev.codeswamp.core.article.domain.version.model.Version
+import dev.codeswamp.core.article.domain.version.repository.VersionRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
 
 @Service
-class ArticleHistoryService(
-    private val articleDiffRepository: ArticleDiffRepository,
+class VersionService(
+    private val versionRepository: VersionRepository,
     private val diffProcessor: ArticleDiffProcessor
 ) {
-    fun save(articleDiff: ArticleDiff): ArticleDiff {
-        return articleDiffRepository.save(articleDiff)
+    fun save(version: Version): Version {
+        return versionRepository.save(version)
     }
 
-    fun findById(id: Long): ArticleDiff? {
-        return articleDiffRepository.findById(id)
+    fun findById(id: Long): Version? {
+        return versionRepository.findById(id)
     }
 
-    fun getHistory(articleId: Long) : List<ArticleDiff> {
-        return articleDiffRepository.findByArticleId(articleId)
+    fun getHistory(articleId: Long) : List<Version> {
+        return versionRepository.findByArticleId(articleId)
     }
 
     fun deleteArticle(articleId: Long) {
-        articleDiffRepository.deleteByArticleId(articleId)
+        versionRepository.deleteByArticleId(articleId)
     }
 
     fun getRollbackedArticle(article: Article, rollbackVersionId: Long): Article {
@@ -34,11 +34,11 @@ class ArticleHistoryService(
 
         val currentVersion = article.currentVersion ?: throw Exception("currentVersion is not set")
 
-        val lca = articleDiffRepository.findLCA(currentVersion, rollbackVersionId)?.id ?: throw Exception("The two versions do not belong to the same article")
+        val lca = versionRepository.findLCA(currentVersion, rollbackVersionId)?.id ?: throw Exception("The two versions do not belong to the same article")
 
-        val nearestSnapshotVersion = articleDiffRepository.findNearestSnapshotBefore(lca).id ?: throw Exception("id not set")
+        val nearestSnapshotVersion = versionRepository.findNearestSnapshotBefore(lca).id ?: throw Exception("id not set")
 
-        val diffList = articleDiffRepository.findDiffPathBetween(nearestSnapshotVersion,rollbackVersionId)
+        val diffList = versionRepository.findDiffPathBetween(nearestSnapshotVersion,rollbackVersionId)
 
         val fullContent = buildFullContentFromHistory(diffList[0].snapshotContent
             ?: throw Exception("Failed to load snapshot content")
@@ -51,17 +51,17 @@ class ArticleHistoryService(
         )
     }
 
-    fun calculateDiff(original: Article?, updated: Article) : ArticleDiff? {
+    fun calculateDiff(original: Article?, updated: Article) : Version? {
         val originalContent = original?.content
-        val versionCount = original?.id?.let{ articleDiffRepository.countByArticleId(it)} ?: 0
+        val versionCount = original?.id?.let{ versionRepository.countByArticleId(it)} ?: 0
 
         val diff = diffProcessor.calculateDiff(originalContent, updated.content)
         val prevVersion = original?.currentVersion
         val isSnapshot = (versionCount % 10 == 0L)
 
         return diff?.let {
-            ArticleDiff(
-                diffData = it,
+            Version(
+                diff = it,
                 isSnapshot = isSnapshot,
                 snapshotContent = if (isSnapshot) updated.content else null,
                 previousVersionId = prevVersion,
@@ -72,8 +72,8 @@ class ArticleHistoryService(
     }
 
 
-    fun buildFullContentFromHistory(snapshot: String, history: List<ArticleDiff>) : String {
-        val sortedHistoryDiffList = history.sortedBy {  it.createdAt }.map{ it.diffData }
+    fun buildFullContentFromHistory(snapshot: String, history: List<Version>) : String {
+        val sortedHistoryDiffList = history.sortedBy {  it.createdAt }.map{ it.diff }
         return diffProcessor.buildFullContentFromHistory(snapshot, sortedHistoryDiffList)
     }
 }

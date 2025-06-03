@@ -2,7 +2,7 @@ package dev.codeswamp.core.article.infrastructure.persistence.jpar
 
 import dev.codeswamp.core.article.domain.article.model.Article
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
-import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.ArticleDiffJpaRepository
+import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.VersionJpaRepository
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.ArticleJpaRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
@@ -22,7 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class ArticleRepositoryImplTest (
     @Autowired private val articleEntityRepository: ArticleJpaRepository,
-    @Autowired private val articleDiffJpaRepository: ArticleDiffJpaRepository,
+    @Autowired private val versionJpaRepository: VersionJpaRepository,
     @Autowired private val articleRepository: ArticleRepository
 ){
     @BeforeAll
