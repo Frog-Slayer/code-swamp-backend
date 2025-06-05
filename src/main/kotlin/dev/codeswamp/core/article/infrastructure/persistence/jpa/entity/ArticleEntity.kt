@@ -17,8 +17,7 @@ import java.time.temporal.ChronoUnit
 @Table(name = "article",
     uniqueConstraints = [UniqueConstraint(columnNames = ["folder_id", "slug"])]
 )
-data class ArticleEntity (
-
+data class ArticleEntity (//ArticleMetadatas
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
@@ -29,19 +28,10 @@ data class ArticleEntity (
     @Column(nullable = false)
     val authorId: Long,
 
-    @Column(nullable = false)
-    var currentVersion: Long = 0,
-
-    @Column(nullable = false, columnDefinition = "TEXT")
-    val content: String,
+    var isPublic: Boolean,
 
     @Column(columnDefinition = "TIMESTAMP(3)")
     val createdAt: Instant = Instant.now(),
-
-    @Column(columnDefinition = "TIMESTAMP(3)")
-    var updatedAt: Instant = Instant.now(),
-
-    var isPublic: Boolean,
 
     @Column(nullable = false, name = "folder_id")
     var folderId: Long,
@@ -50,28 +40,20 @@ data class ArticleEntity (
     val slug: String,
 
     val summary: String = "",
+
     val thumbnailUrl : String? = null,
-
-    @Enumerated(EnumType.STRING)
-    val status: ArticleStatusJpa
-
-
 ) {
     companion object {
         fun from(versionedArticle: VersionedArticle) = ArticleEntity(
             id = versionedArticle.id,
-            title = versionedArticle.title,
+            title = versionedArticle.metadata.title,
             authorId = versionedArticle.authorId,
-            currentVersion = versionedArticle.currentVersion ?: 0,
-            content = versionedArticle.content,
             createdAt = versionedArticle.createdAt,
-            updatedAt = versionedArticle.updatedAt,
             isPublic = versionedArticle.isPublic,
             folderId = versionedArticle.folderId,
-            slug = versionedArticle.slug,
+            slug = versionedArticle.metadata.slug,
             summary = versionedArticle.summary,
             thumbnailUrl = versionedArticle.thumbnailUrl,
-            status = ArticleStatusJpa.fromDomain(versionedArticle.status)
         )
     }
 
