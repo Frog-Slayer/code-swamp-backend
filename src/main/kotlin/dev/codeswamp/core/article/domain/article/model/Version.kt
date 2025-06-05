@@ -7,10 +7,10 @@ data class Version (
     val state: ArticleState,
 
     val articleId: Long,
-    val previousVersion: Version?,
+    val previousVersionId: Long? = null,
 
     val diff: String,
-    val createdAt: Instant = Instant.now(),
+    val createdAt: Instant,
 ){
     fun publish() = this.copy(state = ArticleState.PUBLISHED)
     fun archive() = this.copy(state = ArticleState.ARCHIVED)

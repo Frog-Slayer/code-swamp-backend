@@ -1,6 +1,7 @@
 package dev.codeswamp.core.article.infrastructure.persistence.jpa.entity
 
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
+import dev.codeswamp.core.article.domain.article.model.vo.Title
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -18,60 +19,41 @@ import java.time.temporal.ChronoUnit
     uniqueConstraints = [UniqueConstraint(columnNames = ["folder_id", "slug"])]
 )
 data class ArticleEntity (//ArticleMetadatas
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id//도메인에서 생성
     val id: Long,
 
-    @Column(nullable = false)
-    var title: String,
-
-    @Column(nullable = false)
-    val authorId: Long,
-
-    var isPublic: Boolean,
-
-    @Column(columnDefinition = "TIMESTAMP(3)")
-    val createdAt: Instant = Instant.now(),
+    var title: String?,
 
     @Column(nullable = false, name = "folder_id")
     var folderId: Long,
 
-    @Column(nullable = false, name = "slug")
-    val slug: String,
+    var slug: String?,
 
-    val summary: String = "",
+    @Column(nullable = false)
+    var authorId: Long,
 
-    val thumbnailUrl : String? = null,
+    var isPublic: Boolean,
+    var isPublished: Boolean,
+
+    @Column(columnDefinition = "TIMESTAMP(3)")
+    var createdAt: Instant = Instant.now(),
+
+    var summary: String = "",
+
+    var thumbnailUrl : String? = null,
 ) {
     companion object {
         fun from(versionedArticle: VersionedArticle) = ArticleEntity(
             id = versionedArticle.id,
-            title = versionedArticle.metadata.title,
             authorId = versionedArticle.authorId,
             createdAt = versionedArticle.createdAt,
-            isPublic = versionedArticle.isPublic,
-            folderId = versionedArticle.folderId,
-            slug = versionedArticle.metadata.slug,
-            summary = versionedArticle.summary,
-            thumbnailUrl = versionedArticle.thumbnailUrl,
-        )
-    }
-
-    fun toDomain(): VersionedArticle {
-        return VersionedArticle(
-            id = id,
-            title = title,
-            status = status.toDomain(),
-            authorId = authorId,
-            folderId = folderId,
-            isPublic = isPublic,
-            createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
-            updatedAt = updatedAt.truncatedTo(ChronoUnit.MILLIS),
-            currentVersion = currentVersion,
-            content = content,
-            slug = slug,
-            summary = summary,
-            thumbnailUrl = thumbnailUrl
+            isPublished = versionedArticle.isPublished,
+            title = versionedArticle.metadata.title?.value,
+            isPublic = versionedArticle.metadata.isPublic,
+            folderId = versionedArticle.metadata.folderId,
+            summary = versionedArticle.metadata.summary,
+            slug = versionedArticle.metadata.slug?.value,
+            thumbnailUrl = versionedArticle.metadata.thumbnailUrl,
         )
     }
 }
