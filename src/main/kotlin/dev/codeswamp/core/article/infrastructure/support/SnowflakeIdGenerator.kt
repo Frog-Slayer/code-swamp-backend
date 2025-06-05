@@ -1,8 +1,10 @@
 package dev.codeswamp.core.article.infrastructure.support
 
 import dev.codeswamp.core.article.domain.support.IdGenerator
+import org.springframework.stereotype.Component
 import java.time.Instant
 
+@Component
 object SnowflakeIdGenerator : IdGenerator {
     private const val EPOCH = 1748790000
     private const val WORKER_ID_BITS = 10L

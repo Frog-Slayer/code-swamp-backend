@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.presentation.controller
 
-import dev.codeswamp.core.article.application.dto.command.ArticleWriteCommand
+import dev.codeswamp.core.article.application.dto.command.CreateArticleCommand
 import dev.codeswamp.core.article.application.dto.query.GetArticleByIdQuery
 import dev.codeswamp.core.article.application.dto.query.GetArticleByPathQuery
 import dev.codeswamp.core.article.application.dto.query.GetVersionedArticleQuery
@@ -67,7 +67,7 @@ class ArticleController(
     fun publishNewArticle(@AuthenticationPrincipal user: CustomUserDetails, @RequestBody articleCreateRequestDto: ArticleCreateRequestDto) {
         val userId = requireNotNull(user.getId())
 
-        val articleWriteCommand = ArticleWriteCommand(
+        val createArticleCommand = CreateArticleCommand(
             userId = userId,
             title = articleCreateRequestDto.title,
             content = articleCreateRequestDto.content,
@@ -78,7 +78,7 @@ class ArticleController(
             folderId = 1L
         )
 
-        articleCommandUsecase.create(articleWriteCommand)
+        articleCommandUsecase.create(createArticleCommand)
     }
 
     @PatchMapping("/{articleId}/versions/{versionId}")
@@ -89,7 +89,7 @@ class ArticleController(
 
         val userId = requireNotNull(user.getId())
 
-        val articleWriteCommand = ArticleWriteCommand(
+        val createArticleCommand = CreateArticleCommand(
             userId = userId,
             title = articleCreateRequestDto.title,
             content = articleCreateRequestDto.content,
@@ -100,7 +100,7 @@ class ArticleController(
             folderId = 1L
         )
 
-        articleCommandUsecase.create(articleWriteCommand)
+        articleCommandUsecase.create(createArticleCommand)
     }
 
     @DeleteMapping("/{id}")
