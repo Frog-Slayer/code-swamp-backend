@@ -9,9 +9,6 @@ import org.springframework.transaction.annotation.Transactional
 interface VersionJpaRepository : JpaRepository<VersionEntity, Long>{
     fun findAllByArticleId(articleId: Long): List<VersionEntity>
     fun findAllByIdIsIn(diffs: List<Long>): List<VersionEntity>
-
     fun countByArticleId(articleId: Long) : Long
-
-    @Transactional
     fun deleteAllByArticleId(articleId: Long)
 }

@@ -1,47 +1,76 @@
 package dev.codeswamp.core.article.infrastructure.persistence.repositoryImpl
 
+import com.fasterxml.jackson.core.Versioned
+import dev.codeswamp.core.article.domain.article.exceptions.ArticleNotFoundException
+import dev.codeswamp.core.article.domain.article.model.Version
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
+import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
+import dev.codeswamp.core.article.domain.article.model.vo.Slug
+import dev.codeswamp.core.article.domain.article.model.vo.Title
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.ArticleMetadataEntity
+import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.VersionEntity
+import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.ArticleMetadataJpaRepository
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.VersionJpaRepository
+import jakarta.persistence.EntityNotFoundException
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 
 @Repository
 class ArticleRepositoryImpl (
-    private val articleJpaRepository: dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.ArticleMetadataEntity,
+    private val articleMetadataJpaRepository: ArticleMetadataJpaRepository,
     private val versionJpaRepository: VersionJpaRepository
 ) : ArticleRepository {
 
     override fun save(versionedArticle: VersionedArticle): VersionedArticle {
-        val metadataEntity = ArticleMetadataEntity.from(versionedArticle)
-        val versionEntity = VersionEntity.from(versionedArticle)
+        val savedMetadataEntity = saveMetadata(versionedArticle)
+        val savedVersionEntity = saveVersion(versionedArticle.currentVersion)
+        return toDomain(savedMetadataEntity, savedVersionEntity)
+    }
 
+    override fun findByIdAndVersionId( articleId: Long, versionId: Long): VersionedArticle {
+        val savedMetadataEntity = articleMetadataJpaRepository.findByIdOrNull(articleId) ?: throw EntityNotFoundException("해당 아티클을 찾을 수 없습니다")
+        val savedVersionEntity = versionJpaRepository.findByIdOrNull(versionId) ?: throw EntityNotFoundException("해당 버전을 찾을 수 없습니다")
 
-        val existingArticleEntity = versionedArticle.id?.let { articleJpaRepository.findById(it).orElse(null) }
-        //노드 생성 필요
+        if (savedMetadataEntity.id != savedVersionEntity.articleId) throw RuntimeException("서로 맞지 않는 버전입니다")
 
+        return toDomain(savedMetadataEntity, savedVersionEntity)
+    }
 
-        val saved = articleJpaRepository.save(articleEntity).toDomain()
+    private fun saveMetadata(article: VersionedArticle) : ArticleMetadataEntity{
+        val entity = ArticleMetadataEntity.from(article)
+        return articleMetadataJpaRepository.findByIdOrNull(entity.id)
+            ?.apply { updateTo(entity) }
+            ?: articleMetadataJpaRepository.save(entity)
+    }
 
-        return saved
+    override fun saveVersion(version: Version): VersionEntity {
+        val entity = VersionEntity.from(version)
+        return versionJpaRepository.findByIdOrNull(entity.id)
+            ?.apply { updateTo(entity) }
+            ?: versionJpaRepository.save(entity)
     }
 
     override fun deleteById(id: Long) {
-        articleJpaRepository.deleteById(id)
-        //노드 삭제 필요
+        articleMetadataJpaRepository.deleteById(id)
+        versionJpaRepository.deleteAllByArticleId(id)
     }
 
-    override fun findAllByIds(articleIds: List<Long>): List<VersionedArticle> {
-        return articleJpaRepository.findAllByIdIsIn(articleIds).map { it.toDomain() }
-    }
-
-    override fun findById(articleId: Long): VersionedArticle? {
-        return articleJpaRepository.findById(articleId)
-            .map { it.toDomain() }
-            .orElse(null)
-    }
-
-    override fun findByFolderIdAndSlug(folderId: Long, slug: String): VersionedArticle? {
-        return articleJpaRepository.findByFolderIdAndSlug(folderId, slug)?.toDomain()
+    private fun toDomain(metadata: ArticleMetadataEntity, version:  VersionEntity): VersionedArticle {
+        return VersionedArticle(
+            id = metadata.id,
+            authorId = metadata.authorId,
+            createdAt = metadata.createdAt,
+            isPublished = metadata.isPublished,
+            metadata = ArticleMetadata(
+                folderId = metadata.folderId,
+                summary = metadata.summary,
+                thumbnailUrl = metadata.thumbnailUrl,
+                isPublic = metadata.isPublic,
+                title = Title.of(metadata.title),
+                slug = Slug.of(metadata.slug)
+            ),
+            currentVersion = version.toDomain()
+        )
     }
 }

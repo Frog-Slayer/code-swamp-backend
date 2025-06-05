@@ -29,8 +29,8 @@ data class VersionEntity (
     val createdAt: Instant,
 
     @Enumerated(EnumType.STRING)
-    val state: ArticleStatusJpa
-    ) {
+    var state: ArticleStatusJpa
+) {
     companion object {
         fun from(version: Version) = VersionEntity(
             id = version.id,
@@ -51,5 +51,9 @@ data class VersionEntity (
             createdAt = createdAt,
             state = state.toDomain()
         )
+    }
+
+    fun updateTo(newVersion: VersionEntity) {
+        state = newVersion.state
     }
 }

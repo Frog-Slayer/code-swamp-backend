@@ -50,4 +50,14 @@ data class ArticleMetadataEntity (//ArticleMetadatas
             thumbnailUrl = versionedArticle.metadata.thumbnailUrl,
         )
     }
+
+    fun updateTo(newMetadata: ArticleMetadataEntity) {
+        title =  newMetadata.title
+        folderId =  newMetadata.folderId
+        slug =  newMetadata.slug
+        isPublic =  newMetadata.isPublic
+        isPublished =  newMetadata.isPublished
+        summary = newMetadata.summary
+        thumbnailUrl = newMetadata.thumbnailUrl
+    }
 }

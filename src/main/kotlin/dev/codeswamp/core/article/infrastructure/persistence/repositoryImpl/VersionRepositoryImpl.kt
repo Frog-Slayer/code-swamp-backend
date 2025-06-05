@@ -6,13 +6,13 @@ import dev.codeswamp.core.article.infrastructure.persistence.graph.node.VersionN
 import dev.codeswamp.core.article.infrastructure.persistence.graph.repository.VersionNodeRepository
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.VersionEntity
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.VersionJpaRepository
-import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.ArticleMetadataEntity
+import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.ArticleMetadataJpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
 class VersionRepositoryImpl(
     private val diffJpaRepository: VersionJpaRepository,
-    private val articleJpaRepository: ArticleMetadataEntity,
+    private val articleJpaRepository: ArticleMetadataJpaRepository,
     private val versionNodeRepository: VersionNodeRepository,
 ) : VersionRepository {
 
