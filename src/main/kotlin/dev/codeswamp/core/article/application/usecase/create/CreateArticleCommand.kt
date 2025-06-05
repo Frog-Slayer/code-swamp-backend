@@ -1,4 +1,4 @@
-package dev.codeswamp.core.article.application.dto.command
+package dev.codeswamp.core.article.application.usecase.create
 
 data class CreateArticleCommand (
     val userId: Long,

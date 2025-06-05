@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.application.usecase.create
 
-import dev.codeswamp.core.article.application.dto.command.CreateArticleCommand
+import dev.codeswamp.core.article.application.usecase.create.CreateArticleCommand
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
@@ -19,7 +19,7 @@ class CreateArticleUseCaseImpl(
 
 ) : CreateArticleUseCase {
 
-    override fun handle(command: CreateArticleCommand) {
+    override fun handle(command: CreateArticleCommand): CreateArticleResult {
         val createdAt = Instant.now()
 
         val article = VersionedArticle.create(
@@ -41,8 +41,11 @@ class CreateArticleUseCaseImpl(
             else it.publish(slugUniquenessChecker::checkSlugUniqueness)
         }
 
-        articleRepository.save(article)
+        val saved = articleRepository.save(article)
+
+        return CreateArticleResult(
+            saved.id,
+            saved.currentVersion?.id ?: throw IllegalStateException("currentVersion is null"),
+        )
     }
-
-
 }

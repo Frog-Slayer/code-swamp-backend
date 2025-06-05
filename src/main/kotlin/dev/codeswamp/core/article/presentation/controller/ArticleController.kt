@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.presentation.controller
 
-import dev.codeswamp.core.article.application.dto.command.CreateArticleCommand
+import dev.codeswamp.core.article.application.usecase.create.CreateArticleCommand
 import dev.codeswamp.core.article.application.dto.query.GetArticleByIdQuery
 import dev.codeswamp.core.article.application.dto.query.GetArticleByPathQuery
 import dev.codeswamp.core.article.application.dto.query.GetVersionedArticleQuery
