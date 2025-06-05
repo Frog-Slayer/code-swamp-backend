@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.application.dto.command
 
-import dev.codeswamp.core.article.domain.article.model.Article
+import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 
 data class ArticleIndexDTO(
     val articleId: Long,
@@ -10,13 +10,13 @@ data class ArticleIndexDTO(
     val isPublic: Boolean,
 ) {
     companion object {
-        fun from(article: Article, preprocessedText: String) : ArticleIndexDTO {
+        fun from(versionedArticle: VersionedArticle, preprocessedText: String) : ArticleIndexDTO {
             return ArticleIndexDTO(
-                articleId = article.id!!,
-                authorId = article.authorId,
-                title = article.title,
+                articleId = versionedArticle.id!!,
+                authorId = versionedArticle.authorId,
+                title = versionedArticle.title,
                 preprocessedText = preprocessedText,
-                isPublic = article.isPublic,
+                isPublic = versionedArticle.isPublic,
             )
         }
     }

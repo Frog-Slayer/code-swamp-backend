@@ -6,7 +6,7 @@ import dev.codeswamp.core.article.application.dto.query.GetArticleByPathQuery
 import dev.codeswamp.core.article.application.dto.query.GetVersionedArticleQuery
 import dev.codeswamp.core.article.application.usecase.ArticleCommandUseCase
 import dev.codeswamp.core.article.application.usecase.ArticleQueryUseCase
-import dev.codeswamp.core.article.domain.article.model.Article
+import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.presentation.dto.request.ArticleCreateRequestDto
 import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
 import dev.codeswamp.global.auth.infrastructure.security.user.CustomUserDetails
@@ -30,7 +30,7 @@ class ArticleController(
     //TODO(ResponseDTO & 예외 처리)
 
     @GetMapping("/{articleId}")
-    fun getArticleWithId(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable articleId:Long): Article {
+    fun getArticleWithId(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable articleId:Long): VersionedArticle {
         return articleQueryService.findByArticleId(GetArticleByIdQuery(
             userId = user.getId(),
             articleId = articleId
@@ -42,7 +42,7 @@ class ArticleController(
         @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable username: String,
         httpServletRequest: HttpServletRequest
-    ) : Article {
+    ) : VersionedArticle {
         val fullPath = httpServletRequest.requestURI
 
         return articleQueryService.getArticleByUsernameAndPath(GetArticleByPathQuery(
@@ -52,7 +52,7 @@ class ArticleController(
     }
 
     @GetMapping("/{articleId}/versions/{versionId}")
-    fun getVersionedArticle(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable articleId: Long, @PathVariable versionId: Long) : Article{
+    fun getVersionedArticle(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable articleId: Long, @PathVariable versionId: Long) : VersionedArticle{
         val userId = requireNotNull(user.getId())
         return articleQueryService.getVersionedArticle(
             GetVersionedArticleQuery(

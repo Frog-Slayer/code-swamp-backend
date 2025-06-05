@@ -4,7 +4,7 @@ import dev.codeswamp.core.article.application.dto.query.GetArticleByIdQuery
 import dev.codeswamp.core.article.application.dto.query.GetArticleByPathQuery
 import dev.codeswamp.core.article.application.dto.query.GetVersionedArticleQuery
 import dev.codeswamp.core.article.application.usecase.ArticleQueryUseCase
-import dev.codeswamp.core.article.domain.article.model.Article
+import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.domain.article.service.VersionService
 import dev.codeswamp.core.article.domain.article.service.ArticleDomainService
 import dev.codeswamp.core.article.domain.folder.service.FolderDomainService
@@ -18,7 +18,7 @@ class ArticleQueryUseCaseImpl(
     private val folderDomainService: FolderDomainService,
 ): ArticleQueryUseCase {
 
-    override fun findByArticleId(getArticleByIdQuery: GetArticleByIdQuery): Article {
+    override fun findByArticleId(getArticleByIdQuery: GetArticleByIdQuery): VersionedArticle {
         val article = requireNotNull(articleDomainService.findById(getArticleByIdQuery.articleId))
 
         article.assertReadableBy(getArticleByIdQuery.userId)
@@ -33,7 +33,7 @@ class ArticleQueryUseCaseImpl(
         TODO("Not yet implemented")
     }
 
-    override fun getVersionedArticle (getVersionedArticleQuery: GetVersionedArticleQuery): Article {
+    override fun getVersionedArticle (getVersionedArticleQuery: GetVersionedArticleQuery): VersionedArticle {
         val article = requireNotNull(articleDomainService.findById(getVersionedArticleQuery.articleId))
 
         article.checkOwnership(getVersionedArticleQuery.userId)
@@ -43,7 +43,7 @@ class ArticleQueryUseCaseImpl(
         return articleWithVersion
     }
 
-    override fun getArticleByUsernameAndPath(getArticleByPathQuery: GetArticleByPathQuery): Article {
+    override fun getArticleByUsernameAndPath(getArticleByPathQuery: GetArticleByPathQuery): VersionedArticle {
         val path = getArticleByPathQuery.path
         val lastSlash = path.lastIndexOf('/');
 

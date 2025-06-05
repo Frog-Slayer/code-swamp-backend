@@ -3,12 +3,16 @@ package dev.codeswamp.core.article.domain.article.model
 import java.time.Instant
 
 data class Version (
-    val id: Long? = null,
+    val id: Long,
+    val state: ArticleState,
+
     val articleId: Long,
-    val previousVersionId: Long? = null,
+    val previousVersion: Version?,
+
     val diff: String,
     val createdAt: Instant = Instant.now(),
-
-    val isSnapshot: Boolean = false,
-    val snapshotContent: String? = null,
-)
+){
+    fun publish() = this.copy(state = ArticleState.PUBLISHED)
+    fun archive() = this.copy(state = ArticleState.ARCHIVED)
+    fun draft() = this.copy(state = ArticleState.DRAFT)
+}

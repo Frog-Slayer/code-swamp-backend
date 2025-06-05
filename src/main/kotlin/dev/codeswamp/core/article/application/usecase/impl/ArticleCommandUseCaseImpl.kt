@@ -3,18 +3,16 @@ package dev.codeswamp.core.article.application.usecase.impl
 import dev.codeswamp.core.article.application.dto.command.ArticleWriteCommand
 import dev.codeswamp.core.article.application.dto.command.UpdateArticleCommand
 import dev.codeswamp.core.article.application.usecase.ArticleCommandUseCase
-import dev.codeswamp.core.article.domain.article.model.Article
+import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.domain.article.service.ArticleDomainService
 import org.springframework.stereotype.Service
 
 @Service
-class ArticleCommandUseCaseImpl(
-    private val articleDomainService: ArticleDomainService,
-) : ArticleCommandUseCase {
+class ArticleCommandUseCaseImpl() : ArticleCommandUseCase {
 
     override fun create(articleWriteCommand: ArticleWriteCommand) {
 
-        articleDomainService.create(Article(
+        articleDomainService.create(VersionedArticle(
             title = articleWriteCommand.title,
             authorId = articleWriteCommand.userId,
             folderId = articleWriteCommand.folderId,

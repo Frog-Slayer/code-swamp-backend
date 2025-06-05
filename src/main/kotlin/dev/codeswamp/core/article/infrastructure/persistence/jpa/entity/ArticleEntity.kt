@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.infrastructure.persistence.jpa.entity
 
-import dev.codeswamp.core.article.domain.article.model.Article
+import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -58,25 +58,25 @@ data class ArticleEntity (
 
 ) {
     companion object {
-        fun from(article: Article) = ArticleEntity(
-            id = article.id,
-            title = article.title,
-            authorId = article.authorId,
-            currentVersion = article.currentVersion ?: 0,
-            content = article.content,
-            createdAt = article.createdAt,
-            updatedAt = article.updatedAt,
-            isPublic = article.isPublic,
-            folderId = article.folderId,
-            slug = article.slug,
-            summary = article.summary,
-            thumbnailUrl = article.thumbnailUrl,
-            status = ArticleStatusJpa.fromDomain(article.status)
+        fun from(versionedArticle: VersionedArticle) = ArticleEntity(
+            id = versionedArticle.id,
+            title = versionedArticle.title,
+            authorId = versionedArticle.authorId,
+            currentVersion = versionedArticle.currentVersion ?: 0,
+            content = versionedArticle.content,
+            createdAt = versionedArticle.createdAt,
+            updatedAt = versionedArticle.updatedAt,
+            isPublic = versionedArticle.isPublic,
+            folderId = versionedArticle.folderId,
+            slug = versionedArticle.slug,
+            summary = versionedArticle.summary,
+            thumbnailUrl = versionedArticle.thumbnailUrl,
+            status = ArticleStatusJpa.fromDomain(versionedArticle.status)
         )
     }
 
-    fun toDomain(): Article {
-        return Article(
+    fun toDomain(): VersionedArticle {
+        return VersionedArticle(
             id = id,
             title = title,
             status = status.toDomain(),

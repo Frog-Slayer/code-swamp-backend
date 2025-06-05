@@ -1,7 +1,7 @@
 package dev.codeswamp.core.article.domain.service
 
-import dev.codeswamp.core.article.domain.article.model.Article
-import dev.codeswamp.core.article.domain.article.model.ArticleStatus
+import dev.codeswamp.core.article.domain.article.model.VersionedArticle
+import dev.codeswamp.core.article.domain.article.model.ArticleState
 import dev.codeswamp.core.article.domain.article.service.ArticleDomainService
 import dev.codeswamp.core.article.domain.article.service.VersionService
 import dev.codeswamp.core.article.infrastructure.persistence.graph.repository.VersionNodeRepository
@@ -24,9 +24,9 @@ class ArticleServiceTest (
 
     @BeforeAll
     fun create() {
-        val article = Article(
+        val versionedArticle = VersionedArticle(
             title = "title",
-            status = ArticleStatus.NEW,
+            status = ArticleState.NEW,
             authorId = 1L,
             folderId = 1L,
             isPublic = true,
@@ -39,7 +39,7 @@ class ArticleServiceTest (
             currentVersion = TODO()
         )
 
-        val saved = articleDomainService.create(article)
+        val saved = articleDomainService.create(versionedArticle)
 
         assertThat(saved).isNotNull()
         assertThat(saved.title).isEqualTo("title")
@@ -69,7 +69,7 @@ class ArticleServiceTest (
     fun metadataChangeTest() {
         val article = articleDomainService.findById(1L)?.copy(
             title = "title22",
-            status = ArticleStatus.PUBLISHED,
+            status = ArticleState.PUBLISHED,
             authorId = 1L,
             folderId = 1L,
             isPublic = false,
@@ -85,9 +85,9 @@ class ArticleServiceTest (
 
     @Test
     fun findById() {
-        val article = Article(
+        val versionedArticle = VersionedArticle(
             title = "title",
-            status = ArticleStatus.NEW,
+            status = ArticleState.NEW,
             authorId = 1L,
             folderId = 1L,
             isPublic = true,
@@ -96,7 +96,7 @@ class ArticleServiceTest (
             content = "this is my content"
         )
 
-        val saved = articleDomainService.create(article)
+        val saved = articleDomainService.create(versionedArticle)
         val found = articleDomainService.findById(2L) ?: throw Exception("something went wrong")
 
         assertThat(saved).isEqualTo(found)

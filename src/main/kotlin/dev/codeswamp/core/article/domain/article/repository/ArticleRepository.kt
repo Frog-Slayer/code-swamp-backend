@@ -1,12 +1,12 @@
 package dev.codeswamp.core.article.domain.article.repository
 
-import dev.codeswamp.core.article.domain.article.model.Article
+import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 
 interface ArticleRepository {
-    fun save(article: Article): Article
+    fun save(versionedArticle: VersionedArticle): VersionedArticle
     fun deleteById(id: Long)
 
-    fun findAllByIds(articleIds : List<Long>): List<Article>
-    fun findById(articleId : Long): Article?
-    fun findByFolderIdAndSlug(folderId: Long, slug: String): Article?
+    fun findAllByIds(articleIds : List<Long>): List<VersionedArticle>
+    fun findById(articleId : Long): VersionedArticle?
+    fun findByFolderIdAndSlug(folderId: Long, slug: String): VersionedArticle?
 }

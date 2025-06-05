@@ -6,13 +6,12 @@ interface VersionRepository {
     fun save(version: Version): Version
     fun findById(id: Long) : Version?
 
-    fun findByArticleId(articleId: Long) : List<Version>
     fun countByArticleId(articleId: Long) : Long
-
     fun findAllByIdsIn(diffs: List<Long>) : List<Version>
     fun deleteByArticleId(articleId: Long)
 
-    fun findLCA(version1Id: Long, version2Id: Long) : Version?
-    fun findNearestSnapshotBefore(versionId: Long) : Version
+    fun findPublishedVersionByArticleId(articleId: Long) : Version
+    fun findNearestSnapshotBefore(versionId: Long) : Version//nearest snapshot까지의 path 조회로 하나로 줄일 수 있음
     fun findDiffPathBetween(version1Id: Long, version2Id: Long) : List<Version>
+
 }

@@ -1,15 +1,15 @@
 package dev.codeswamp.core.article.infrastructure.persistence.jpa.entity
 
-import dev.codeswamp.core.article.domain.article.model.ArticleStatus
+import dev.codeswamp.core.article.domain.article.model.ArticleState
 
 enum class ArticleStatusJpa {
     ARCHIVED,
     DRAFT,
     PUBLISHED;
 
-    fun toDomain(): ArticleStatus = ArticleStatus.valueOf(this.name)
+    fun toDomain(): ArticleState = ArticleState.valueOf(this.name)
 
     companion object {
-        fun fromDomain(status: ArticleStatus): ArticleStatusJpa = valueOf(status.name)
+        fun fromDomain(status: ArticleState): ArticleStatusJpa = valueOf(status.name)
     }
 }

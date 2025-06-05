@@ -2,7 +2,7 @@ package dev.codeswamp.core.article.infrastructure.search
 
 import dev.codeswamp.core.article.application.dto.command.ArticleIndexDTO
 import dev.codeswamp.core.article.application.dto.command.ArticleSearchDTO
-import dev.codeswamp.core.article.domain.article.model.Article
+import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.infrastructure.persistence.search.config.MeiliSearchConfig
 import dev.codeswamp.core.article.infrastructure.persistence.search.MeiliSearchIndexer
 import dev.codeswamp.core.article.infrastructure.support.FlexMarkdownPreprocessor
@@ -18,15 +18,15 @@ class MeiliSearchIndexerTest {
 
     @BeforeAll
     fun index() {
-        val article = Article(
+        val versionedArticle = VersionedArticle(
             id = 1,
             title = "test",
             authorId = 1 ,
             folderId = 1,
             content = "hello"
         )
-        val preprocessedText : String = FlexMarkdownPreprocessor.preprocess(article.content)
-        val indexDTO = ArticleIndexDTO.from(article, preprocessedText)
+        val preprocessedText : String = FlexMarkdownPreprocessor.preprocess(versionedArticle.content)
+        val indexDTO = ArticleIndexDTO.from(versionedArticle, preprocessedText)
 
         indexer.index(indexDTO)
     }

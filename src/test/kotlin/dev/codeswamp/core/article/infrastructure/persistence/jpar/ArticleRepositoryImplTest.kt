@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.infrastructure.persistence.jpar
 
-import dev.codeswamp.core.article.domain.article.model.Article
+import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.VersionJpaRepository
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.ArticleJpaRepository
@@ -27,14 +27,14 @@ class ArticleRepositoryImplTest (
 ){
     @BeforeAll
     fun beforeAll() {
-        val article = Article(
+        val versionedArticle = VersionedArticle(
             title = "test",
             authorId = 1 ,
             folderId = 1,
             content = "hello"
         )
 
-        articleRepository.save(article)
+        articleRepository.save(versionedArticle)
     }
 
     @Test
