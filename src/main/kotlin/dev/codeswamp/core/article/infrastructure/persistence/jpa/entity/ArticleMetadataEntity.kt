@@ -1,24 +1,18 @@
 package dev.codeswamp.core.article.infrastructure.persistence.jpa.entity
 
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
-import dev.codeswamp.core.article.domain.article.model.vo.Title
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
 import java.time.Instant
-import java.time.temporal.ChronoUnit
 
 @Entity
 @Table(name = "article",
     uniqueConstraints = [UniqueConstraint(columnNames = ["folder_id", "slug"])]
 )
-data class ArticleEntity (//ArticleMetadatas
+data class ArticleMetadataEntity (//ArticleMetadatas
     @Id//도메인에서 생성
     val id: Long,
 
@@ -43,7 +37,7 @@ data class ArticleEntity (//ArticleMetadatas
     var thumbnailUrl : String? = null,
 ) {
     companion object {
-        fun from(versionedArticle: VersionedArticle) = ArticleEntity(
+        fun from(versionedArticle: VersionedArticle) = ArticleMetadataEntity(
             id = versionedArticle.id,
             authorId = versionedArticle.authorId,
             createdAt = versionedArticle.createdAt,

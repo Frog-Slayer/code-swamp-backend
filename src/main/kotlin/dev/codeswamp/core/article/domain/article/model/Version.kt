@@ -7,7 +7,7 @@ data class Version (
     val state: ArticleState,
 
     val articleId: Long,
-    val previousVersionId: Long? = null,
+    val previousVersionId: Long?,
 
     val diff: String,
     val createdAt: Instant,

@@ -5,12 +5,8 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
 import java.time.Instant
 
@@ -20,35 +16,38 @@ data class VersionEntity (
     @Id//도메인에서 생성
     val id: Long,
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_id", nullable = false)
-    val article: ArticleEntity,
+    val articleId: Long,
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prev_id")
-    val previousVersion: VersionEntity?,
+    val previousVersionId: Long?,
 
     @Column(nullable = false, columnDefinition = "TEXT")
-    val diffData: String,
+    val diff: String,
 
     @Column(nullable = false, updatable = false)
-    val createdAt: Instant = Instant.now(),
-
-    val isSnapshot: Boolean = false,
-
-    @Column(columnDefinition = "TEXT")
-    val snapshotContent: String? = null,
+    val createdAt: Instant,
 
     @Enumerated(EnumType.STRING)
     val state: ArticleStatusJpa
     ) {
+    companion object {
+        fun from(version: Version) = VersionEntity(
+            id = version.id,
+            articleId = version.articleId,
+            previousVersionId = version.previousVersionId,
+            diff =  version.diff,
+            createdAt = version.createdAt,
+            state = ArticleStatusJpa.fromDomain(version.state),
+        )
+    }
 
     fun toDomain(): Version {
         return  Version(
             id = id,
-            articleId = article.id,
-            previousVersionId = previousVersion?.id,
-            diff = diffData,
+            articleId = articleId,
+            previousVersionId = previousVersionId,
+            diff = diff,
             createdAt = createdAt,
             state = state.toDomain()
         )

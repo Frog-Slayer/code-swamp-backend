@@ -55,7 +55,7 @@ data class VersionedArticle (
                     id = generateId(),
                     articleId = id,
                     state = ArticleState.NEW,
-                    previousVersion = currentVersion,
+                    previousVersionId = currentVersion.id,
                     diff = diff,
                     createdAt = createdAt,
                 )

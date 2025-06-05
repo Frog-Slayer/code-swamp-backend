@@ -10,6 +10,10 @@ enum class ArticleStatusJpa {
     fun toDomain(): ArticleState = ArticleState.valueOf(this.name)
 
     companion object {
-        fun fromDomain(status: ArticleState): ArticleStatusJpa = valueOf(status.name)
+        fun fromDomain(status: ArticleState): ArticleStatusJpa =
+            when (status) {
+                ArticleState.NEW -> throw IllegalStateException("NEW article state is invalid")
+                else -> valueOf(status.name)
+            }
     }
 }

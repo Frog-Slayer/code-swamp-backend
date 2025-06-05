@@ -2,22 +2,24 @@ package dev.codeswamp.core.article.infrastructure.persistence.repositoryImpl
 
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
-import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.ArticleEntity
-import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.ArticleJpaRepository
+import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.ArticleMetadataEntity
+import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.VersionJpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
 class ArticleRepositoryImpl (
-    private val articleJpaRepository: ArticleJpaRepository,
+    private val articleJpaRepository: dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.ArticleMetadataEntity,
+    private val versionJpaRepository: VersionJpaRepository
 ) : ArticleRepository {
 
     override fun save(versionedArticle: VersionedArticle): VersionedArticle {
+        val metadataEntity = ArticleMetadataEntity.from(versionedArticle)
+        val versionEntity = VersionEntity.from(versionedArticle)
+
+
         val existingArticleEntity = versionedArticle.id?.let { articleJpaRepository.findById(it).orElse(null) }
         //노드 생성 필요
 
-        val articleEntity = ArticleEntity(
-
-        )
 
         val saved = articleJpaRepository.save(articleEntity).toDomain()
 
