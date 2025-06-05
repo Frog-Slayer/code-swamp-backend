@@ -1,6 +1,5 @@
-package dev.codeswamp.core.article.application.usecase.create
+package dev.codeswamp.core.article.application.usecase.command.create
 
-import dev.codeswamp.core.article.application.usecase.create.CreateArticleCommand
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
@@ -34,6 +33,8 @@ class CreateArticleUseCaseImpl(
                 title = Title.Companion.of(command.title),
                 slug = Slug.Companion.of(command.slug),
             ),
+            content = command.content,
+            versionId = idGenerator.generateId()
         )
         .updateVersionIfChanged(command.content, { idGenerator.generateId()  }, createdAt)
         .let {

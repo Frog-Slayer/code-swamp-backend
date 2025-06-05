@@ -30,15 +30,38 @@ data class VersionedArticle private constructor (
      */
     val metadata: ArticleMetadata,
 
-    val currentVersion: Version?= null,//if null: root version
+    val currentVersion: Version,
 
 ) : AggregateRoot() {
     companion object {
-        fun create(id: Long, authorId: Long, createdAt: Instant, metadata: ArticleMetadata) = VersionedArticle(
+        fun create(id: Long,
+                   authorId: Long,
+                   createdAt: Instant,
+                   metadata: ArticleMetadata,
+                   content: String,
+                   versionId: Long) = VersionedArticle(
             id = id,
             authorId = authorId,
             createdAt = createdAt,
-            metadata = metadata
+            metadata = metadata,
+            currentVersion = Version(
+                    id = versionId,
+                    articleId = id,
+                    state = VersionState.NEW,
+                    previousVersionId = null,
+                    diff = content,
+                    createdAt = createdAt,
+            )
+        )
+
+        fun of (id: Long, authorId: Long, createdAt: Instant, isPublished: Boolean,
+                metadata: ArticleMetadata, currentVersion: Version) = VersionedArticle(
+            id = id,
+            authorId = authorId,
+            createdAt = createdAt,
+            isPublished = isPublished,
+            metadata = metadata,
+            currentVersion = currentVersion
         )
     }
 
@@ -65,7 +88,7 @@ data class VersionedArticle private constructor (
                 currentVersion = Version(
                     id = newVersionId,
                     articleId = id,
-                    state = ArticleState.NEW,
+                    state = VersionState.NEW,
                     previousVersionId = currentVersion?.id,
                     diff = diff,
                     createdAt = createdAt,
@@ -77,8 +100,6 @@ data class VersionedArticle private constructor (
     fun publish(slugUniquenessChecker : (VersionedArticle, Long, Slug) -> Unit) : VersionedArticle {
         // publish 시점 이후로 slug는 non-nullable, unique해야 함
         val slug = requireNotNull(metadata.slug) { "Slug is required" }
-        requireNotNull(this.currentVersion) { "Version is required" }
-
         slugUniquenessChecker(this, metadata.folderId, slug)
 
         //이전 버전 및 이전 발행본을 ARCHIVED로 변경하는 이벤트 발행
@@ -94,8 +115,6 @@ data class VersionedArticle private constructor (
     }
 
     fun draft(slugUniquenessChecker : (VersionedArticle, Long, Slug) -> Unit) : VersionedArticle {
-        requireNotNull(this.currentVersion) { "Version is required" }
-
         if (isPublished) {
             val slug = requireNotNull(metadata.slug) { "Slug is required" }
             slugUniquenessChecker(this, metadata.folderId, slug)
@@ -112,10 +131,10 @@ data class VersionedArticle private constructor (
     }
 
     fun archive() : VersionedArticle {
-        requireNotNull(this.currentVersion) { "Version is required" }
+        if (currentVersion.state == VersionState.PUBLISHED) throw IllegalStateException("Cannot archive current published version")
 
         return this.copy(
-            currentVersion = currentVersion.publish()
+            currentVersion = currentVersion.archive()
         )
     }
 

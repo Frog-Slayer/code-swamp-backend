@@ -9,8 +9,8 @@ data class ArticleMetadata (//가변 메타데이터
 
     /**
      * title & slug:
-     * - publish된 이후에는 반드시 non-null, non-empty여야 하며, 각 폴더 내에서 유일해야 한다.
-     * - slug는 식별자로 사용됨.
+     * - publish된 이후에는 반드시 non-null, non-empty여야 한다.
+     * - slug는 식별자로 사용하며, 각 폴더 내에서 유일해야 한다.
      */
     val title: Title?,
     val slug: Slug?,

@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.domain.article.model
 
-enum class ArticleState {
+enum class VersionState {
     NEW,
     ARCHIVED,
     DRAFT,

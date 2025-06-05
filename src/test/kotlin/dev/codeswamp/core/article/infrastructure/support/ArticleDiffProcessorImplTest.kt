@@ -5,7 +5,7 @@ import kotlin.test.assertEquals
 
 class ArticleDiffProcessorImplTest {
 
-    private val processor = ArticleDiffProcessorImpl()
+    private val processor = DiffProcessorImpl()
 
     @Test
     fun calculateDiff() {
@@ -24,7 +24,7 @@ class ArticleDiffProcessorImplTest {
     }
 
     @Test
-    fun buildFullContentFromHistory() {
+    fun buildFullContent() {
         val diffList : MutableList<String> = mutableListOf()
 
         val origin = ""
@@ -49,7 +49,7 @@ class ArticleDiffProcessorImplTest {
 
         diffList.add(processor.calculateDiff(next4, next5)!!)
 
-        val restored = processor.buildFullContentFromHistory(origin,diffList)
+        val restored = processor.buildFullContent(origin,diffList)
         assertEquals(next5, restored)
     }
 

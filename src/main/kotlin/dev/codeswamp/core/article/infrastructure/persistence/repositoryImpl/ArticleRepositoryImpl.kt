@@ -24,13 +24,17 @@ class ArticleRepositoryImpl (
 
     override fun save(versionedArticle: VersionedArticle): VersionedArticle {
         val savedMetadataEntity = saveMetadata(versionedArticle)
-        val savedVersionEntity = saveVersion(versionedArticle.currentVersion)
+        val savedVersionEntity = versionedArticle.currentVersion?.let { saveVersion(it)}
+            ?: throw IllegalStateException("current version is null")
+
         return toDomain(savedMetadataEntity, savedVersionEntity)
     }
 
-    override fun findByIdAndVersionId( articleId: Long, versionId: Long): VersionedArticle {
-        val savedMetadataEntity = articleMetadataJpaRepository.findByIdOrNull(articleId) ?: throw EntityNotFoundException("해당 아티클을 찾을 수 없습니다")
-        val savedVersionEntity = versionJpaRepository.findByIdOrNull(versionId) ?: throw EntityNotFoundException("해당 버전을 찾을 수 없습니다")
+    override fun findByIdAndVersionId( articleId: Long, versionId: Long): VersionedArticle? {
+        val savedMetadataEntity = articleMetadataJpaRepository.findByIdOrNull(articleId)
+        val savedVersionEntity = versionJpaRepository.findByIdOrNull(versionId)
+
+        if (savedMetadataEntity == null || savedVersionEntity == null) return null
 
         if (savedMetadataEntity.id != savedVersionEntity.articleId) throw RuntimeException("서로 맞지 않는 버전입니다")
 
@@ -57,7 +61,7 @@ class ArticleRepositoryImpl (
     }
 
     private fun toDomain(metadata: ArticleMetadataEntity, version:  VersionEntity): VersionedArticle {
-        return VersionedArticle(
+        return VersionedArticle.of(
             id = metadata.id,
             authorId = metadata.authorId,
             createdAt = metadata.createdAt,

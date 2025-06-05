@@ -3,9 +3,8 @@ package dev.codeswamp.core.article.infrastructure.persistence.repositoryImpl
 import dev.codeswamp.core.article.domain.article.model.Version
 import dev.codeswamp.core.article.domain.article.repository.VersionRepository
 import dev.codeswamp.core.article.infrastructure.persistence.graph.repository.VersionNodeRepository
-import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.ArticleStatusJpa
+import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.VersionStatusJpa
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.VersionJpaRepository
-import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.ArticleMetadataJpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -27,7 +26,7 @@ class VersionRepositoryImpl(
     }
 
     override fun findPublishedVersionByArticleId(articleId: Long): Version? {
-        return versionJpaRepository.findByArticleIdAndState(articleId, ArticleStatusJpa.PUBLISHED)?.toDomain()
+        return versionJpaRepository.findByArticleIdAndState(articleId, VersionStatusJpa.PUBLISHED)?.toDomain()
     }
 
     override fun findDiffChainFromNearestSnapshot(versionId: Long): List<String> {

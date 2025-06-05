@@ -2,11 +2,11 @@ package dev.codeswamp.core.article.infrastructure.support
 
 import com.github.difflib.DiffUtils
 import com.github.difflib.UnifiedDiffUtils
-import dev.codeswamp.core.article.domain.support.ArticleDiffProcessor
+import dev.codeswamp.core.article.domain.support.DiffProcessor
 import org.springframework.stereotype.Component
 
 @Component
-class ArticleDiffProcessorImpl : ArticleDiffProcessor {
+class DiffProcessorImpl : DiffProcessor {
     override fun calculateDiff(old: String?, new: String): String? {
         val oldLines = old?.lines() ?: emptyList()
         val newLines = new.lines()
@@ -26,18 +26,13 @@ class ArticleDiffProcessorImpl : ArticleDiffProcessor {
         ).joinToString("\n")
     }
 
-    override fun applyDiff(content: String, diff: String): String {
-        val contentLines = content.lines()
-        val patch = UnifiedDiffUtils.parseUnifiedDiff(diff.lines())
-        return DiffUtils.patch(contentLines, patch).joinToString("\n")
-    }
+    override fun buildFullContent(diffChain: List<String>): String {
+        if (diffChain.isEmpty()) return ""
 
-    override fun buildFullContentFromHistory(snapshot: String, history: List<String>): String {
-        if (history.isEmpty()) return ""
+        val base = diffChain[0]
+        var fullContent = base.lines()
 
-        var fullContent = snapshot.lines()
-
-        for (diff in  history.drop(1)) {
+        for (diff in  diffChain.drop(1)) {
             val patch = UnifiedDiffUtils.parseUnifiedDiff(diff.lines())
             fullContent = DiffUtils.patch(fullContent, patch)
         }

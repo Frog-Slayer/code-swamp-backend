@@ -29,7 +29,7 @@ data class VersionEntity (
     val createdAt: Instant,
 
     @Enumerated(EnumType.STRING)
-    var state: ArticleStatusJpa
+    var state: VersionStatusJpa
 ) {
     companion object {
         fun from(version: Version) = VersionEntity(
@@ -38,7 +38,7 @@ data class VersionEntity (
             previousVersionId = version.previousVersionId,
             diff =  version.diff,
             createdAt = version.createdAt,
-            state = ArticleStatusJpa.fromDomain(version.state),
+            state = VersionStatusJpa.fromDomain(version.state),
         )
     }
 

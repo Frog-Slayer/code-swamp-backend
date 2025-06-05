@@ -1,11 +1,11 @@
 package dev.codeswamp.core.article.presentation.controller
 
-import dev.codeswamp.core.article.application.usecase.create.CreateArticleCommand
+import dev.codeswamp.core.article.application.usecase.command.create.CreateArticleCommand
 import dev.codeswamp.core.article.application.dto.query.GetArticleByIdQuery
 import dev.codeswamp.core.article.application.dto.query.GetArticleByPathQuery
 import dev.codeswamp.core.article.application.dto.query.GetVersionedArticleQuery
 import dev.codeswamp.core.article.application.usecase.ArticleCommandUseCase
-import dev.codeswamp.core.article.application.usecase.ArticleQueryUseCase
+import dev.codeswamp.core.article.application.usecase.query.ArticleQueryUseCase
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.presentation.dto.request.ArticleCreateRequestDto
 import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity

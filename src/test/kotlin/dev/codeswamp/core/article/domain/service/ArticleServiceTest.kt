@@ -1,7 +1,7 @@
 package dev.codeswamp.core.article.domain.service
 
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
-import dev.codeswamp.core.article.domain.article.model.ArticleState
+import dev.codeswamp.core.article.domain.article.model.VersionState
 import dev.codeswamp.core.article.domain.article.service.ArticleDomainService
 import dev.codeswamp.core.article.domain.article.service.VersionService
 import dev.codeswamp.core.article.infrastructure.persistence.graph.repository.VersionNodeRepository
@@ -26,7 +26,7 @@ class ArticleServiceTest (
     fun create() {
         val versionedArticle = VersionedArticle(
             title = "title",
-            status = ArticleState.NEW,
+            status = VersionState.NEW,
             authorId = 1L,
             folderId = 1L,
             isPublic = true,
@@ -69,7 +69,7 @@ class ArticleServiceTest (
     fun metadataChangeTest() {
         val article = articleDomainService.findById(1L)?.copy(
             title = "title22",
-            status = ArticleState.PUBLISHED,
+            status = VersionState.PUBLISHED,
             authorId = 1L,
             folderId = 1L,
             isPublic = false,
@@ -87,7 +87,7 @@ class ArticleServiceTest (
     fun findById() {
         val versionedArticle = VersionedArticle(
             title = "title",
-            status = ArticleState.NEW,
+            status = VersionState.NEW,
             authorId = 1L,
             folderId = 1L,
             isPublic = true,
