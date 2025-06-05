@@ -14,7 +14,7 @@ data class VersionNode(
 
     val articleId: Long,
 
-    val diffId: Long,
+    val versionId: Long,
 
     val isSnapshot: Boolean = false,
 
@@ -23,9 +23,9 @@ data class VersionNode(
 
     ) {
     companion object {
-        fun fromDomain(diff: Version, previous: VersionNode?) = VersionNode(
-            articleId = diff.articleId,
-            diffId = diff.id!!,
+        fun fromDomain(version: Version, previous: VersionNode?) = VersionNode(
+            articleId = version.articleId,
+            versionId= version.id,
             previous = previous
         )
     }

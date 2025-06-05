@@ -11,23 +11,11 @@ interface VersionNodeRepository : Neo4jRepository<VersionNode, Long> {
 
     fun deleteAllByArticleId(articleId: Long)
 
-    @Query(
-        "MATCH path = (n1: HistoryNode {diffId: \$diffId1}) <-[:NEXT*0..]-(ancestor:HistoryNode)-[:NEXT*0..]->(n2: HistoryNode {diffId: \$diffId2}) " +
-        """
-        RETURN ancestor
-        """
-    )
-    fun findLCA(diffId1: Long, diffId2: Long): VersionNode?
-
-    @Query("MATCH p = shortestPath((n1: HistoryNode {diffId: \$diffId1})-[:NEXT*0..]->(n2: HistoryNode {diffId: \$diffId2})) RETURN p")
-    fun findPathBetween(diffId1: Long, diffId2: Long): List<VersionNode>
-
-
-    @Query("MATCH p= (snapshot:HistoryNode)-[:NEXT*0..]->(target:HistoryNode {diffId: \$diffId})" +
+    @Query("MATCH p = (snapshot: VersionNode) -[:NEXT*0..]-> (target:HistoryNode{versionId : \$versionId})" +
         """WHERE snapshot.isSnapshot = true
-        RETURN snapshot
+        RETURN p
         ORDER BY length(p) ASC
         LIMIT 1 
     """)
-    fun findNearestSnapshotBefore(diffId: Long): VersionNode
+    fun findDiffChainFromNearestSnapshot(versionId: Long): List<VersionNode>
 }
