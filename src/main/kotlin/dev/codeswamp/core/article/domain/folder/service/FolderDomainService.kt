@@ -31,10 +31,6 @@ class FolderDomainService (
         folderRepository.delete(folder)
     }
 
-    fun findFolderByFullPath(rootName: String, paths: List<String>): Folder? {
-        return folderRepository.findFolderByFullPath(rootName, paths)
-    }
-
     fun checkDuplicatedFolderNameInSameLevel(parent: Folder, name: String) : Boolean{
         requireNotNull(parent.id) {"parent folder id required"}
         return folderRepository.existsByParentIdAndName(parent.id, name)

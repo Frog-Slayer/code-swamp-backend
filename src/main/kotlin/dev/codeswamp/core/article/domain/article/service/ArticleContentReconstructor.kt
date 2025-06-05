@@ -11,7 +11,7 @@ class ArticleContentReconstructor(
     private val diffProcessor: DiffProcessor
 ){
     fun reconstructFullContent(article: VersionedArticle) : String {
-        val diffChain = versionRepository.findDiffChainFromNearestSnapshot(article.currentVersion.id)
+        val diffChain = versionRepository.findDiffChainTo(article.currentVersion.id)
         return diffProcessor.buildFullContent(diffChain)
     }
 }

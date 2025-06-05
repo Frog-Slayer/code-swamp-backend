@@ -2,7 +2,7 @@ package dev.codeswamp.core.article.infrastructure.persistence.jpa.entity
 
 import dev.codeswamp.core.article.domain.article.model.VersionState
 
-enum class VersionStatusJpa {
+enum class VersionStateJpa {
     ARCHIVED,
     DRAFT,
     PUBLISHED;
@@ -10,7 +10,7 @@ enum class VersionStatusJpa {
     fun toDomain(): VersionState = VersionState.valueOf(this.name)
 
     companion object {
-        fun fromDomain(status: VersionState): VersionStatusJpa =
+        fun fromDomain(status: VersionState): VersionStateJpa =
             when (status) {
                 VersionState.NEW -> throw IllegalStateException("NEW article state is invalid")
                 else -> valueOf(status.name)

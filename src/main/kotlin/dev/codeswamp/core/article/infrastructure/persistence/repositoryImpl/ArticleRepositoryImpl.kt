@@ -24,8 +24,7 @@ class ArticleRepositoryImpl (
 
     override fun save(versionedArticle: VersionedArticle): VersionedArticle {
         val savedMetadataEntity = saveMetadata(versionedArticle)
-        val savedVersionEntity = versionedArticle.currentVersion?.let { saveVersion(it)}
-            ?: throw IllegalStateException("current version is null")
+        val savedVersionEntity = saveVersion(versionedArticle.currentVersion)
 
         return toDomain(savedMetadataEntity, savedVersionEntity)
     }

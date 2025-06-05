@@ -33,18 +33,6 @@ class ArticleQueryUseCaseFacade(
     }
 
     fun getArticleByUsernameAndPath(getArticleByPathQuery: GetArticleByPathQuery): VersionedArticle {
-        val path = getArticleByPathQuery.path
-        val lastSlash = path.lastIndexOf('/');
 
-        val folderPath = path.substring(0, lastSlash)
-        val articleSlug =  path.substring(lastSlash + 1)
-
-        val folder = requireNotNull(folderDomainService.getFolderIdByPath(folderPath))
-
-        val article = requireNotNull(articleDomainService.findByFolderIdAndSlug(folderId, articleSlug))
-
-        article.assertReadableBy(getArticleByPathQuery.userId)
-
-        return article;
     }
 }

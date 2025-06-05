@@ -9,5 +9,5 @@ interface VersionRepository {
     fun deleteByArticleId(articleId: Long)
 
     fun findPublishedVersionByArticleId(articleId: Long) : Version?
-    fun findDiffChainFromNearestSnapshot(versionId: Long) : List<String>
+    fun findDiffChainTo(versionId: Long) : List<String>
 }

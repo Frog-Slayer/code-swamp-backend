@@ -7,6 +7,7 @@ import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.VersionE
 interface ArticleRepository {
     fun save(versionedArticle: VersionedArticle): VersionedArticle
     fun findByIdAndVersionId(articleId: Long, versionId: Long): VersionedArticle?
+    fun findByFolderIdAndSlug(folderId: Long, slug: String): VersionedArticle?
     fun saveVersion(version: Version): VersionEntity;
     fun deleteById(id: Long)
 }

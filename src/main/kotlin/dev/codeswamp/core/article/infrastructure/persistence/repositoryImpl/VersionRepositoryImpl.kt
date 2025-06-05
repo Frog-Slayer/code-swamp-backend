@@ -3,7 +3,7 @@ package dev.codeswamp.core.article.infrastructure.persistence.repositoryImpl
 import dev.codeswamp.core.article.domain.article.model.Version
 import dev.codeswamp.core.article.domain.article.repository.VersionRepository
 import dev.codeswamp.core.article.infrastructure.persistence.graph.repository.VersionNodeRepository
-import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.VersionStatusJpa
+import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.VersionStateJpa
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.VersionJpaRepository
 import org.springframework.stereotype.Repository
 
@@ -26,10 +26,10 @@ class VersionRepositoryImpl(
     }
 
     override fun findPublishedVersionByArticleId(articleId: Long): Version? {
-        return versionJpaRepository.findByArticleIdAndState(articleId, VersionStatusJpa.PUBLISHED)?.toDomain()
+        return versionJpaRepository.findByArticleIdAndState(articleId, VersionStateJpa.PUBLISHED)?.toDomain()
     }
 
-    override fun findDiffChainFromNearestSnapshot(versionId: Long): List<String> {
+    override fun findDiffChainTo(versionId: Long): List<String> {
         return versionNodeRepository.findDiffChainFromNearestSnapshot(versionId)
             .map { it.versionId }
             .let { versionJpaRepository.findAllByIdIsIn(it)}
