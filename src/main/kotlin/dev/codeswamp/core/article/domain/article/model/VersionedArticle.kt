@@ -54,14 +54,16 @@ data class VersionedArticle private constructor (
                 createdAt : Instant) : VersionedArticle {
         return if (diff.isBlank()) this
         else {
+            val newVersionId = generateId()
+
             addEvent(ArticleVersionCreatedEvent(
                 articleId = id,
-                versionId = currentVersion.id,
+                versionId = newVersionId
             ))
 
             this.copy(
                 currentVersion = Version(
-                    id = generateId(),
+                    id = newVersionId,
                     articleId = id,
                     state = ArticleState.NEW,
                     previousVersionId = currentVersion?.id,
