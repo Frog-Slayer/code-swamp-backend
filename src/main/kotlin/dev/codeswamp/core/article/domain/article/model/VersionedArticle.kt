@@ -1,6 +1,7 @@
 package dev.codeswamp.core.article.domain.article.model
 
 import dev.codeswamp.core.article.domain.AggregateRoot
+import dev.codeswamp.core.article.domain.ArticleDomainEvent
 import dev.codeswamp.core.article.domain.article.events.ArticleDraftedEvent
 import dev.codeswamp.core.article.domain.article.events.ArticlePublishedEvent
 import dev.codeswamp.core.article.domain.article.events.ArticleVersionCreatedEvent
@@ -110,15 +111,15 @@ data class VersionedArticle private constructor (
         slugUniquenessChecker(this, metadata.folderId, slug)
 
         //이전 버전 및 이전 발행본을 ARCHIVED로 변경하는 이벤트 발행
-        addEvent(ArticlePublishedEvent(
-            articleId = id,
-            versionId = currentVersion.id,
-        ))
 
         return this.copy(
             isPublished = true,
             currentVersion = currentVersion.publish()
-        )
+        ).withEvent(
+            ArticlePublishedEvent(
+            articleId = id,
+            versionId = currentVersion.id,
+        ))
     }
 
     fun draft(slugUniquenessChecker : (VersionedArticle, Long, Slug) -> Unit) : VersionedArticle {
@@ -127,14 +128,12 @@ data class VersionedArticle private constructor (
             slugUniquenessChecker(this, metadata.folderId, slug)
         }
 
-        addEvent(ArticleDraftedEvent(
+
+        return this.copy( currentVersion = currentVersion.draft()).withEvent(
+            ArticleDraftedEvent(
             articleId = id,
             versionId = currentVersion.id,
         ))
-
-        return this.copy(
-            currentVersion = currentVersion.draft()
-        )
     }
 
     fun archive() : VersionedArticle {
@@ -152,5 +151,11 @@ data class VersionedArticle private constructor (
     fun assertReadableBy(userId: Long?) {
         if (!metadata.isPublic && (userId == null || authorId != userId))
             throw AccessDeniedException("cannot read private article")
+    }
+
+    fun withEvent(event: ArticleDomainEvent) : VersionedArticle {
+        val newArticle = this.copy()
+        newArticle.addEvent(event)
+        return newArticle
     }
 }
