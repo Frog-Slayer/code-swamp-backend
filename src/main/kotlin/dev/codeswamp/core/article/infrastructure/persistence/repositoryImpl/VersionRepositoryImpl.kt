@@ -1,0 +1,62 @@
+package dev.codeswamp.core.article.infrastructure.persistence.repositoryImpl
+
+import dev.codeswamp.core.article.domain.article.model.Version
+import dev.codeswamp.core.article.domain.article.repository.VersionRepository
+import dev.codeswamp.core.article.infrastructure.persistence.graph.repository.VersionNodeRepository
+import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.VersionEntity
+import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.VersionStateJpa
+import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.BaseVersionJpaRepository
+import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.VersionJpaRepository
+import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Repository
+
+@Repository
+class VersionRepositoryImpl(
+    private val versionJpaRepository: VersionJpaRepository,
+    private val versionNodeRepository: VersionNodeRepository,
+    private val baseVersionJpaRepository: BaseVersionJpaRepository,
+) : VersionRepository {
+    override fun save(version: Version): Version {
+        val entity = VersionEntity.from(version)
+
+        val existingEntity = versionJpaRepository.findByIdOrNull(entity.id)
+
+        return if (existingEntity != null) {
+            existingEntity.updateTo(entity)
+            existingEntity.toDomain()
+        }
+        else versionJpaRepository.save(entity).toDomain()
+    }
+
+    override fun findByIdOrNull(id: Long): Version? {
+        return versionJpaRepository.findByIdOrNull(id)?.toDomain()
+    }
+
+    override fun deleteByArticleId(articleId: Long) {
+        versionJpaRepository.deleteAllByArticleId(articleId)
+        versionNodeRepository.deleteAllByArticleId(articleId)
+    }
+
+    override fun findPublishedVersionByArticleId(articleId: Long): Version? {
+        return versionJpaRepository.findByArticleIdAndState(articleId, VersionStateJpa.PUBLISHED)?.toDomain()
+    }
+
+    override fun findNearestBaseTo(versionId: Long): Version? {
+       return versionNodeRepository.findBaseNodeNearestTo(versionId)
+                        ?.let { versionJpaRepository.findByIdOrNull(it.versionId) }
+                        ?.toDomain()
+    }
+
+    override fun findDiffChainBetween(baseId: Long, targetId: Long): List<String> {
+        return versionNodeRepository.findShortestPathBetween(baseId, targetId)
+                .map { it.versionId }
+                .let { versionJpaRepository.findAllByIdIsIn(it)}
+                .sortedBy { it.createdAt }
+                .map { it.diff }
+    }
+
+    fun VersionEntity.toDomain() : Version {
+        val fullContent = if (this.isBaseVersion) baseVersionJpaRepository.findByIdOrNull(id)?.content else null
+        return this.toDomain(fullContent)
+    }
+}

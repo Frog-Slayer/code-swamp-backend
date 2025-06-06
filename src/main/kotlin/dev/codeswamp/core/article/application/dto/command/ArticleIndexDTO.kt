@@ -1,0 +1,23 @@
+package dev.codeswamp.core.article.application.dto.command
+
+import dev.codeswamp.core.article.domain.article.model.VersionedArticle
+
+data class ArticleIndexDTO(
+    val articleId: Long,
+    val authorId: Long,
+    val title: String,
+    val preprocessedText: String,
+    val isPublic: Boolean,
+) {
+    companion object {
+        fun from(versionedArticle: VersionedArticle, preprocessedText: String) : ArticleIndexDTO {
+            return ArticleIndexDTO(
+                articleId = versionedArticle.id,
+                authorId = versionedArticle.authorId,
+                title = requireNotNull(versionedArticle.metadata.title).value,
+                preprocessedText = preprocessedText,
+                isPublic = versionedArticle.metadata.isPublic,
+            )
+        }
+    }
+}
