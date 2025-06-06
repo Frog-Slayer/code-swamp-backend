@@ -6,7 +6,7 @@ value class Title private constructor(
 ) {
     companion object {
         private const val MIN_LENGTH = 1
-        private const val MAX_LENGTH = 256
+        private const val MAX_LENGTH = 255
 
         fun of(value: String?): Title? {
             if (value.isNullOrEmpty()) return null
