@@ -5,6 +5,7 @@ import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
 import dev.codeswamp.core.article.domain.article.model.vo.Title
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
+import dev.codeswamp.core.article.domain.article.service.ArticleContentReconstructor
 import dev.codeswamp.core.article.domain.article.service.SlugUniquenessChecker
 import dev.codeswamp.core.article.domain.support.IdGenerator
 import org.springframework.stereotype.Service
@@ -14,6 +15,7 @@ import java.time.Instant
 class CreateArticleUseCaseImpl(
     private val articleRepository: ArticleRepository,
     private val idGenerator: IdGenerator,
+    private val contentReconstructor: ArticleContentReconstructor,
     private val slugUniquenessChecker: SlugUniquenessChecker
 
 ) : CreateArticleUseCase {
@@ -33,10 +35,10 @@ class CreateArticleUseCaseImpl(
                 title = Title.Companion.of(command.title),
                 slug = Slug.Companion.of(command.slug),
             ),
-            content = command.content,
+            diff = command.diff,
+            fullContent = contentReconstructor.applyDiff("",  command.diff),
             versionId = idGenerator.generateId()
         )
-        .updateVersionIfChanged(command.content, { idGenerator.generateId()  }, createdAt)
         .let {
             if (command.type == "DRAFT") it.draft(slugUniquenessChecker::checkSlugUniqueness)
             else it.publish(slugUniquenessChecker::checkSlugUniqueness)

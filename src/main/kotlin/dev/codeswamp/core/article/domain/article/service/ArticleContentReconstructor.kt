@@ -11,7 +11,17 @@ class ArticleContentReconstructor(
     private val diffProcessor: DiffProcessor
 ){
     fun reconstructFullContent(article: VersionedArticle) : String {
-        val diffChain = versionRepository.findDiffChainTo(article.currentVersion.id)
-        return diffProcessor.buildFullContent(diffChain)
+        val base = versionRepository.findNearestBaseTo(article.currentVersion.id)
+                    ?: throw IllegalStateException("Base Versiond을 찾지 못했습니다")
+
+        val baseContent = requireNotNull(base.fullContent)
+
+        val diffChain = versionRepository.findDiffChainBetween(base.id, article.currentVersion.id)
+
+        return diffProcessor.buildFullContent(baseContent, diffChain)
+    }
+
+    fun applyDiff(content: String, diff: String) : String {
+        return diffProcessor.applyDiff(content, diff)
     }
 }

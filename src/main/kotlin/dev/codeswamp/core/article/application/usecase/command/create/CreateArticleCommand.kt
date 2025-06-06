@@ -4,7 +4,7 @@ data class CreateArticleCommand (
     val userId: Long,
     val type: String,
     val title: String,
-    val content: String,
+    val diff: String,
     val isPublic: Boolean,
     val thumbnailUrl: String?,
     val folderId: Long,

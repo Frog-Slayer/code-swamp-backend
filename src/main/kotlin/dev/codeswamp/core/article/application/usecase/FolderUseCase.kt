@@ -7,8 +7,6 @@ import dev.codeswamp.core.article.application.dto.command.MoveFolderCommand
 import dev.codeswamp.core.article.domain.folder.model.Folder
 
 interface FolderUseCase {
-    fun findFolderByFullPath(fullPath: String): Folder?
-
     //create
     fun create(createFolderCommand: CreateFolderCommand)
 

@@ -16,7 +16,7 @@ data class VersionNode(
 
     val versionId: Long,
 
-    val isSnapshot: Boolean = false,
+    val isBase: Boolean = false,
 
     @Relationship(type = "NEXT", direction = Relationship.Direction.INCOMING)
     val previous: VersionNode? = null,

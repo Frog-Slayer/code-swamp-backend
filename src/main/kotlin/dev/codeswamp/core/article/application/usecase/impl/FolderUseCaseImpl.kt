@@ -13,14 +13,6 @@ import org.springframework.stereotype.Service
 class FolderUseCaseImpl(
     private val folderDomainService: FolderDomainService,
 ): FolderUseCase {
-    override fun findFolderByFullPath(fullPath: String): Folder? {
-        val splitPath = fullPath.split('/')
-        val rootName =  splitPath.first()
-        val paths = splitPath.drop(1)
-
-        return folderDomainService.findFolderByFullPath(rootName, paths)
-    }
-
     override fun create(createFolderCommand: CreateFolderCommand) {
         val parent = requireNotNull(folderDomainService.findById(createFolderCommand.parentId)) {"parent folder not found"}
 

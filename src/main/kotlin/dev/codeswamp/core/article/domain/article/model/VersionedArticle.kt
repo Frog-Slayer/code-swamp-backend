@@ -38,21 +38,28 @@ data class VersionedArticle private constructor (
                    authorId: Long,
                    createdAt: Instant,
                    metadata: ArticleMetadata,
-                   content: String,
-                   versionId: Long) = VersionedArticle(
-            id = id,
-            authorId = authorId,
-            createdAt = createdAt,
-            metadata = metadata,
-            currentVersion = Version(
-                    id = versionId,
-                    articleId = id,
-                    state = VersionState.NEW,
-                    previousVersionId = null,
-                    diff = content,
+                   diff: String,
+                   fullContent: String,
+                   versionId: Long) : VersionedArticle {
+
+            val article = VersionedArticle(
+                    id = id,
+                    authorId = authorId,
                     createdAt = createdAt,
-            )
-        )
+                    metadata = metadata,
+                    currentVersion = Version.of(
+                        id = versionId,
+                        articleId = id,
+                        state = VersionState.NEW,
+                        previousVersionId = null,
+                        diff = diff,
+                        createdAt = createdAt,
+                    )
+                    .asBaseVersion(fullContent)
+                )
+
+            return article
+        }
 
         fun of (id: Long, authorId: Long, createdAt: Instant, isPublished: Boolean,
                 metadata: ArticleMetadata, currentVersion: Version) = VersionedArticle(
@@ -85,11 +92,11 @@ data class VersionedArticle private constructor (
             ))
 
             this.copy(
-                currentVersion = Version(
+                currentVersion = Version.of(
                     id = newVersionId,
                     articleId = id,
                     state = VersionState.NEW,
-                    previousVersionId = currentVersion?.id,
+                    previousVersionId = currentVersion.id,
                     diff = diff,
                     createdAt = createdAt,
                 )

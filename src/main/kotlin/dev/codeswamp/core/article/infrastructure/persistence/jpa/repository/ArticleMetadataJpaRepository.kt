@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ArticleMetadataJpaRepository : JpaRepository<ArticleMetadataEntity, Long>{
     fun findAllByIdIsIn(articleIds: List<Long>): List<ArticleMetadataEntity>
-    fun findByFolderIdAndSlug(folderId: Long, slug: String): ArticleMetadataEntity?
+    fun findIdByFolderIdAndSlug(folderId: Long, slug: String): Long?
 }

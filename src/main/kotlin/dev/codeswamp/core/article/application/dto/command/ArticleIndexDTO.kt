@@ -12,11 +12,11 @@ data class ArticleIndexDTO(
     companion object {
         fun from(versionedArticle: VersionedArticle, preprocessedText: String) : ArticleIndexDTO {
             return ArticleIndexDTO(
-                articleId = versionedArticle.id!!,
+                articleId = versionedArticle.id,
                 authorId = versionedArticle.authorId,
-                title = versionedArticle.title,
+                title = requireNotNull(versionedArticle.metadata.title).value,
                 preprocessedText = preprocessedText,
-                isPublic = versionedArticle.isPublic,
+                isPublic = versionedArticle.metadata.isPublic,
             )
         }
     }

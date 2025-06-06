@@ -60,7 +60,7 @@ class ArticleServiceTest (
         assertThat(saved.id).isEqualTo(1L)
 
         val currentVersion = saved.currentVersion?:throw Exception("something went wrong")
-        val node = versionNodeRepository.findByDiffId(currentVersion)
+        val node = versionNodeRepository.findByVersionId(currentVersion)
 
         assertThat(node?.previous).isNotNull()
     }

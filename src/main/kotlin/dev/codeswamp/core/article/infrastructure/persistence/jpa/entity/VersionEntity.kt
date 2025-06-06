@@ -29,7 +29,10 @@ data class VersionEntity (
     val createdAt: Instant,
 
     @Enumerated(EnumType.STRING)
-    var state: VersionStateJpa
+    var state: VersionStateJpa,
+
+    val isBaseVersion: Boolean
+
 ) {
     companion object {
         fun from(version: Version) = VersionEntity(
@@ -39,17 +42,20 @@ data class VersionEntity (
             diff =  version.diff,
             createdAt = version.createdAt,
             state = VersionStateJpa.fromDomain(version.state),
+            isBaseVersion = version.isBaseVersion
         )
     }
 
-    fun toDomain(): Version {
-        return  Version(
+    fun toDomain(fullContent: String?): Version {
+        return  Version.from(
             id = id,
             articleId = articleId,
             previousVersionId = previousVersionId,
             diff = diff,
             createdAt = createdAt,
-            state = state.toDomain()
+            state = state.toDomain(),
+            isBaseVersion =  isBaseVersion,
+            fullContent = fullContent,
         )
     }
 

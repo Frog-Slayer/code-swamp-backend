@@ -12,9 +12,8 @@ class SlugUniquenessChecker(
 ) {
     fun checkSlugUniqueness(article: VersionedArticle, folderId: Long, slug: Slug) {
         val slugValue = requireNotNull(slug.value)
-        articleRepository.findByFolderIdAndSlug(folderId, slugValue)
-            ?.takeIf { it.id != article.id }
-            ?.let { throw DuplicatedSlugException("중복 SLUG입니다") }
-    }
 
+        val existingArticleId = articleRepository.findIdByFolderIdAndSlug(folderId, slugValue)
+        if ( existingArticleId != null && article.id != existingArticleId) throw DuplicatedSlugException("중복 SLUG입니다")
+    }
 }

@@ -1,11 +1,7 @@
 package dev.codeswamp.core.article.presentation.controller
 
 import dev.codeswamp.core.article.application.usecase.command.create.CreateArticleCommand
-import dev.codeswamp.core.article.application.dto.query.GetArticleByIdQuery
-import dev.codeswamp.core.article.application.dto.query.GetArticleByPathQuery
-import dev.codeswamp.core.article.application.dto.query.GetVersionedArticleQuery
-import dev.codeswamp.core.article.application.usecase.ArticleCommandUseCase
-import dev.codeswamp.core.article.application.usecase.query.ArticleQueryUseCase
+import dev.codeswamp.core.article.application.usecase.query.ArticleQueryUseCaseFacade
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.presentation.dto.request.ArticleCreateRequestDto
 import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
@@ -24,17 +20,18 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/articles")
 class ArticleController(
-    private val articleCommandUsecase: ArticleCommandUseCase,
-    private val articleQueryService: ArticleQueryUseCase
+    private val articleCommandUseCaseFacade: ArticleQueryUseCaseFacade,
+    private val articleQueryUseCaseFacade: ArticleQueryUseCaseFacade
 ){
     //TODO(ResponseDTO & 예외 처리)
 
     @GetMapping("/{articleId}")
     fun getArticleWithId(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable articleId:Long): VersionedArticle {
-        return articleQueryService.findByArticleId(GetArticleByIdQuery(
-            userId = user.getId(),
-            articleId = articleId
-        ))
+        TODO()
+//        return articl.findByArticleId(GetArticleByIdQuery(
+//            userId = user.getId(),
+//            articleId = articleId
+//        ))
     }
 
     @GetMapping("/@{username}/**")
@@ -45,40 +42,43 @@ class ArticleController(
     ) : VersionedArticle {
         val fullPath = httpServletRequest.requestURI
 
-        return articleQueryService.getArticleByUsernameAndPath(GetArticleByPathQuery(
-            userId = user.getId(),
-            path = fullPath
-        ))
+        TODO()
+//        return articleQueryService.getArticleByUsernameAndPath(GetArticleByPathQuery(
+//            userId = user.getId(),
+//            path = fullPath
+//        ))
     }
 
     @GetMapping("/{articleId}/versions/{versionId}")
     fun getVersionedArticle(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable articleId: Long, @PathVariable versionId: Long) : VersionedArticle{
-        val userId = requireNotNull(user.getId())
-        return articleQueryService.getVersionedArticle(
-            GetVersionedArticleQuery(
-                userId = userId,
-                articleId = articleId,
-                versionId = versionId
-            )
-        )
+        TODO()
+//        val userId = requireNotNull(user.getId())
+//        return articleQueryService.getVersionedArticle(
+//            GetVersionedArticleQuery(
+//                userId = userId,
+//                articleId = articleId,
+//                versionId = versionId
+//            )
+//        )
     }
 
     @PostMapping
     fun publishNewArticle(@AuthenticationPrincipal user: CustomUserDetails, @RequestBody articleCreateRequestDto: ArticleCreateRequestDto) {
-        val userId = requireNotNull(user.getId())
-
-        val createArticleCommand = CreateArticleCommand(
-            userId = userId,
-            title = articleCreateRequestDto.title,
-            content = articleCreateRequestDto.content,
-            isPublic = articleCreateRequestDto.isPublic,
-            thumbnailUrl = articleCreateRequestDto.thumbnailUrl,
-            slug = articleCreateRequestDto.slug,
-            summary = articleCreateRequestDto.summary,
-            folderId = 1L
-        )
-
-        articleCommandUsecase.create(createArticleCommand)
+        TODO()
+//        val userId = requireNotNull(user.getId())
+//
+//        val createArticleCommand = CreateArticleCommand(
+//            userId = userId,
+//            title = articleCreateRequestDto.title,
+//            diff = articleCreateRequestDto.content,
+//            isPublic = articleCreateRequestDto.isPublic,
+//            thumbnailUrl = articleCreateRequestDto.thumbnailUrl,
+//            slug = articleCreateRequestDto.slug,
+//            summary = articleCreateRequestDto.summary,
+//            folderId = 1L
+//        )
+//
+//        articleCommandUsecase.create(createArticleCommand)
     }
 
     @PatchMapping("/{articleId}/versions/{versionId}")
@@ -87,20 +87,21 @@ class ArticleController(
                        @PathVariable versionId: Long,
                        @RequestBody articleCreateRequestDto: ArticleCreateRequestDto) {
 
-        val userId = requireNotNull(user.getId())
-
-        val createArticleCommand = CreateArticleCommand(
-            userId = userId,
-            title = articleCreateRequestDto.title,
-            content = articleCreateRequestDto.content,
-            isPublic = articleCreateRequestDto.isPublic,
-            thumbnailUrl = articleCreateRequestDto.thumbnailUrl,
-            slug = articleCreateRequestDto.slug,
-            summary = articleCreateRequestDto.summary,
-            folderId = 1L
-        )
-
-        articleCommandUsecase.create(createArticleCommand)
+        TODO()
+//        val userId = requireNotNull(user.getId())
+//
+//        val createArticleCommand = CreateArticleCommand(
+//            userId = userId,
+//            title = articleCreateRequestDto.title,
+//            diff = articleCreateRequestDto.content,
+//            isPublic = articleCreateRequestDto.isPublic,
+//            thumbnailUrl = articleCreateRequestDto.thumbnailUrl,
+//            slug = articleCreateRequestDto.slug,
+//            summary = articleCreateRequestDto.summary,
+//            folderId = 1L
+//        )
+//
+//        articleCommandUsecase.create(createArticleCommand)
     }
 
     @DeleteMapping("/{id}")

@@ -1,4 +1,4 @@
-package dev.codeswamp.core.article.application.usecase.query.read.bySlug
+package dev.codeswamp.core.article.application.usecase.query.read.byslug
 
 import dev.codeswamp.core.article.application.usecase.query.read.ReadArticleResult
 

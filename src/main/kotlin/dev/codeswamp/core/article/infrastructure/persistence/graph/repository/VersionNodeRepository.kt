@@ -7,15 +7,21 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface VersionNodeRepository : Neo4jRepository<VersionNode, Long> {
-    fun findByDiffId(diffId: Long): VersionNode?
+    fun findByVersionId(versionId: Long): VersionNode?
 
     fun deleteAllByArticleId(articleId: Long)
 
-    @Query("MATCH p = (snapshot: VersionNode) -[:NEXT*0..]-> (target:HistoryNode{versionId : \$versionId})" +
-        """WHERE snapshot.isSnapshot = true
-        RETURN p
-        ORDER BY length(p) ASC
-        LIMIT 1 
-    """)
-    fun findDiffChainFromNearestSnapshot(versionId: Long): List<VersionNode>
+    @Query( "MATCH (target: VersionNode{versionId: \$versionId}) SET target.isBase= true")
+    fun markAsBase(versionId: Long)
+
+    @Query("MATCH p= (base: VersionNode)-[:NEXT*0..]->(target: VersionNode{versionId: \$versionId})" +
+            """WHERE base.isBase= true
+            RETURN base
+            ORDER BY length(p) ASC
+            LIMIT 1 
+        """)
+    fun findBaseNodeNearestTo(versionId : Long) : VersionNode?
+
+    @Query("MATCH p = shortestPath((n1: VersionNode{versionId: \$versionId1})-[:NEXT*0..]->(n2: VersionNode{versionId: \$versionId2})) RETURN p")
+    fun findShortestPathBetween(versionId1: Long, versionId2: Long) : List<VersionNode>
 }

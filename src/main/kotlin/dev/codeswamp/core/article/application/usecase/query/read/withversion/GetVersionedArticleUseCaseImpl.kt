@@ -1,4 +1,4 @@
-package dev.codeswamp.core.article.application.usecase.query.read.withVersion
+package dev.codeswamp.core.article.application.usecase.query.read.withversion
 
 import dev.codeswamp.core.article.application.usecase.query.read.ReadArticleResult
 import dev.codeswamp.core.article.domain.article.exceptions.ArticleNotFoundException

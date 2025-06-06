@@ -10,11 +10,11 @@ object SnowflakeIdGenerator : IdGenerator {
     private const val WORKER_ID_BITS = 10L
     private const val SEQUENCE_BITS = 12L
 
-    private const val MAX_WORKER_ID = -1L xor (-1L shl WORKER_ID_BITS.toInt())
-    private const val MAX_SEQUENCE = -1L xor (-1L shl SEQUENCE_BITS.toInt())
+    private val MAX_WORKER_ID = -1L xor (-1L shl WORKER_ID_BITS.toInt())
+    private val MAX_SEQUENCE = -1L xor (-1L shl SEQUENCE_BITS.toInt())
 
-    private const val WORKER_ID_SHIFT = SEQUENCE_BITS
-    private const val TIMESTAMP_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS
+    private val WORKER_ID_SHIFT = SEQUENCE_BITS
+    private val TIMESTAMP_SHIFT = SEQUENCE_BITS + WORKER_ID_BITS
 
     private var workerId: Long = 0
     private var sequence = 0L

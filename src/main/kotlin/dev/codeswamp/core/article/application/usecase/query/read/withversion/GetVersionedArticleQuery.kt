@@ -1,4 +1,4 @@
-package dev.codeswamp.core.article.application.usecase.query.read.withVersion
+package dev.codeswamp.core.article.application.usecase.query.read.withversion
 
 data class GetVersionedArticleQuery (
     val userId: Long,//should be private
