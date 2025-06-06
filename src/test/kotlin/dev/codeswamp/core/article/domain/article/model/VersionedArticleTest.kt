@@ -1,10 +1,12 @@
 package dev.codeswamp.core.article.domain.article.model
 
 import dev.codeswamp.core.article.domain.article.events.ArticlePublishedEvent
+import dev.codeswamp.core.article.domain.article.events.ArticleVersionCreatedEvent
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
 import dev.codeswamp.core.article.domain.article.model.vo.Title
 import org.assertj.core.api.Assertions.assertThat
+import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.Instant
@@ -69,6 +71,8 @@ class VersionedArticleTest {
         assertThat(updated).isNotEqualTo(article)
         assertThat(updated.currentVersion.diff).isEqualTo("+++updated")
         assertThat(updated.currentVersion.id).isEqualTo(2L)
+
+        assertThat(updated.pullEvents().first()).isInstanceOf(ArticleVersionCreatedEvent::class.java)
     }
 
     @Test
@@ -87,8 +91,13 @@ class VersionedArticleTest {
 
     @Test
     fun `published 상태에서 archive 시 예외 발생`() {
+        val article = baseArticle()
+        val checker = {_: VersionedArticle, _:Long, _: Slug -> }
 
+        val published = article.publish(checker)
 
+        assertThatThrownBy { published.archive() }
+            .isInstanceOf(IllegalStateException::class.java)
     }
 
 

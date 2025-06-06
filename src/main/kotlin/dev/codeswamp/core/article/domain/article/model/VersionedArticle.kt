@@ -87,11 +87,6 @@ data class VersionedArticle private constructor (
         else {
             val newVersionId = generateId()
 
-            addEvent(ArticleVersionCreatedEvent(
-                articleId = id,
-                versionId = newVersionId
-            ))
-
             this.copy(
                 currentVersion = Version.of(
                     id = newVersionId,
@@ -101,7 +96,10 @@ data class VersionedArticle private constructor (
                     diff = diff,
                     createdAt = createdAt,
                 )
-            )
+            ).withEvent(ArticleVersionCreatedEvent(
+                articleId = id,
+                versionId = newVersionId
+            ))
         }
     }
 
