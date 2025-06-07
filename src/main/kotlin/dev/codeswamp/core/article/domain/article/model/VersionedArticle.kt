@@ -83,11 +83,14 @@ data class VersionedArticle private constructor (
         )
     }
 
-    fun updateVersionIfChanged(//TODO: title 변경도 추적할 것
-                title: String,
-                diff: String,
-                generateId: () -> Long,
-                createdAt : Instant) : VersionedArticle {
+    fun updateVersionIfChanged(
+            title: String,
+            diff: String,
+            generateId: () -> Long,
+            createdAt : Instant,
+            shouldRebase: (Version) -> Boolean,
+            reconstructFullContent: (Version) -> String,
+        ) : VersionedArticle {
         return if (diff.isBlank()) this
         else {
             val newVersionId = generateId()
@@ -102,6 +105,9 @@ data class VersionedArticle private constructor (
                     diff = diff,
                     createdAt = createdAt,
                 )
+                .let {
+                    if (shouldRebase(it)) it.asBaseVersion(reconstructFullContent(it))
+                    else it }
             ).withEvent(ArticleVersionCreatedEvent(
                 articleId = id,
                 versionId = newVersionId

@@ -1,5 +1,6 @@
 package dev.codeswamp.core.article.application.usecase.command.draft
 
+import dev.codeswamp.core.article.application.base.RebasePolicy
 import dev.codeswamp.core.article.domain.article.exceptions.ArticleNotFoundException
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
@@ -17,26 +18,9 @@ class DraftArticleUseCaseImpl(
     private val idGenerator: IdGenerator,
     private val slugUniquenessChecker: SlugUniquenessChecker,
     private val contentReconstructor: ArticleContentReconstructor,
+    private val rebasePolicy: RebasePolicy,
     private val eventPublisher: ApplicationEventPublisher,
 ) : DraftArticleUseCase {
-
-    override fun update(command: UpdateDraftCommand) : DraftArticleResult {
-        val createdAt = Instant.now()
-
-        val article = articleRepository.findByIdAndVersionId(command.articleId, command.versionId )
-            ?.apply { checkOwnership(command.userId) }
-            ?.updateVersionIfChanged(command.title, command.diff, idGenerator::generateId, createdAt )
-            ?.draft(slugUniquenessChecker::checkSlugUniqueness)
-            ?: throw ArticleNotFoundException("Draft 저장에 실패했습니다 ")
-
-        val saved = articleRepository.save(article)
-        article.pullEvents().forEach(eventPublisher::publishEvent)
-
-        return DraftArticleResult(
-            saved.id,
-            saved.currentVersion.id
-        )
-    }
 
     override fun create(command: CreateDraftCommand): DraftArticleResult {
         val createdAt = Instant.now()
@@ -67,4 +51,28 @@ class DraftArticleUseCaseImpl(
             saved.currentVersion.id
         )
     }
+
+    override fun update(command: UpdateDraftCommand) : DraftArticleResult {
+        val createdAt = Instant.now()
+
+        val article = articleRepository.findByIdAndVersionId(command.articleId, command.versionId )
+            ?.apply { checkOwnership(command.userId) }
+            ?.updateVersionIfChanged(command.title,
+                command.diff,
+                idGenerator::generateId,
+                createdAt,
+                rebasePolicy::shouldStoreAsBase,
+                contentReconstructor::reconstructFullContent)
+            ?.draft(slugUniquenessChecker::checkSlugUniqueness)
+            ?: throw ArticleNotFoundException("Draft 저장에 실패했습니다 ")
+
+        val saved = articleRepository.save(article)
+        article.pullEvents().forEach(eventPublisher::publishEvent)
+
+        return DraftArticleResult(
+            saved.id,
+            saved.currentVersion.id
+        )
+    }
+
 }

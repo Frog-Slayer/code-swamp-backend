@@ -1,5 +1,6 @@
 package dev.codeswamp.core.article.application.usecase.command.publish
 
+import dev.codeswamp.core.article.application.base.RebasePolicy
 import dev.codeswamp.core.article.domain.article.exceptions.ArticleNotFoundException
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
@@ -18,6 +19,7 @@ class PublishArticleUseCaseImpl(
     private val idGenerator: IdGenerator,
     private val slugUniquenessChecker: SlugUniquenessChecker,
     private val contentReconstructor: ArticleContentReconstructor,
+    private val rebasePolicy: RebasePolicy,
     private val eventPublisher: ApplicationEventPublisher,
 ) : PublishArticleUseCase {
 
@@ -33,7 +35,12 @@ class PublishArticleUseCaseImpl(
                 isPublic = command.isPublic,
                 slug = Slug.of(command.slug)
             ))
-            ?.updateVersionIfChanged(command.title, command.diff, idGenerator::generateId, createdAt )
+            ?.updateVersionIfChanged(command.title,
+                command.diff,
+                idGenerator::generateId,
+                createdAt,
+                rebasePolicy::shouldStoreAsBase,
+                contentReconstructor::reconstructFullContent)
             ?.publish(slugUniquenessChecker::checkSlugUniqueness)
             ?: throw ArticleNotFoundException("Draft 저장에 실패했습니다 ")
 

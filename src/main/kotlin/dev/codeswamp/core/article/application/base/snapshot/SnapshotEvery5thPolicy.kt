@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.application.base.snapshot
 
-import dev.codeswamp.core.article.application.base.BaseSelectionPolicy
+import dev.codeswamp.core.article.application.base.RebasePolicy
 import dev.codeswamp.core.article.domain.article.model.Version
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
 import org.springframework.context.annotation.Primary
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component
 @Primary
 class SnapshotEvery5thPolicy(
     private val articleRepository: ArticleRepository
-): BaseSelectionPolicy {
+): RebasePolicy {
     override fun shouldStoreAsBase(version: Version): Boolean {
         return articleRepository.countVersionsOfArticle(version.articleId) % 5 == 0L
     }
