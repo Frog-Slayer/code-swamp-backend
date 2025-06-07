@@ -14,7 +14,7 @@ class VersionNodeSaveEventHandler(
 
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
     fun handle(event: VersionNodeSaveEvent) {
-        val previousNode = versionNodeRepository.findByVersionId(event.versionId)
+        val previousNode = event.previousNodeId?.let { versionNodeRepository.findByVersionId(event.previousNodeId) }
 
         val node = VersionNode(
             versionId = event.versionId,

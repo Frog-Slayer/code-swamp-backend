@@ -10,6 +10,7 @@ import dev.codeswamp.core.article.domain.article.service.SlugUniquenessChecker
 import dev.codeswamp.core.article.domain.support.IdGenerator
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
 
 @Service
@@ -22,6 +23,7 @@ class DraftArticleUseCaseImpl(
     private val eventPublisher: ApplicationEventPublisher,
 ) : DraftArticleUseCase {
 
+    @Transactional
     override fun create(command: CreateDraftCommand): DraftArticleResult {
         val createdAt = Instant.now()
 
@@ -52,6 +54,7 @@ class DraftArticleUseCaseImpl(
         )
     }
 
+    @Transactional
     override fun update(command: UpdateDraftCommand) : DraftArticleResult {
         val createdAt = Instant.now()
 
