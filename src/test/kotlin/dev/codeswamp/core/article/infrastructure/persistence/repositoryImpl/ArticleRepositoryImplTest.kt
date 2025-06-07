@@ -19,7 +19,6 @@ class ArticleRepositoryImplTest(
     @Autowired private val idGenerator: IdGenerator
 ){
 
-    private val id = 1L;
     private val authorId = 100L
     private val createdAt = Instant.now()
 
@@ -32,13 +31,13 @@ class ArticleRepositoryImplTest(
     )
 
     private fun baseArticle() = VersionedArticle.create (
-            id = id,
+            id = idGenerator.generateId(),
             authorId = authorId,
             createdAt = createdAt,
             metadata = metadata,
             diff = "full-content",
             fullContent = "full-content",
-            versionId = 1L,
+            versionId = idGenerator.generateId(),
             title= "title"
     )
 
@@ -48,7 +47,7 @@ class ArticleRepositoryImplTest(
 
         articleRepository.save(article)
 
-        val saved = articleRepository.findByIdAndVersionId(id, 1L)
+        val saved = articleRepository.findByIdAndVersionId(article.id, article.currentVersion.id)
 
         assertNotNull(saved)
         assertEquals(article, saved)

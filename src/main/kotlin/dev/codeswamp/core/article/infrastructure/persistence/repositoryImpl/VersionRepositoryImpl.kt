@@ -2,12 +2,14 @@ package dev.codeswamp.core.article.infrastructure.persistence.repositoryImpl
 
 import dev.codeswamp.core.article.domain.article.model.Version
 import dev.codeswamp.core.article.domain.article.repository.VersionRepository
+import dev.codeswamp.core.article.infrastructure.events.VersionNodeSaveEvent
 import dev.codeswamp.core.article.infrastructure.persistence.graph.repository.VersionNodeRepository
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.BaseVersionEntity
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.VersionEntity
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.VersionStateJpa
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.BaseVersionJpaRepository
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.VersionJpaRepository
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 
@@ -16,6 +18,7 @@ class VersionRepositoryImpl(
     private val versionJpaRepository: VersionJpaRepository,
     private val versionNodeRepository: VersionNodeRepository,
     private val baseVersionJpaRepository: BaseVersionJpaRepository,
+    private val eventPublisher: ApplicationEventPublisher
 ) : VersionRepository {
     override fun save(version: Version): Version {
         val entity = VersionEntity.from(version)
@@ -25,11 +28,20 @@ class VersionRepositoryImpl(
             baseVersionJpaRepository.save(BaseVersionEntity(version.id, version.fullContent))
         }
 
-        return if (existingEntity != null) {
+        val ret = if (existingEntity != null) {
             existingEntity.updateTo(entity)
             existingEntity.toDomain()
         }
         else versionJpaRepository.save(entity).toDomain()
+
+        eventPublisher.publishEvent(VersionNodeSaveEvent(
+            versionId = version.id,
+            articleId = version.articleId,
+            isBase = version.isBaseVersion,
+            previousNodeId = version.previousVersionId
+        ))
+
+        return ret;
     }
 
     override fun findByIdOrNull(id: Long): Version? {
