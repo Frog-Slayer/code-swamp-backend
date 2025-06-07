@@ -91,7 +91,7 @@ data class VersionedArticle private constructor (
             shouldRebase: (Version) -> Boolean,
             reconstructFullContent: (Version) -> String,
         ) : VersionedArticle {
-        return if (diff.isBlank()) this
+        return if (diff.isBlank() && title == this.currentVersion.title?.value) this
         else {
             val newVersionId = generateId()
 
