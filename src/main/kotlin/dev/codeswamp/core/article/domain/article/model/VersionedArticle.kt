@@ -106,8 +106,11 @@ data class VersionedArticle private constructor (
                     createdAt = createdAt,
                 )
                 .let {
-                    if (shouldRebase(it)) it.asBaseVersion(reconstructFullContent(it))
-                    else it }
+                    if (shouldRebase(it)) {
+                        it.asBaseVersion(reconstructFullContent(it))
+                    }
+                    else it
+                }
             ).withEvent(ArticleVersionCreatedEvent(
                 articleId = id,
                 versionId = newVersionId

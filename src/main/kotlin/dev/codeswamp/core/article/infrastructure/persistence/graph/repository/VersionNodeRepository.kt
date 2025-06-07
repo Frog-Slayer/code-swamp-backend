@@ -11,11 +11,8 @@ interface VersionNodeRepository : Neo4jRepository<VersionNode, Long> {
 
     fun deleteAllByArticleId(articleId: Long)
 
-    @Query( "MATCH (target: VersionNode{versionId: \$versionId}) SET target.isBase= true")
-    fun markAsBase(versionId: Long)
-
     @Query("MATCH p= (base: VersionNode)-[:NEXT*0..]->(target: VersionNode{versionId: \$versionId})" +
-            """WHERE base.isBase= true
+            """WHERE base.isBase = TRUE
             RETURN base
             ORDER BY length(p) ASC
             LIMIT 1 
