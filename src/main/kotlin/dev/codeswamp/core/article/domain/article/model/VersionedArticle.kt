@@ -10,6 +10,7 @@ import dev.codeswamp.core.article.domain.article.model.vo.Slug
 import dev.codeswamp.core.article.domain.article.model.vo.Title
 import org.springframework.security.access.AccessDeniedException
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 data class VersionedArticle private constructor (
     val id: Long,
@@ -48,7 +49,7 @@ data class VersionedArticle private constructor (
             val article = VersionedArticle(
                     id = id,
                     authorId = authorId,
-                    createdAt = createdAt,
+                    createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
                     metadata = metadata,
                     currentVersion = Version.of(
                         id = versionId,
@@ -69,7 +70,7 @@ data class VersionedArticle private constructor (
                 metadata: ArticleMetadata, currentVersion: Version) = VersionedArticle(
             id = id,
             authorId = authorId,
-            createdAt = createdAt,
+            createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
             isPublished = isPublished,
             metadata = metadata,
             currentVersion = currentVersion

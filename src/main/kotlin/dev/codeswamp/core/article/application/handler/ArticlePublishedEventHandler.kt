@@ -12,7 +12,7 @@ import org.springframework.transaction.event.TransactionPhase
 import org.springframework.transaction.event.TransactionalEventListener
 
 @Component
-class ArticlePublishedEvenHandler(
+class ArticlePublishedEventHandler(
     private val articleRepository: ArticleRepository,
     private val publishedArticleRepository: PublishedArticleRepository,
     private val reconstructor: ArticleContentReconstructor,

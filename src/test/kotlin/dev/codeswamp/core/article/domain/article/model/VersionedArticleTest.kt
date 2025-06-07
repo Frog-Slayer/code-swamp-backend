@@ -18,7 +18,6 @@ class VersionedArticleTest {
     private val createdAt = Instant.now()
 
     private val metadata = ArticleMetadata(
-        title = Title.of("Test"),
         folderId = 10L,
         slug = Slug.of("test-slug"),
         summary = "test",
@@ -35,7 +34,8 @@ class VersionedArticleTest {
             metadata = metadata,
             diff = "full-content",
             fullContent = "full-content",
-            versionId = 1L
+            versionId = 1L,
+            title = "title"
         )
 
         assertThat(article.currentVersion.id).isEqualTo(1L)
@@ -50,14 +50,15 @@ class VersionedArticleTest {
             metadata = metadata,
             diff = "full-content",
             fullContent = "full-content",
-            versionId = 1L
+            versionId = 1L,
+            title= "title"
     )
 
     @Test
     fun `diff가 없으면 기존 version을 반환`() {
         val article = baseArticle()
 
-        val updated = article.updateVersionIfChanged(diff = "", { 2L }, Instant.now())
+        val updated = article.updateVersionIfChanged(diff = "", title = "title", generateId = { 2L }, createdAt = Instant.now())
 
         assertThat(updated).isEqualTo(article)
     }
@@ -66,7 +67,7 @@ class VersionedArticleTest {
     fun `diff가 있으면 새 version을 반환`() {
         val article = baseArticle()
 
-        val updated = article.updateVersionIfChanged(diff = "+++updated", { 2L }, Instant.now())
+        val updated = article.updateVersionIfChanged(diff = "+++updated", title = "title", generateId = { 2L }, createdAt = Instant.now())
 
         assertThat(updated).isNotEqualTo(article)
         assertThat(updated.currentVersion.diff).isEqualTo("+++updated")

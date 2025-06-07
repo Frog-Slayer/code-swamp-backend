@@ -3,6 +3,7 @@ package dev.codeswamp.core.article.infrastructure.persistence.repositoryImpl
 import dev.codeswamp.core.article.domain.article.model.Version
 import dev.codeswamp.core.article.domain.article.repository.VersionRepository
 import dev.codeswamp.core.article.infrastructure.persistence.graph.repository.VersionNodeRepository
+import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.BaseVersionEntity
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.VersionEntity
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.VersionStateJpa
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.BaseVersionJpaRepository
@@ -18,8 +19,11 @@ class VersionRepositoryImpl(
 ) : VersionRepository {
     override fun save(version: Version): Version {
         val entity = VersionEntity.from(version)
-
         val existingEntity = versionJpaRepository.findByIdOrNull(entity.id)
+
+        if (version.isBaseVersion && version.fullContent != null) {
+            baseVersionJpaRepository.save(BaseVersionEntity(version.id, version.fullContent))
+        }
 
         return if (existingEntity != null) {
             existingEntity.updateTo(entity)
