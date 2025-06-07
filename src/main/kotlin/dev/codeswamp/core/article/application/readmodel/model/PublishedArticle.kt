@@ -1,6 +1,7 @@
 package dev.codeswamp.core.article.application.readmodel.model
 
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
+import org.springframework.security.access.AccessDeniedException
 import java.time.Instant
 
 data class PublishedArticle private constructor (
@@ -63,5 +64,10 @@ data class PublishedArticle private constructor (
             title = title,
             content = content
         )
+    }
+
+    fun assertReadableBy(userId: Long?) {
+        if (!isPublic && (userId == null || authorId != userId))
+            throw AccessDeniedException("cannot read private article")//TODO
     }
 }

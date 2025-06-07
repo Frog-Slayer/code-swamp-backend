@@ -18,4 +18,8 @@ class PublishedArticleRepositoryImpl(
     override fun findByArticleId(articleId: Long): PublishedArticle? {
         return publishedArticleJpaRepository.findByIdOrNull(articleId)?.toDomain()
     }
+
+    override fun findByFolderIdAndSlug(folderId: Long, slug: String): PublishedArticle? {
+        return publishedArticleJpaRepository.findByFolderIdAndSlug(folderId, slug)?.toDomain()
+    }
 }
