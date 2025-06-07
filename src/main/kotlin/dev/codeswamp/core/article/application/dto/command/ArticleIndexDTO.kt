@@ -14,7 +14,7 @@ data class ArticleIndexDTO(
             return ArticleIndexDTO(
                 articleId = versionedArticle.id,
                 authorId = versionedArticle.authorId,
-                title = requireNotNull(versionedArticle.metadata.title).value,
+                title = requireNotNull(versionedArticle.currentVersion.title).value,
                 preprocessedText = preprocessedText,
                 isPublic = versionedArticle.metadata.isPublic,
             )

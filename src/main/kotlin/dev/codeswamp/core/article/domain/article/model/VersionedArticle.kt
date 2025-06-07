@@ -7,8 +7,10 @@ import dev.codeswamp.core.article.domain.article.events.ArticlePublishedEvent
 import dev.codeswamp.core.article.domain.article.events.ArticleVersionCreatedEvent
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
+import dev.codeswamp.core.article.domain.article.model.vo.Title
 import org.springframework.security.access.AccessDeniedException
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 data class VersionedArticle private constructor (
     val id: Long,
@@ -39,6 +41,7 @@ data class VersionedArticle private constructor (
                    authorId: Long,
                    createdAt: Instant,
                    metadata: ArticleMetadata,
+                   title: String,
                    diff: String,
                    fullContent: String,
                    versionId: Long) : VersionedArticle {
@@ -46,13 +49,14 @@ data class VersionedArticle private constructor (
             val article = VersionedArticle(
                     id = id,
                     authorId = authorId,
-                    createdAt = createdAt,
+                    createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
                     metadata = metadata,
                     currentVersion = Version.of(
                         id = versionId,
                         articleId = id,
                         state = VersionState.NEW,
                         previousVersionId = null,
+                        title = title,
                         diff = diff,
                         createdAt = createdAt,
                     )
@@ -66,7 +70,7 @@ data class VersionedArticle private constructor (
                 metadata: ArticleMetadata, currentVersion: Version) = VersionedArticle(
             id = id,
             authorId = authorId,
-            createdAt = createdAt,
+            createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
             isPublished = isPublished,
             metadata = metadata,
             currentVersion = currentVersion
@@ -80,10 +84,14 @@ data class VersionedArticle private constructor (
     }
 
     fun updateVersionIfChanged(
-                diff: String,
-                generateId: () -> Long,
-                createdAt : Instant) : VersionedArticle {
-        return if (diff.isBlank()) this
+            title: String,
+            diff: String,
+            generateId: () -> Long,
+            createdAt : Instant,
+            shouldRebase: (Version) -> Boolean,
+            reconstructFullContent: (Version) -> String,
+        ) : VersionedArticle {
+        return if (diff.isBlank() && title == this.currentVersion.title?.value) this
         else {
             val newVersionId = generateId()
 
@@ -93,9 +101,16 @@ data class VersionedArticle private constructor (
                     articleId = id,
                     state = VersionState.NEW,
                     previousVersionId = currentVersion.id,
+                    title = title,
                     diff = diff,
                     createdAt = createdAt,
                 )
+                .let {
+                    if (shouldRebase(it)) {
+                        it.asBaseVersion(reconstructFullContent(it))
+                    }
+                    else it
+                }
             ).withEvent(ArticleVersionCreatedEvent(
                 articleId = id,
                 versionId = newVersionId
@@ -117,6 +132,7 @@ data class VersionedArticle private constructor (
             ArticlePublishedEvent(
             articleId = id,
             versionId = currentVersion.id,
+            previousVersionId = currentVersion.previousVersionId,
         ))
     }
 

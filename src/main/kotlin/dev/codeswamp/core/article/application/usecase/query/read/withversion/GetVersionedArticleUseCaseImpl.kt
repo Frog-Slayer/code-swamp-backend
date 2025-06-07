@@ -4,6 +4,7 @@ import dev.codeswamp.core.article.application.usecase.query.read.ReadArticleResu
 import dev.codeswamp.core.article.domain.article.exceptions.ArticleNotFoundException
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
 import dev.codeswamp.core.article.domain.article.service.ArticleContentReconstructor
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -19,7 +20,7 @@ class GetVersionedArticleUseCaseImpl(
                         ?: throw ArticleNotFoundException("해당 버전의 글을 찾을 수 없습니다")
 
         article.checkOwnership(query.userId)
-        val fullContent = contentReconstructor.reconstructFullContent(article)
+        val fullContent = contentReconstructor.reconstructFullContent(article.currentVersion)
 
         return ReadArticleResult(
             id = article.id,
@@ -30,7 +31,7 @@ class GetVersionedArticleUseCaseImpl(
             summary = article.metadata.summary,
             thumbnailUrl = article.metadata.thumbnailUrl,
             isPublic = article.metadata.isPublic,
-            title = article.metadata.title?.value ?: "",
+            title = article.currentVersion.title?.value ?: "",
             content = fullContent,
         )
     }

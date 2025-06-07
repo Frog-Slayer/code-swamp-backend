@@ -7,6 +7,26 @@ import org.springframework.stereotype.Component
 
 @Component
 class DiffProcessorImpl : DiffProcessor {
+    override fun calculateDiff(old: String?, new: String): String? {//FOR TEST ONLY
+        val oldLines = old?.lines() ?: emptyList()
+        val newLines = new.lines()
+
+        val patch = DiffUtils.diff(oldLines, newLines)
+
+        if (patch.deltas.isEmpty()) {
+            return null
+        }
+
+        return UnifiedDiffUtils.generateUnifiedDiff(
+            "",
+            "",
+            oldLines,
+            patch,
+            3
+        ).joinToString("\n")
+    }
+
+
     override fun buildFullContent(base: String, diffChain: List<String>): String {
         if (diffChain.isEmpty()) return ""
 

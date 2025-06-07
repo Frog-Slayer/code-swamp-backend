@@ -12,7 +12,7 @@ import java.time.Instant
 @Table(name = "article",
     uniqueConstraints = [UniqueConstraint(columnNames = ["folder_id", "slug"])]
 )
-data class ArticleMetadataEntity (//ArticleMetadatas
+data class ArticleMetadataEntity (//ArticleMetadata
     @Id//도메인에서 생성
     val id: Long,
 
@@ -42,7 +42,7 @@ data class ArticleMetadataEntity (//ArticleMetadatas
             authorId = versionedArticle.authorId,
             createdAt = versionedArticle.createdAt,
             isPublished = versionedArticle.isPublished,
-            title = versionedArticle.metadata.title?.value,
+            title = versionedArticle.currentVersion.title?.value,
             isPublic = versionedArticle.metadata.isPublic,
             folderId = versionedArticle.metadata.folderId,
             summary = versionedArticle.metadata.summary,

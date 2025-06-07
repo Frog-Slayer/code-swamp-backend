@@ -22,6 +22,8 @@ data class VersionEntity (
     @JoinColumn(name = "prev_id")
     val previousVersionId: Long?,
 
+    val title: String?,
+
     @Column(nullable = false, columnDefinition = "TEXT")
     val diff: String,
 
@@ -42,7 +44,8 @@ data class VersionEntity (
             diff =  version.diff,
             createdAt = version.createdAt,
             state = VersionStateJpa.fromDomain(version.state),
-            isBaseVersion = version.isBaseVersion
+            isBaseVersion = version.isBaseVersion,
+            title = version.title?.value
         )
     }
 
@@ -56,6 +59,7 @@ data class VersionEntity (
             state = state.toDomain(),
             isBaseVersion =  isBaseVersion,
             fullContent = fullContent,
+            title = title
         )
     }
 

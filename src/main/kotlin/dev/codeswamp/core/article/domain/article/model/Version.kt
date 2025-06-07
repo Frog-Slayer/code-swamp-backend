@@ -1,6 +1,8 @@
 package dev.codeswamp.core.article.domain.article.model
 
+import dev.codeswamp.core.article.domain.article.model.vo.Title
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 
 data class Version private constructor(
     val id: Long,
@@ -9,6 +11,7 @@ data class Version private constructor(
     val articleId: Long,
     val previousVersionId: Long?,
 
+    val title: Title?,
     val diff: String,
     val createdAt: Instant,
 
@@ -21,6 +24,7 @@ data class Version private constructor(
             state: VersionState,
             articleId: Long,
             previousVersionId: Long?,
+            title: String?,
             diff : String,
             createdAt: Instant,
         ) = Version (
@@ -28,8 +32,9 @@ data class Version private constructor(
             state = state,
             articleId = articleId,
             previousVersionId = previousVersionId,
+            title = Title.of(title),
             diff = diff,
-            createdAt = createdAt,
+            createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
         )
 
         fun from (
@@ -37,6 +42,7 @@ data class Version private constructor(
             state: VersionState,
             articleId: Long,
             previousVersionId: Long?,
+            title: String?,
             diff : String,
             createdAt: Instant,
             isBaseVersion: Boolean,
@@ -46,8 +52,9 @@ data class Version private constructor(
             state = state,
             articleId = articleId,
             previousVersionId = previousVersionId,
+            title = Title.of(title),
             diff = diff,
-            createdAt = createdAt,
+            createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
             isBaseVersion = isBaseVersion,
             fullContent = fullContent
         )

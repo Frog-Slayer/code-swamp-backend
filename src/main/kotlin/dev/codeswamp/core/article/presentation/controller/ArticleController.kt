@@ -1,14 +1,22 @@
 package dev.codeswamp.core.article.presentation.controller
 
-import dev.codeswamp.core.article.application.usecase.command.create.CreateArticleCommand
+import dev.codeswamp.core.article.application.usecase.command.ArticleCommandUseCaseFacade
+import dev.codeswamp.core.article.application.usecase.command.draft.DraftArticleResult
+import dev.codeswamp.core.article.application.usecase.command.publish.CreatePublishCommand
+import dev.codeswamp.core.article.application.usecase.command.publish.PublishArticleResult
+import dev.codeswamp.core.article.application.usecase.command.publish.UpdatePublishCommand
 import dev.codeswamp.core.article.application.usecase.query.ArticleQueryUseCaseFacade
-import dev.codeswamp.core.article.domain.article.model.VersionedArticle
-import dev.codeswamp.core.article.presentation.dto.request.ArticleCreateRequestDto
-import dev.codeswamp.core.user.infrastructure.persistence.entity.UserEntity
+import dev.codeswamp.core.article.application.usecase.query.read.ReadArticleResult
+import dev.codeswamp.core.article.application.usecase.query.read.byid.GetPublishedArticleByIdQuery
+import dev.codeswamp.core.article.application.usecase.query.read.byslug.GetPublishedArticleBySlugQuery
+import dev.codeswamp.core.article.application.usecase.query.read.withversion.GetVersionedArticleQuery
+import dev.codeswamp.core.article.presentation.dto.request.DraftRequest
+import dev.codeswamp.core.article.presentation.dto.request.DraftUpdateRequest
+import dev.codeswamp.core.article.presentation.dto.request.PublishRequest
+import dev.codeswamp.core.article.presentation.dto.request.PublishUpdateRequest
 import dev.codeswamp.global.auth.infrastructure.security.user.CustomUserDetails
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.core.annotation.AuthenticationPrincipal
-import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
@@ -20,18 +28,17 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/articles")
 class ArticleController(
-    private val articleCommandUseCaseFacade: ArticleQueryUseCaseFacade,
-    private val articleQueryUseCaseFacade: ArticleQueryUseCaseFacade
+    private val commandFacade: ArticleCommandUseCaseFacade,
+    private val queryFacade: ArticleQueryUseCaseFacade
 ){
     //TODO(ResponseDTO & 예외 처리)
 
     @GetMapping("/{articleId}")
-    fun getArticleWithId(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable articleId:Long): VersionedArticle {
-        TODO()
-//        return articl.findByArticleId(GetArticleByIdQuery(
-//            userId = user.getId(),
-//            articleId = articleId
-//        ))
+    fun getArticleWithId(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable articleId:Long): ReadArticleResult {
+       return queryFacade.getPublishedArticleById(query = GetPublishedArticleByIdQuery(
+           userId = user.getId(),
+           articleId = articleId
+       ))
     }
 
     @GetMapping("/@{username}/**")
@@ -39,73 +46,55 @@ class ArticleController(
         @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable username: String,
         httpServletRequest: HttpServletRequest
-    ) : VersionedArticle {
+    ) : ReadArticleResult {
         val fullPath = httpServletRequest.requestURI
 
-        TODO()
-//        return articleQueryService.getArticleByUsernameAndPath(GetArticleByPathQuery(
-//            userId = user.getId(),
-//            path = fullPath
-//        ))
+        return queryFacade.getPublishedArticleBySlug(GetPublishedArticleBySlugQuery(
+            userId = user.getId(),
+            path = fullPath
+        ))
     }
 
     @GetMapping("/{articleId}/versions/{versionId}")
-    fun getVersionedArticle(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable articleId: Long, @PathVariable versionId: Long) : VersionedArticle{
-        TODO()
-//        val userId = requireNotNull(user.getId())
-//        return articleQueryService.getVersionedArticle(
-//            GetVersionedArticleQuery(
-//                userId = userId,
-//                articleId = articleId,
-//                versionId = versionId
-//            )
-//        )
+    fun getVersionedArticle(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable articleId: Long, @PathVariable versionId: Long) :
+    ReadArticleResult{
+        val userId = requireNotNull(user.getId())
+        return queryFacade.getVersionedArticle(GetVersionedArticleQuery(
+                userId = userId,
+                articleId = articleId,
+                versionId = versionId
+            )
+        )
     }
 
-    @PostMapping
-    fun publishNewArticle(@AuthenticationPrincipal user: CustomUserDetails, @RequestBody articleCreateRequestDto: ArticleCreateRequestDto) {
-        TODO()
-//        val userId = requireNotNull(user.getId())
-//
-//        val createArticleCommand = CreateArticleCommand(
-//            userId = userId,
-//            title = articleCreateRequestDto.title,
-//            diff = articleCreateRequestDto.content,
-//            isPublic = articleCreateRequestDto.isPublic,
-//            thumbnailUrl = articleCreateRequestDto.thumbnailUrl,
-//            slug = articleCreateRequestDto.slug,
-//            summary = articleCreateRequestDto.summary,
-//            folderId = 1L
-//        )
-//
-//        articleCommandUsecase.create(createArticleCommand)
+    @PostMapping( "/publish")
+    fun publishNew(@AuthenticationPrincipal user: CustomUserDetails,
+                   @RequestBody publishRequest: PublishRequest,
+    ) : PublishArticleResult {
+        return commandFacade.createPublish(publishRequest.toCommand(user.getId()))
+    }
+
+    @PostMapping("/{articleId}/publish")
+    fun  publish(@AuthenticationPrincipal user: CustomUserDetails,
+                 @PathVariable articleId: Long,
+                 @RequestBody publishRequest: PublishUpdateRequest
+    ) : PublishArticleResult {
+        return commandFacade.updatePublish(publishRequest.toCommand(user.getId(), articleId))
+    }
+
+    @PostMapping("/draft")
+    fun draftNew(@AuthenticationPrincipal user: CustomUserDetails,
+                 @RequestBody draftArticleRequest: DraftRequest
+    ) : DraftArticleResult {
+        return commandFacade.createDraft(draftArticleRequest.toCommand(user.getId()))
     }
 
     @PatchMapping("/{articleId}/versions/{versionId}")
-    fun updateArticle (@AuthenticationPrincipal user: CustomUserDetails,
-                       @PathVariable articleId: Long,
-                       @PathVariable versionId: Long,
-                       @RequestBody articleCreateRequestDto: ArticleCreateRequestDto) {
-
-        TODO()
-//        val userId = requireNotNull(user.getId())
-//
-//        val createArticleCommand = CreateArticleCommand(
-//            userId = userId,
-//            title = articleCreateRequestDto.title,
-//            diff = articleCreateRequestDto.content,
-//            isPublic = articleCreateRequestDto.isPublic,
-//            thumbnailUrl = articleCreateRequestDto.thumbnailUrl,
-//            slug = articleCreateRequestDto.slug,
-//            summary = articleCreateRequestDto.summary,
-//            folderId = 1L
-//        )
-//
-//        articleCommandUsecase.create(createArticleCommand)
-    }
-
-    @DeleteMapping("/{id}")
-    fun deleteArticle(@AuthenticationPrincipal user: UserEntity, @PathVariable id: Long) {
-        TODO("Not yet implemented")
+    fun draft(@AuthenticationPrincipal user: CustomUserDetails,
+              @PathVariable articleId: Long,
+              @PathVariable versionId: Long,
+              @RequestBody draftArticleRequest: DraftUpdateRequest
+    ): DraftArticleResult {
+        return commandFacade.updateDraft(draftArticleRequest.toCommand(user.getId(), articleId, versionId))
     }
 }
