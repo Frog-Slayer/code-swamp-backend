@@ -32,9 +32,9 @@ class CreateArticleUseCaseImpl(
                 summary = command.summary,
                 thumbnailUrl = command.thumbnailUrl,
                 isPublic = command.isPublic,
-                title = Title.Companion.of(command.title),
                 slug = Slug.Companion.of(command.slug),
             ),
+            title = command.title,
             diff = command.diff,
             fullContent = contentReconstructor.applyDiff("",  command.diff),
             versionId = idGenerator.generateId()

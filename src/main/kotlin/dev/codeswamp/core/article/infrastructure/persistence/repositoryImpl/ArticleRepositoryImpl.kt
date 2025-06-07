@@ -42,6 +42,14 @@ class ArticleRepositoryImpl (
         return toDomain(savedMetadataEntity, savedVersion)
     }
 
+    override fun findPreviousPublishedVersion(articleId: Long, versionId: Long): Version? {
+        return versionRepository.findPreviousPublishedVersion(articleId, versionId)
+    }
+
+    override fun findVersionByVersionId(versionId: Long): Version? {
+        return versionRepository.findByIdOrNull(versionId)
+    }
+
     override fun countVersionsOfArticle(articleId: Long): Long {
         return versionJpaRepository.countByArticleId(articleId)
     }
@@ -73,7 +81,6 @@ class ArticleRepositoryImpl (
                 summary = metadata.summary,
                 thumbnailUrl = metadata.thumbnailUrl,
                 isPublic = metadata.isPublic,
-                title = Title.of(metadata.title),
                 slug = Slug.of(metadata.slug)
             ),
             currentVersion = version

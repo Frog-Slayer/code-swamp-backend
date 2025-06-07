@@ -37,8 +37,8 @@ class VersionRepositoryImpl(
         versionNodeRepository.deleteAllByArticleId(articleId)
     }
 
-    override fun findPublishedVersionByArticleId(articleId: Long): Version? {
-        return versionJpaRepository.findByArticleIdAndState(articleId, VersionStateJpa.PUBLISHED)?.toDomain()
+    override fun findPreviousPublishedVersion(articleId: Long, versionId: Long): Version? {
+        return versionJpaRepository.findTopByArticleIdAndIdLessThanAndStateOrderByIdDesc(articleId, versionId,VersionStateJpa.PUBLISHED)?.toDomain()
     }
 
     override fun findNearestBaseTo(versionId: Long): Version? {

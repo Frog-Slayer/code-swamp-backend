@@ -11,6 +11,7 @@ import dev.codeswamp.core.article.domain.ArticleDomainEvent
  */
 data class ArticlePublishedEvent (
     val articleId: Long,
+    val previousVersionId: Long?,
     val versionId: Long,
 ): ArticleDomainEvent
 

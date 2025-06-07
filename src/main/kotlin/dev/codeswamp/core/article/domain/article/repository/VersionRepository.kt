@@ -9,7 +9,7 @@ interface VersionRepository {
 
     fun deleteByArticleId(articleId: Long)
 
-    fun findPublishedVersionByArticleId(articleId: Long) : Version?
+    fun findPreviousPublishedVersion(articleId: Long, versionId: Long) : Version?
 
     fun findNearestBaseTo(versionId : Long) : Version?
 

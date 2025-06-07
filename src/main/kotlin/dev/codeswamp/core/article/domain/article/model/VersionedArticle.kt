@@ -7,6 +7,7 @@ import dev.codeswamp.core.article.domain.article.events.ArticlePublishedEvent
 import dev.codeswamp.core.article.domain.article.events.ArticleVersionCreatedEvent
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
+import dev.codeswamp.core.article.domain.article.model.vo.Title
 import org.springframework.security.access.AccessDeniedException
 import java.time.Instant
 
@@ -39,6 +40,7 @@ data class VersionedArticle private constructor (
                    authorId: Long,
                    createdAt: Instant,
                    metadata: ArticleMetadata,
+                   title: String?,
                    diff: String,
                    fullContent: String,
                    versionId: Long) : VersionedArticle {
@@ -53,6 +55,7 @@ data class VersionedArticle private constructor (
                         articleId = id,
                         state = VersionState.NEW,
                         previousVersionId = null,
+                        title = title,
                         diff = diff,
                         createdAt = createdAt,
                     )
@@ -80,6 +83,7 @@ data class VersionedArticle private constructor (
     }
 
     fun updateVersionIfChanged(
+                title: String,
                 diff: String,
                 generateId: () -> Long,
                 createdAt : Instant) : VersionedArticle {
@@ -93,6 +97,7 @@ data class VersionedArticle private constructor (
                     articleId = id,
                     state = VersionState.NEW,
                     previousVersionId = currentVersion.id,
+                    title = title,
                     diff = diff,
                     createdAt = createdAt,
                 )
@@ -117,6 +122,7 @@ data class VersionedArticle private constructor (
             ArticlePublishedEvent(
             articleId = id,
             versionId = currentVersion.id,
+            previousVersionId = currentVersion.previousVersionId,
         ))
     }
 
