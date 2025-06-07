@@ -55,10 +55,13 @@ class VersionedArticleTest {
     )
 
     @Test
-    fun `diff가 없으면 기존 version을 반환`() {
+    fun `diff가 없고 title 변화가 없으면 기존 version을 반환`() {
         val article = baseArticle()
 
-        val updated = article.updateVersionIfChanged(diff = "", title = "title", generateId = { 2L }, createdAt = Instant.now())
+        val updated = article.updateVersionIfChanged(diff = "", title = "title", generateId = { 2L }, createdAt = Instant.now(),
+            shouldRebase = { version -> false},
+            reconstructFullContent = { version -> "" }
+        )
 
         assertThat(updated).isEqualTo(article)
     }
@@ -67,10 +70,29 @@ class VersionedArticleTest {
     fun `diff가 있으면 새 version을 반환`() {
         val article = baseArticle()
 
-        val updated = article.updateVersionIfChanged(diff = "+++updated", title = "title", generateId = { 2L }, createdAt = Instant.now())
+        val updated = article.updateVersionIfChanged(diff = "+++updated", title = "title", generateId = { 2L }, createdAt = Instant.now(),
+            shouldRebase = { version -> false },
+            reconstructFullContent = { version -> "" }
+        )
 
         assertThat(updated).isNotEqualTo(article)
         assertThat(updated.currentVersion.diff).isEqualTo("+++updated")
+        assertThat(updated.currentVersion.id).isEqualTo(2L)
+
+        assertThat(updated.pullEvents().first()).isInstanceOf(ArticleVersionCreatedEvent::class.java)
+    }
+
+    @Test
+    fun `title 변화 시 version을 반환`() {
+        val article = baseArticle()
+
+        val updated = article.updateVersionIfChanged(diff = "", title = "title2", generateId = { 2L }, createdAt = Instant.now(),
+            shouldRebase = { version -> false },
+            reconstructFullContent = { version -> "" }
+        )
+
+        assertThat(updated).isNotEqualTo(article)
+        assertThat(updated.currentVersion.title?.value).isEqualTo("title2")
         assertThat(updated.currentVersion.id).isEqualTo(2L)
 
         assertThat(updated.pullEvents().first()).isInstanceOf(ArticleVersionCreatedEvent::class.java)

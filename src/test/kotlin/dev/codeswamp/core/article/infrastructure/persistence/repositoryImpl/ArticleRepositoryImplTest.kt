@@ -55,6 +55,4 @@ class ArticleRepositoryImplTest(
         assertEquals(article, saved)
     }
 
-
-
 }
