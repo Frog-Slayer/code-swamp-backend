@@ -1,5 +1,6 @@
 package dev.codeswamp.core.article.infrastructure.persistence.repositoryImpl
 
+import dev.codeswamp.core.article.application.base.RebasePolicy
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
@@ -7,6 +8,7 @@ import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
 import dev.codeswamp.core.article.domain.article.service.SlugUniquenessChecker
 import dev.codeswamp.core.article.domain.support.DiffProcessor
 import dev.codeswamp.core.article.domain.support.IdGenerator
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,7 +20,8 @@ class ArticleRepositoryImplTest(
     @Autowired private val articleRepository: ArticleRepository,
     @Autowired private val slugChecker: SlugUniquenessChecker,
     @Autowired private val idGenerator: IdGenerator,
-    @Autowired private val diffProcessor: DiffProcessor
+    @Autowired private val diffProcessor: DiffProcessor,
+    @Autowired private val rebasePolicy: RebasePolicy
 ){
 
     private val authorId = 100L
@@ -55,4 +58,24 @@ class ArticleRepositoryImplTest(
         assertEquals(article, saved)
     }
 
+    @Test
+    fun `diff 업데이트 후 저장`() {
+        val article = baseArticle().draft(slugChecker::checkSlugUniqueness)
+
+        articleRepository.save(article)
+
+        val updated = article.updateVersionIfChanged(
+            diff = "+++updated",
+            title = "title",
+            generateId = idGenerator::generateId,
+            createdAt = Instant.now(),
+            shouldRebase = { version -> false },
+            reconstructFullContent = { version -> "" }
+        ).draft(slugChecker::checkSlugUniqueness)
+
+        articleRepository.save(updated)
+
+        val saved = articleRepository.findByIdAndVersionId(updated.id, updated.currentVersion.id)
+        assertThat(saved).isEqualTo(updated)
+    }
 }
