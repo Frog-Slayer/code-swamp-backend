@@ -3,7 +3,6 @@ package dev.codeswamp.core.article.application.usecase.command.draft
 import dev.codeswamp.core.article.domain.article.exceptions.ArticleNotFoundException
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
-import dev.codeswamp.core.article.domain.article.model.vo.Slug
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
 import dev.codeswamp.core.article.domain.article.service.ArticleContentReconstructor
 import dev.codeswamp.core.article.domain.article.service.SlugUniquenessChecker
@@ -21,14 +20,7 @@ class DraftArticleUseCaseImpl(
     private val eventPublisher: ApplicationEventPublisher,
 ) : DraftArticleUseCase {
 
-    override fun handle(command: DraftArticleCommand): DraftArticleResult {
-        return if (command.articleId != null && command.versionId != null) update(command)
-        else create(command)
-    }
-
-    private fun update(command: DraftArticleCommand) : DraftArticleResult {
-        require(command.articleId != null && command.versionId != null) { "articleId and versionId must not be null" }
-
+    override fun update(command: UpdateDraftCommand) : DraftArticleResult {
         val createdAt = Instant.now()
 
         val article = articleRepository.findByIdAndVersionId(command.articleId, command.versionId )
@@ -46,7 +38,7 @@ class DraftArticleUseCaseImpl(
         )
     }
 
-    private fun create(command: DraftArticleCommand): DraftArticleResult {
+    override fun create(command: CreateDraftCommand): DraftArticleResult {
         val createdAt = Instant.now()
 
         val article = VersionedArticle.create(

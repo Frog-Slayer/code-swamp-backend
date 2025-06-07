@@ -4,6 +4,7 @@ import dev.codeswamp.core.article.application.usecase.query.read.ReadArticleResu
 import dev.codeswamp.core.article.domain.article.exceptions.ArticleNotFoundException
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
 import dev.codeswamp.core.article.domain.article.service.ArticleContentReconstructor
+import org.springframework.security.access.AccessDeniedException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

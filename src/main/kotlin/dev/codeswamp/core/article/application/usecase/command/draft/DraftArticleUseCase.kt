@@ -1,5 +1,6 @@
 package dev.codeswamp.core.article.application.usecase.command.draft
 
 interface DraftArticleUseCase {
-    fun handle(command: DraftArticleCommand) : DraftArticleResult
+    fun create(command: CreateDraftCommand) : DraftArticleResult
+    fun update(command: UpdateDraftCommand) : DraftArticleResult
 }

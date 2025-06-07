@@ -1,5 +1,6 @@
 package dev.codeswamp.core.article.application.usecase.command.publish
 
 interface PublishArticleUseCase {
-    fun handle(command: PublishArticleCommand) : PublishArticleResult
+    fun create(command: CreatePublishCommand) : PublishArticleResult
+    fun update(command: UpdatePublishCommand) : PublishArticleResult
 }

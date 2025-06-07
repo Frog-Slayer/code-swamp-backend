@@ -21,14 +21,7 @@ class PublishArticleUseCaseImpl(
     private val eventPublisher: ApplicationEventPublisher,
 ) : PublishArticleUseCase {
 
-    override fun handle(command: PublishArticleCommand): PublishArticleResult {
-        return if (command.articleId != null && command.versionId != null) update(command)
-        else create(command)
-    }
-
-    private fun update(command: PublishArticleCommand) : PublishArticleResult {
-        require(command.articleId != null && command.versionId != null) { "articleId and versionId must not be null" }
-
+    override fun update(command: UpdatePublishCommand) : PublishArticleResult {
         val createdAt = Instant.now()
 
         val article = articleRepository.findByIdAndVersionId(command.articleId, command.versionId )
@@ -53,7 +46,7 @@ class PublishArticleUseCaseImpl(
         )
     }
 
-    private fun create(command: PublishArticleCommand): PublishArticleResult {
+    override fun create(command: CreatePublishCommand): PublishArticleResult {
         val createdAt = Instant.now()
 
         val article = VersionedArticle.create(
