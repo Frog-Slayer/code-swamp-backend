@@ -1,4 +1,4 @@
-package dev.codeswamp.core.article.domain.article.events
+package dev.codeswamp.core.article.domain.article.event
 
 import dev.codeswamp.core.article.domain.ArticleDomainEvent
 

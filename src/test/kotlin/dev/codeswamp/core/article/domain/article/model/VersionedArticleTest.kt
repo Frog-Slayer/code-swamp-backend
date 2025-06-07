@@ -1,13 +1,11 @@
 package dev.codeswamp.core.article.domain.article.model
 
-import dev.codeswamp.core.article.domain.article.events.ArticlePublishedEvent
-import dev.codeswamp.core.article.domain.article.events.ArticleVersionCreatedEvent
+import dev.codeswamp.core.article.domain.article.event.ArticlePublishedEvent
+import dev.codeswamp.core.article.domain.article.event.ArticleVersionCreatedEvent
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
-import dev.codeswamp.core.article.domain.article.model.vo.Title
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.Instant
 

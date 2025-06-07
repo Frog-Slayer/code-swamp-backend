@@ -1,9 +1,9 @@
-package dev.codeswamp.core.article.application.handler
+package dev.codeswamp.core.article.application.event.handler
 
-import dev.codeswamp.core.article.application.events.ArticleIndexingEvent
+import dev.codeswamp.core.article.application.event.event.ArticleIndexingEvent
 import dev.codeswamp.core.article.application.readmodel.model.PublishedArticle
 import dev.codeswamp.core.article.application.readmodel.repository.PublishedArticleRepository
-import dev.codeswamp.core.article.domain.article.events.ArticlePublishedEvent
+import dev.codeswamp.core.article.domain.article.event.ArticlePublishedEvent
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
 import dev.codeswamp.core.article.domain.article.service.ArticleContentReconstructor
 import org.springframework.context.ApplicationEventPublisher

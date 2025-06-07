@@ -1,7 +1,7 @@
 package dev.codeswamp.core.article.application.usecase.command.publish
 
 import dev.codeswamp.core.article.application.base.RebasePolicy
-import dev.codeswamp.core.article.domain.article.exceptions.ArticleNotFoundException
+import dev.codeswamp.core.article.domain.article.exception.ArticleNotFoundException
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
@@ -41,7 +41,7 @@ class PublishArticleUseCaseImpl(
             ),
             title = command.title,
             diff = command.diff,
-            fullContent = contentReconstructor.applyDiff("",  command.diff),
+            fullContent = contentReconstructor.contentFromInitialDiff(command.diff),
             versionId = idGenerator.generateId()
         ).publish(slugUniquenessChecker::checkSlugUniqueness)
 

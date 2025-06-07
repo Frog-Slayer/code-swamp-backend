@@ -2,8 +2,7 @@ package dev.codeswamp.core.article.application.usecase.query.read.byslug
 
 import dev.codeswamp.core.article.application.readmodel.repository.PublishedArticleRepository
 import dev.codeswamp.core.article.application.usecase.query.read.ReadArticleResult
-import dev.codeswamp.core.article.domain.article.exceptions.ArticleNotFoundException
-import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
+import dev.codeswamp.core.article.domain.article.exception.ArticleNotFoundException
 import dev.codeswamp.core.article.domain.folder.service.FolderPathResolver
 import org.springframework.stereotype.Service
 import java.awt.geom.IllegalPathStateException

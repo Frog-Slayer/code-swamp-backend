@@ -1,5 +1,7 @@
 package dev.codeswamp.core.article.domain.article.model.vo
 
+import dev.codeswamp.core.article.domain.article.exception.InvalidSlugFormatException
+
 @JvmInline
 value class Slug private constructor(
     val value: String
@@ -17,8 +19,8 @@ value class Slug private constructor(
         }
 
         private fun validate(value: String) {
-            require(value.length in MIN_LENGTH..MAX_LENGTH) { "Invalid slug length" }
-            require(value.matches(allowedPattern)) { "Invalid slug format" }
+            if (value.length !in MIN_LENGTH..MAX_LENGTH) throw InvalidSlugFormatException(value)
+            if (!value.matches(allowedPattern)) throw InvalidSlugFormatException(value)
         }
     }
 }
