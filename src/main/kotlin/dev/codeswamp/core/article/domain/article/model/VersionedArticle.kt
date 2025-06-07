@@ -40,7 +40,7 @@ data class VersionedArticle private constructor (
                    authorId: Long,
                    createdAt: Instant,
                    metadata: ArticleMetadata,
-                   title: String?,
+                   title: String,
                    diff: String,
                    fullContent: String,
                    versionId: Long) : VersionedArticle {
@@ -82,7 +82,7 @@ data class VersionedArticle private constructor (
         )
     }
 
-    fun updateVersionIfChanged(
+    fun updateVersionIfChanged(//TODO: title 변경도 추적할 것
                 title: String,
                 diff: String,
                 generateId: () -> Long,

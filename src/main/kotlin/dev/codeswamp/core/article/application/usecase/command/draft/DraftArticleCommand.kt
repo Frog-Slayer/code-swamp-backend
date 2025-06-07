@@ -1,8 +1,9 @@
-package dev.codeswamp.core.article.application.usecase.command.create
+package dev.codeswamp.core.article.application.usecase.command.draft
 
-data class CreateArticleCommand (
+data class DraftArticleCommand (
     val userId: Long,
-    val type: String,
+    val articleId: Long?,
+    val versionId: Long?,
     val title: String,
     val diff: String,
     val isPublic: Boolean,
@@ -10,4 +11,5 @@ data class CreateArticleCommand (
     val folderId: Long,
     val slug: String,
     val summary: String,
+
 )
