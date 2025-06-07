@@ -5,6 +5,7 @@ import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
 import dev.codeswamp.core.article.domain.article.service.SlugUniquenessChecker
+import dev.codeswamp.core.article.domain.support.DiffProcessor
 import dev.codeswamp.core.article.domain.support.IdGenerator
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
@@ -16,7 +17,8 @@ import java.time.Instant
 class ArticleRepositoryImplTest(
     @Autowired private val articleRepository: ArticleRepository,
     @Autowired private val slugChecker: SlugUniquenessChecker,
-    @Autowired private val idGenerator: IdGenerator
+    @Autowired private val idGenerator: IdGenerator,
+    @Autowired private val diffProcessor: DiffProcessor
 ){
 
     private val authorId = 100L
@@ -52,6 +54,7 @@ class ArticleRepositoryImplTest(
         assertNotNull(saved)
         assertEquals(article, saved)
     }
+
 
 
 }
