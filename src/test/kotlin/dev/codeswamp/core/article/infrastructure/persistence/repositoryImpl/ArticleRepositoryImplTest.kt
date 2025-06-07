@@ -66,7 +66,7 @@ class ArticleRepositoryImplTest(
 
         val updated = article.updateVersionIfChanged(
             diff = "+++updated",
-            title = "title",
+            title = "title2",
             generateId = idGenerator::generateId,
             createdAt = Instant.now(),
             shouldRebase = { version -> false },
@@ -75,7 +75,11 @@ class ArticleRepositoryImplTest(
 
         articleRepository.save(updated)
 
-        val saved = articleRepository.findByIdAndVersionId(updated.id, updated.currentVersion.id)
+        val prev = articleRepository.findByIdAndVersionId(article.id, article.currentVersion.id)
+        val saved = articleRepository.findByIdAndVersionId(article.id, updated.currentVersion.id)
+
+        assertThat(prev?.currentVersion?.title?.value).isEqualTo("title")
+        assertThat(saved?.currentVersion?.title?.value).isEqualTo("title2")
         assertThat(saved).isEqualTo(updated)
     }
 }
