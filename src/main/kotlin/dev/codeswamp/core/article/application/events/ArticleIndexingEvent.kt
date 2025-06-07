@@ -1,5 +1,5 @@
 package dev.codeswamp.core.article.application.events
 
-data class IndexPublishedArticleEvent (
+data class ArticleIndexingEvent (
     val articleId : Long,
 )

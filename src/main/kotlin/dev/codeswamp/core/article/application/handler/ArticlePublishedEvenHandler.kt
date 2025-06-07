@@ -1,13 +1,11 @@
 package dev.codeswamp.core.article.application.handler
 
-import dev.codeswamp.core.article.application.events.IndexPublishedArticleEvent
+import dev.codeswamp.core.article.application.events.ArticleIndexingEvent
 import dev.codeswamp.core.article.application.readmodel.model.PublishedArticle
 import dev.codeswamp.core.article.application.readmodel.repository.PublishedArticleRepository
-import dev.codeswamp.core.article.application.support.ArticleSearchIndexer
 import dev.codeswamp.core.article.domain.article.events.ArticlePublishedEvent
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
 import dev.codeswamp.core.article.domain.article.service.ArticleContentReconstructor
-import org.springframework.context.ApplicationEvent
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
 import org.springframework.transaction.event.TransactionPhase
@@ -41,6 +39,6 @@ class ArticlePublishedEvenHandler(
 
         publishedArticleRepository.save(articleToPublish)
 
-        eventPublisher.publishEvent(IndexPublishedArticleEvent(articleToPublish.id))
+        eventPublisher.publishEvent(ArticleIndexingEvent(articleToPublish.id))
     }
 }
