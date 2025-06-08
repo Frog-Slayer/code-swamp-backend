@@ -7,6 +7,6 @@ interface FolderRepository {
     fun delete(folder: Folder)
     fun findById(folderId: Long): Folder?
     fun findAllByIds(folderIds: List<Long>) : List<Folder>
-    fun findFolderByFullPath(rootName: String, paths: List<String>): Folder?
+    fun findFolderByFullPath(paths: List<String>): Folder?
     fun existsByParentIdAndName(parentId: Long, name: String): Boolean
 }

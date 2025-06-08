@@ -9,23 +9,22 @@ import org.springframework.stereotype.Repository
 interface FolderNodeRepository : Neo4jRepository<FolderNode, Long> {
 
     @Query(
-        "WITH \$rootName AS rootName, \$path AS pathNames" +
-            """
-            MATCH (root:Folder { name: rootName })
-            
-            CALL apoc.path.expandConfig(root, {
-                relationshipFilter: "HAS_CHILD>",
-                labelFilter: "Folder",
-                maxLevel: size(pathNames),
-                bfs: true
-            }) YIELD path
+        "WITH \$path AS pathNames MATCH (root:Folder { name: pathNames[0] })" +
+                """
+                CALL apoc.path.expandConfig(root, {
+                    relationshipFilter: "HAS_CHILD>",
+                    labelFilter: "Folder",
+                    maxLevel: size(pathNames) - 1,
+                    bfs: true
+                }) YIELD path
 
-            WITH path, nodes(path) AS n
-            WHERE [i IN RANGE(1, size(pathNames)) | n[i].name] = pathNames
-            RETURN n[-1].folderId
-        """
+                WITH path, nodes(path) AS n, pathNames
+                WHERE [i IN RANGE(0, size(pathNames) - 1) | n[i].name] = pathNames
+                RETURN n[-1].folderId
+                LIMIT 1
+            """
     )
-    fun findFolderIdByFullPath(rootName:String, path: List<String>): Long?
+    fun findFolderIdByFullPath(path: List<String>): Long?
 
     @Query("MATCH (folder: Folder { folderId : \$folderId }) RETURN folder")
     fun findByFolderId(folderId: Long): FolderNode?
