@@ -1,10 +1,8 @@
-package dev.codeswamp.core.article.infrastructure.handler
+package dev.codeswamp.core.article.infrastructure.event.handler
 
-import dev.codeswamp.core.article.infrastructure.events.VersionNodeSaveEvent
+import dev.codeswamp.core.article.infrastructure.event.event.VersionNodeSaveEvent
 import dev.codeswamp.core.article.infrastructure.persistence.graph.node.VersionNode
 import dev.codeswamp.core.article.infrastructure.persistence.graph.repository.VersionNodeRepository
-import org.springframework.context.event.ContextRefreshedEvent
-import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 import org.springframework.transaction.event.TransactionPhase
 import org.springframework.transaction.event.TransactionalEventListener

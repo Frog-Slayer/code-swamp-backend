@@ -8,6 +8,8 @@ import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
 import dev.codeswamp.core.article.domain.article.service.ArticleContentReconstructor
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Component
+import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.event.TransactionPhase
 import org.springframework.transaction.event.TransactionalEventListener
 
@@ -18,6 +20,7 @@ class ArticlePublishedEventHandler(
     private val reconstructor: ArticleContentReconstructor,
     private val eventPublisher: ApplicationEventPublisher
 ) {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)//TODO: Race Condition 있음
     fun handle(event: ArticlePublishedEvent) {
         //이전 버전, 이전 published본 archiving

@@ -1,4 +1,4 @@
-package dev.codeswamp.core.article.infrastructure.events
+package dev.codeswamp.core.article.infrastructure.event.event
 
 data class VersionNodeSaveEvent (
     val versionId: Long,

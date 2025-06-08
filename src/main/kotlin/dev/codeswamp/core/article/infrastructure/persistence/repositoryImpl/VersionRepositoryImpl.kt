@@ -2,7 +2,7 @@ package dev.codeswamp.core.article.infrastructure.persistence.repositoryImpl
 
 import dev.codeswamp.core.article.domain.article.model.Version
 import dev.codeswamp.core.article.domain.article.repository.VersionRepository
-import dev.codeswamp.core.article.infrastructure.events.VersionNodeSaveEvent
+import dev.codeswamp.core.article.infrastructure.event.event.VersionNodeSaveEvent
 import dev.codeswamp.core.article.infrastructure.persistence.graph.repository.VersionNodeRepository
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.BaseVersionEntity
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.VersionEntity
