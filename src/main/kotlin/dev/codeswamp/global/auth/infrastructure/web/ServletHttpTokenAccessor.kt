@@ -1,8 +1,10 @@
 package dev.codeswamp.global.auth.infrastructure.web
 
+import dev.codeswamp.global.auth.application.dto.ValidatedTokenPair
 import dev.codeswamp.global.auth.application.service.AuthApplicationService
 import dev.codeswamp.global.auth.domain.model.token.RawAccessToken
 import dev.codeswamp.global.auth.domain.model.token.RawRefreshToken
+import dev.codeswamp.global.auth.domain.model.token.ValidatedAccessToken
 import dev.codeswamp.global.auth.domain.model.token.ValidatedRefreshToken
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
@@ -13,10 +15,11 @@ import org.springframework.stereotype.Component
 @Component
 class ServletHttpTokenAccessor (
     private val authApplicationService: AuthApplicationService,
-    @Value("\${jwt.access-token-exp}") private val refreshTokenExpiration: Long,
+    @Value("\${jwt.access-token-exp}") private val accessTokenExpiration: Long,
+    @Value("\${jwt.refresh-token-exp}") private val refreshTokenExpiration: Long,
 ) : HttpTokenAccessor {
 
-    override fun extractAccessToken(request: HttpServletRequest): RawAccessToken? {
+    override fun extractAccessTokenFromHeader(request: HttpServletRequest): RawAccessToken? {
         return request.getHeader("Authorization")
             ?.removePrefix("Bearer ")
             ?.let { authApplicationService.parseAccessToken(it) }
@@ -28,25 +31,41 @@ class ServletHttpTokenAccessor (
             ?.let { authApplicationService.parseRefreshToken(it) }
     }
 
-    override fun injectRefreshToken(response: HttpServletResponse, refreshToken: ValidatedRefreshToken) {
-        val cookie = Cookie("refresh_token", refreshToken.value).apply {
+    override fun injectTokenPair(response: HttpServletResponse, tokenPair: ValidatedTokenPair) {
+        val accessToken = Cookie("access_token", tokenPair.accessToken.value).apply {
             path = "/"
             isHttpOnly = true
-            secure = false //TODO
+            secure = true
+            maxAge = accessTokenExpiration.toInt()
+        }
+
+        val refreshToken = Cookie("refresh_token", tokenPair.refreshToken.value).apply {
+            path = "/"
+            isHttpOnly = true
+            secure = true
             maxAge = refreshTokenExpiration.toInt()
         }
 
-        response.addCookie(cookie)
+        response.addCookie(refreshToken)
+        response.addCookie(accessToken)
     }
 
-    override fun invalidateRefreshToken(response: HttpServletResponse) {
-        val cookie = Cookie("refresh_token", null).apply {
+    override fun invalidateTokenPair(response: HttpServletResponse) {
+        val refreshToken = Cookie("refresh_token", null).apply {
             path = "/"
             isHttpOnly = true
-            secure = false //TODO
+            secure = true
             maxAge = 0
         }
 
-        response.addCookie(cookie)
+        val accessToken = Cookie("access_token", null).apply {
+            path = "/"
+            isHttpOnly = true
+            secure = true
+            maxAge = 0
+        }
+
+        response.addCookie(accessToken)
+        response.addCookie(refreshToken)
     }
 }

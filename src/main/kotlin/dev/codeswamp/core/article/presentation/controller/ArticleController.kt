@@ -14,6 +14,9 @@ import dev.codeswamp.core.article.presentation.dto.request.DraftRequest
 import dev.codeswamp.core.article.presentation.dto.request.DraftUpdateRequest
 import dev.codeswamp.core.article.presentation.dto.request.PublishRequest
 import dev.codeswamp.core.article.presentation.dto.request.PublishUpdateRequest
+import dev.codeswamp.core.article.presentation.dto.response.ArticleReadResponse
+import dev.codeswamp.core.article.presentation.dto.response.DraftResponse
+import dev.codeswamp.core.article.presentation.dto.response.PublishResponse
 import dev.codeswamp.global.auth.infrastructure.security.user.CustomUserDetails
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -31,14 +34,13 @@ class ArticleController(
     private val commandFacade: ArticleCommandUseCaseFacade,
     private val queryFacade: ArticleQueryUseCaseFacade
 ){
-    //TODO(ResponseDTO & 예외 처리)
-
     @GetMapping("/{articleId}")
-    fun getArticleWithId(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable articleId:Long): ReadArticleResult {
-       return queryFacade.getPublishedArticleById(query = GetPublishedArticleByIdQuery(
-           userId = user.getId(),
-           articleId = articleId
-       ))
+    fun getArticleWithId(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable articleId:Long): ArticleReadResponse{
+       return ArticleReadResponse.from( queryFacade.getPublishedArticleById(query = GetPublishedArticleByIdQuery(
+               userId = user.getId(),
+               articleId = articleId
+           ))
+       )
     }
 
     @GetMapping("/@{username}/**")
@@ -46,55 +48,55 @@ class ArticleController(
         @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable username: String,
         httpServletRequest: HttpServletRequest
-    ) : ReadArticleResult {
+    ) : ArticleReadResponse {
         val fullPath = httpServletRequest.requestURI
 
-        return queryFacade.getPublishedArticleBySlug(GetPublishedArticleBySlugQuery(
+        return ArticleReadResponse.from( queryFacade.getPublishedArticleBySlug(GetPublishedArticleBySlugQuery(
             userId = user.getId(),
             path = fullPath
-        ))
+        )))
     }
 
     @GetMapping("/{articleId}/versions/{versionId}")
     fun getVersionedArticle(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable articleId: Long, @PathVariable versionId: Long) :
-    ReadArticleResult{
+    ArticleReadResponse {
         val userId = requireNotNull(user.getId())
-        return queryFacade.getVersionedArticle(GetVersionedArticleQuery(
+        return ArticleReadResponse.from( queryFacade.getVersionedArticle(GetVersionedArticleQuery(
                 userId = userId,
                 articleId = articleId,
                 versionId = versionId
             )
-        )
+        ))
     }
 
     @PostMapping( "/publish")
     fun publishNew(@AuthenticationPrincipal user: CustomUserDetails,
                    @RequestBody publishRequest: PublishRequest,
-    ) : PublishArticleResult {
-        return commandFacade.createPublish(publishRequest.toCommand(user.getId()))
+    ) : PublishResponse {
+        return PublishResponse.from(commandFacade.createPublish(publishRequest.toCommand(user.getId())))
     }
 
     @PostMapping("/{articleId}/publish")
     fun  publish(@AuthenticationPrincipal user: CustomUserDetails,
                  @PathVariable articleId: Long,
                  @RequestBody publishRequest: PublishUpdateRequest
-    ) : PublishArticleResult {
-        return commandFacade.updatePublish(publishRequest.toCommand(user.getId(), articleId))
+    ) : PublishResponse {
+        return PublishResponse.from(commandFacade.updatePublish(publishRequest.toCommand(user.getId(), articleId)))
     }
 
     @PostMapping("/draft")
     fun draftNew(@AuthenticationPrincipal user: CustomUserDetails,
                  @RequestBody draftArticleRequest: DraftRequest
-    ) : DraftArticleResult {
-        return commandFacade.createDraft(draftArticleRequest.toCommand(user.getId()))
+    ) : DraftResponse {
+        return DraftResponse.from( commandFacade.createDraft(draftArticleRequest.toCommand(user.getId())))
     }
 
-    @PatchMapping("/{articleId}/versions/{versionId}")
+    @PatchMapping("/{articleId}/versions/{versionId}/draft")
     fun draft(@AuthenticationPrincipal user: CustomUserDetails,
               @PathVariable articleId: Long,
               @PathVariable versionId: Long,
               @RequestBody draftArticleRequest: DraftUpdateRequest
-    ): DraftArticleResult {
-        return commandFacade.updateDraft(draftArticleRequest.toCommand(user.getId(), articleId, versionId))
+    ): DraftResponse {
+        return DraftResponse.from(commandFacade.updateDraft(draftArticleRequest.toCommand(user.getId(), articleId, versionId)))
     }
 }

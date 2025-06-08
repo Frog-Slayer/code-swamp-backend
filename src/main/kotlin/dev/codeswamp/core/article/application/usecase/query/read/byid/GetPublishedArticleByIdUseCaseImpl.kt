@@ -2,7 +2,7 @@ package dev.codeswamp.core.article.application.usecase.query.read.byid
 
 import dev.codeswamp.core.article.application.readmodel.repository.PublishedArticleRepository
 import dev.codeswamp.core.article.application.usecase.query.read.ReadArticleResult
-import dev.codeswamp.core.article.domain.article.exceptions.ArticleNotFoundException
+import dev.codeswamp.core.article.application.exception.article.ArticleNotFoundException
 import org.springframework.stereotype.Service
 
 @Service
@@ -11,7 +11,7 @@ class GetPublishedArticleByIdUseCaseImpl(
 ) : GetPublishedArticleByIdUseCase {
     override fun handle(query: GetPublishedArticleByIdQuery): ReadArticleResult {
         val article = publishedArticleRepository.findByArticleId(query.articleId)
-            ?: throw ArticleNotFoundException("해당 경로의 글을 찾을 수 없습니다.")
+            ?: throw ArticleNotFoundException.byId(query.articleId)
 
         article.assertReadableBy(query.userId)
 

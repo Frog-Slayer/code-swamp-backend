@@ -2,13 +2,13 @@ package dev.codeswamp.core.article.domain.article.model
 
 import dev.codeswamp.core.article.domain.AggregateRoot
 import dev.codeswamp.core.article.domain.ArticleDomainEvent
-import dev.codeswamp.core.article.domain.article.events.ArticleDraftedEvent
-import dev.codeswamp.core.article.domain.article.events.ArticlePublishedEvent
-import dev.codeswamp.core.article.domain.article.events.ArticleVersionCreatedEvent
+import dev.codeswamp.core.article.domain.article.event.ArticleDraftedEvent
+import dev.codeswamp.core.article.domain.article.event.ArticlePublishedEvent
+import dev.codeswamp.core.article.domain.article.event.ArticleVersionCreatedEvent
+import dev.codeswamp.core.article.domain.article.exception.article.InvalidArticleStateException
+import dev.codeswamp.core.article.domain.article.exception.article.PrivateArticleForbiddenException
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
-import dev.codeswamp.core.article.domain.article.model.vo.Title
-import org.springframework.security.access.AccessDeniedException
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
@@ -106,9 +106,7 @@ data class VersionedArticle private constructor (
                     createdAt = createdAt,
                 )
                 .let {
-                    if (shouldRebase(it)) {
-                        it.asBaseVersion(reconstructFullContent(it))
-                    }
+                    if (shouldRebase(it)) { it.asBaseVersion(reconstructFullContent(it)) }
                     else it
                 }
             ).withEvent(ArticleVersionCreatedEvent(
@@ -119,11 +117,9 @@ data class VersionedArticle private constructor (
     }
 
     fun publish(slugUniquenessChecker : (VersionedArticle, Long, Slug) -> Unit) : VersionedArticle {
-        // publish 시점 이후로 slug는 non-nullable, unique해야 함
-        val slug = requireNotNull(metadata.slug) { "Slug is required" }
-        slugUniquenessChecker(this, metadata.folderId, slug)
+        val slug = metadata.slug ?:throw InvalidArticleStateException("Cannot publish article", "slug is null")
 
-        //이전 버전 및 이전 발행본을 ARCHIVED로 변경하는 이벤트 발행
+        slugUniquenessChecker(this, metadata.folderId, slug)
 
         return this.copy(
             isPublished = true,
@@ -138,10 +134,10 @@ data class VersionedArticle private constructor (
 
     fun draft(slugUniquenessChecker : (VersionedArticle, Long, Slug) -> Unit) : VersionedArticle {
         if (isPublished) {
-            val slug = requireNotNull(metadata.slug) { "Slug is required" }
+            val slug = metadata.slug
+                ?:throw InvalidArticleStateException("Cannot draft article", "Published article should have slug")
             slugUniquenessChecker(this, metadata.folderId, slug)
         }
-
 
         return this.copy( currentVersion = currentVersion.draft()).withEvent(
             ArticleDraftedEvent(
@@ -151,7 +147,8 @@ data class VersionedArticle private constructor (
     }
 
     fun archive() : VersionedArticle {
-        if (currentVersion.state == VersionState.PUBLISHED) throw IllegalStateException("Cannot archive current published version")
+        if (currentVersion.state == VersionState.PUBLISHED)
+            throw InvalidArticleStateException("Invalid state transition", "cannot archive published version")
 
         return this.copy(
             currentVersion = currentVersion.archive()
@@ -159,12 +156,12 @@ data class VersionedArticle private constructor (
     }
 
     fun checkOwnership(userId: Long) {
-        if (authorId != userId) throw AccessDeniedException("You are not the owner of this article")
+        if (authorId != userId) throw PrivateArticleForbiddenException("$id")
     }
 
     fun assertReadableBy(userId: Long?) {
         if (!metadata.isPublic && (userId == null || authorId != userId))
-            throw AccessDeniedException("cannot read private article")
+            throw PrivateArticleForbiddenException("$id")
     }
 
     fun withEvent(event: ArticleDomainEvent) : VersionedArticle {

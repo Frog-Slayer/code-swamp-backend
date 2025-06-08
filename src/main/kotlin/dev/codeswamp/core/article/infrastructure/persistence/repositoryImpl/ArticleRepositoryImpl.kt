@@ -7,6 +7,7 @@ import dev.codeswamp.core.article.domain.article.model.vo.Slug
 import dev.codeswamp.core.article.domain.article.model.vo.Title
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
 import dev.codeswamp.core.article.domain.article.repository.VersionRepository
+import dev.codeswamp.core.article.infrastructure.exception.article.ArticleVersionMismatchException
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.ArticleMetadataEntity
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.ArticleMetadataJpaRepository
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.repository.VersionJpaRepository
@@ -37,7 +38,7 @@ class ArticleRepositoryImpl (
 
         if (savedMetadataEntity == null || savedVersion == null) return null
 
-        if (savedMetadataEntity.id != savedVersion.articleId) throw RuntimeException("서로 맞지 않는 버전입니다")
+        if (savedMetadataEntity.id != savedVersion.articleId) throw ArticleVersionMismatchException(savedMetadataEntity.id, savedVersion.articleId)
 
         return toDomain(savedMetadataEntity, savedVersion)
     }

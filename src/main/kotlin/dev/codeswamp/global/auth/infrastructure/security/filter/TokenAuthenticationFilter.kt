@@ -24,7 +24,7 @@ class TokenAuthenticationFilter(
     ): Authentication? {
         log.info("attemptAuthentication()")
 
-        val rawAccessToken = httpTokenAccessor.extractAccessToken(request)
+        val rawAccessToken = httpTokenAccessor.extractAccessTokenFromHeader(request)
             ?: throw AuthenticationServiceException("cannot extract access token")
 
         log.info("extracted access token {}", rawAccessToken.value)

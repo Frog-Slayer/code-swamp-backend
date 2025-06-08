@@ -1,14 +1,18 @@
 package dev.codeswamp.global.auth.infrastructure.web
 
+import dev.codeswamp.global.auth.application.dto.ValidatedTokenPair
 import dev.codeswamp.global.auth.domain.model.token.RawAccessToken
 import dev.codeswamp.global.auth.domain.model.token.RawRefreshToken
+import dev.codeswamp.global.auth.domain.model.token.ValidatedAccessToken
 import dev.codeswamp.global.auth.domain.model.token.ValidatedRefreshToken
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 
 interface HttpTokenAccessor {
-    fun extractAccessToken(request: HttpServletRequest): RawAccessToken?
+    fun extractAccessTokenFromHeader(request: HttpServletRequest): RawAccessToken?
     fun extractRefreshToken(request: HttpServletRequest): RawRefreshToken?
-    fun injectRefreshToken(response: HttpServletResponse, refreshToken: ValidatedRefreshToken)
-    fun invalidateRefreshToken(response: HttpServletResponse)
+
+    fun injectTokenPair(response: HttpServletResponse, tokenPair: ValidatedTokenPair)
+
+    fun invalidateTokenPair(response: HttpServletResponse)
 }

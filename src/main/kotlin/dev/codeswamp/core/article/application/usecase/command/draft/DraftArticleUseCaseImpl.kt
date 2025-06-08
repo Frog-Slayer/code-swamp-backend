@@ -1,7 +1,7 @@
 package dev.codeswamp.core.article.application.usecase.command.draft
 
-import dev.codeswamp.core.article.application.base.RebasePolicy
-import dev.codeswamp.core.article.domain.article.exceptions.ArticleNotFoundException
+import dev.codeswamp.core.article.application.rebase.RebasePolicy
+import dev.codeswamp.core.article.application.exception.article.ArticleNotFoundException
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
@@ -40,7 +40,7 @@ class DraftArticleUseCaseImpl(
             ),
             title = command.title,
             diff = command.diff,
-            fullContent = contentReconstructor.applyDiff("",  command.diff),
+            fullContent = contentReconstructor.contentFromInitialDiff(command.diff),
             versionId = idGenerator.generateId()
         ).draft(slugUniquenessChecker::checkSlugUniqueness)
 
@@ -67,7 +67,7 @@ class DraftArticleUseCaseImpl(
                 rebasePolicy::shouldStoreAsBase,
                 contentReconstructor::reconstructFullContent)
             ?.draft(slugUniquenessChecker::checkSlugUniqueness)
-            ?: throw ArticleNotFoundException("Draft 저장에 실패했습니다 ")
+            ?: throw ArticleNotFoundException.byId(command.articleId)
 
         val saved = articleRepository.save(article)
         article.pullEvents().forEach(eventPublisher::publishEvent)
