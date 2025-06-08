@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 class FolderPathResolver(
     private val folderRepository: FolderRepository,
 ){
-    fun findFolderByFullPath(paths: List<String>): Folder? {
-        return folderRepository.findFolderByFullPath(paths[0], paths.drop(1))
+    fun findFolderByFullPath(path: List<String>): Folder? {
+        return folderRepository.findFolderByFullPath(path)
     }
 }

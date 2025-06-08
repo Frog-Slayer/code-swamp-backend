@@ -13,8 +13,14 @@ class GetPublishedArticleBySlugUseCaseImpl(
     private val publishedArticleRepository: PublishedArticleRepository,
 ): GetPublishedArticleBySlugUseCase {
     override fun handle(query: GetPublishedArticleBySlugQuery): ReadArticleResult {
-        val path = query.path.split("/")
+        println("path: ${query.path}")
+        val path = query.path.split("/").drop(2) // drop "", "/article"
         val slug = path.last()
+
+        for (folder in path)  {
+            println(folder)
+        }
+
 
         val folderId = folderPathResolver.findFolderByFullPath(path.dropLast(1))?.id
             ?: throw FolderPathNotFoundException(query.path)

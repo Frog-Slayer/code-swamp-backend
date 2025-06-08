@@ -43,8 +43,8 @@ class FolderRepositoryImpl(
         return folderJpaRepository.findAllById(folderIds).map { it.toDomain() }
     }
 
-    override fun findFolderByFullPath(rootName: String, paths: List<String>): Folder? {
-        val targetFolderId = folderNodeRepository.findFolderIdByFullPath(rootName, paths)
+    override fun findFolderByFullPath(path: List<String>): Folder? {
+        val targetFolderId = folderNodeRepository.findFolderIdByFullPath( path)
         return folderJpaRepository.findByIdOrNull(targetFolderId)?.toDomain()
     }
 
