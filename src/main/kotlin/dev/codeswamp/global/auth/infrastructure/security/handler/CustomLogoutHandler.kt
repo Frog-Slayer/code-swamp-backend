@@ -20,7 +20,7 @@ class CustomLogoutHandler(
         response: HttpServletResponse,
         authentication: Authentication?
     ) {
-        httpTokenAccessor.invalidateRefreshToken(response)
+        httpTokenAccessor.invalidateTokenPair(response)
         val userDetails = authentication?.principal as? CustomUserDetails
 
         userDetails?.let {

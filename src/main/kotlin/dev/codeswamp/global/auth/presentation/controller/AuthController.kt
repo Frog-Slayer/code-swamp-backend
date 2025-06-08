@@ -28,12 +28,13 @@ class AuthController(
     @GetMapping("/refresh")
     fun refreshToken(request: HttpServletRequest, response: HttpServletResponse) : AuthResult {
         val refreshToken = httpTokenAccessor.extractRefreshToken(request) ?: throw Exception("cannot find refresh token")
-        val (newAccessToken, newRefreshToken)= authApplicationService.refresh(refreshToken)
+        val validatedTokenPair = authApplicationService.refresh(refreshToken)
+        val (newAccessToken, newRefreshToken) = validatedTokenPair
 
         val userProfile = newAccessToken.authUser.id?.let { userProfileFetcher.fetchUserProfile(it) }
             ?: throw Exception("cannot find user profile")
 
-        httpTokenAccessor.injectRefreshToken(response, newRefreshToken)
+        httpTokenAccessor.injectTokenPair(response, validatedTokenPair)
 
         return AuthResult(
             newAccessToken.value,
@@ -47,7 +48,7 @@ class AuthController(
         val token = tempLoginRequest.token
 
         val (tokenPair, userProfile)= authApplicationService.loginWithTemporaryToken(email, token)
-        httpTokenAccessor.injectRefreshToken(response, tokenPair.refreshToken)
+        httpTokenAccessor.injectTokenPair(response, tokenPair)
 
         logger.info("temp-login success")
 

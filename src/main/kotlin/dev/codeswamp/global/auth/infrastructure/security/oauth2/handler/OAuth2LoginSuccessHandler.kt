@@ -1,11 +1,10 @@
 package dev.codeswamp.global.auth.infrastructure.security.oauth2.handler
 
 import dev.codeswamp.global.auth.application.acl.UserProfileFetcher
+import dev.codeswamp.global.auth.application.dto.ValidatedTokenPair
 import dev.codeswamp.global.auth.application.service.AuthApplicationService
 import dev.codeswamp.global.auth.application.signup.TemporaryTokenService
 import dev.codeswamp.global.auth.domain.model.AuthUser
-import dev.codeswamp.global.auth.domain.service.AuthUserService
-import dev.codeswamp.global.auth.domain.service.TokenService
 import dev.codeswamp.global.auth.infrastructure.security.oauth2.dto.ProviderUserInfo
 import dev.codeswamp.global.auth.infrastructure.security.oauth2.factory.UserInfoFactory
 import dev.codeswamp.global.auth.infrastructure.web.HttpTokenAccessor
@@ -77,7 +76,7 @@ class OAuth2LoginSuccessHandler(
         val refreshToken = authApplicationService.issueRefreshToken(user)
 
         authApplicationService.storeRefreshToken(refreshToken)
-        tokenAccessor.injectRefreshToken(response, refreshToken)
+        tokenAccessor.injectTokenPair(response, ValidatedTokenPair(accessToken, refreshToken))
 
         val userProfile = userProfileFetcher.fetchUserProfile(user.id!!)
 
