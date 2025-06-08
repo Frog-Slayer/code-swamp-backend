@@ -1,11 +1,10 @@
 package dev.codeswamp.core.article.domain.article.service
 
-import dev.codeswamp.core.article.domain.article.exception.InvalidVersionStateException
+import dev.codeswamp.core.article.domain.article.exception.article.ContentReconstructionException
 import dev.codeswamp.core.article.domain.article.model.Version
 import dev.codeswamp.core.article.domain.article.repository.VersionRepository
 import dev.codeswamp.core.article.domain.support.DiffProcessor
 import org.springframework.stereotype.Service
-import java.lang.IllegalStateException
 
 @Service
 class ArticleContentReconstructor(
@@ -27,21 +26,21 @@ class ArticleContentReconstructor(
 
     private fun contentFromBaseVersion(version: Version) : String {
         return version.fullContent
-            ?: throw InvalidVersionStateException("Cannot reconstruct content", "base version ${version.id} has no content")
+            ?: throw ContentReconstructionException("base version ${version.id} has no content")
     }
 
     private fun contentFromDiffChain(version: Version): String {
         val previousVersionId = version.previousVersionId
-            ?: throw InvalidVersionStateException("Cannot reconstruct content", "version ${version.id} has no previous version")
+            ?: throw ContentReconstructionException("version ${version.id} has no previous version")
 
         val base = versionRepository.findNearestBaseTo(previousVersionId)
-            ?: throw InvalidVersionStateException("Cannot reconstruct content", "version ${version.id} has no base version")
+            ?: throw ContentReconstructionException("version ${version.id} has no base version")
 
         val diffChain = versionRepository.findDiffChainBetween(base.id, version.previousVersionId)
 
         val previousContent = diffProcessor.buildFullContent(
             base.fullContent
-                ?: throw InvalidVersionStateException("Cannot reconstruct content", "base version ${base.id} has no content"),
+                ?: throw ContentReconstructionException("base version ${base.id} has no content"),
             diffChain
         )
 

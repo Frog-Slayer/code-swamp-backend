@@ -1,7 +1,7 @@
 package dev.codeswamp.core.article.application.usecase.command.publish
 
 import dev.codeswamp.core.article.application.base.RebasePolicy
-import dev.codeswamp.core.article.domain.article.exception.ArticleNotFoundException
+import dev.codeswamp.core.article.domain.article.exception.article.ArticleNotFoundException
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug

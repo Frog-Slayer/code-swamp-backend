@@ -5,13 +5,10 @@ import dev.codeswamp.core.article.domain.ArticleDomainEvent
 import dev.codeswamp.core.article.domain.article.event.ArticleDraftedEvent
 import dev.codeswamp.core.article.domain.article.event.ArticlePublishedEvent
 import dev.codeswamp.core.article.domain.article.event.ArticleVersionCreatedEvent
-import dev.codeswamp.core.article.domain.article.exception.DomainForbiddenException
-import dev.codeswamp.core.article.domain.article.exception.InvalidArticleStateException
-import dev.codeswamp.core.article.domain.article.exception.InvalidSlugFormatException
-import dev.codeswamp.core.article.domain.article.exception.InvalidStateTransitionException
+import dev.codeswamp.core.article.domain.article.exception.article.InvalidArticleStateException
+import dev.codeswamp.core.article.domain.article.exception.article.PrivateArticleForbiddenException
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
-import org.springframework.security.access.AccessDeniedException
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
@@ -142,7 +139,6 @@ data class VersionedArticle private constructor (
             slugUniquenessChecker(this, metadata.folderId, slug)
         }
 
-
         return this.copy( currentVersion = currentVersion.draft()).withEvent(
             ArticleDraftedEvent(
             articleId = id,
@@ -151,7 +147,8 @@ data class VersionedArticle private constructor (
     }
 
     fun archive() : VersionedArticle {
-        if (currentVersion.state == VersionState.PUBLISHED) throw InvalidStateTransitionException()
+        if (currentVersion.state == VersionState.PUBLISHED)
+            throw InvalidArticleStateException("Invalid state transition", "cannot archive published version")
 
         return this.copy(
             currentVersion = currentVersion.archive()
@@ -159,12 +156,12 @@ data class VersionedArticle private constructor (
     }
 
     fun checkOwnership(userId: Long) {
-        if (authorId != userId) throw DomainForbiddenException("You are not the owner of this article")
+        if (authorId != userId) throw PrivateArticleForbiddenException("$id")
     }
 
     fun assertReadableBy(userId: Long?) {
         if (!metadata.isPublic && (userId == null || authorId != userId))
-            throw DomainForbiddenException("cannot read private article")
+            throw PrivateArticleForbiddenException("$id")
     }
 
     fun withEvent(event: ArticleDomainEvent) : VersionedArticle {

@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.domain.article.service
 
-import dev.codeswamp.core.article.domain.article.exception.DuplicatedSlugException
+import dev.codeswamp.core.article.domain.article.exception.validation.DuplicatedSlugException
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository

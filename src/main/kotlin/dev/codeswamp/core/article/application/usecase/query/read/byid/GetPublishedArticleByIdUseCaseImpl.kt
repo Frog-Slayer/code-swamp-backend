@@ -2,7 +2,7 @@ package dev.codeswamp.core.article.application.usecase.query.read.byid
 
 import dev.codeswamp.core.article.application.readmodel.repository.PublishedArticleRepository
 import dev.codeswamp.core.article.application.usecase.query.read.ReadArticleResult
-import dev.codeswamp.core.article.domain.article.exception.ArticleNotFoundException
+import dev.codeswamp.core.article.domain.article.exception.article.ArticleNotFoundException
 import org.springframework.stereotype.Service
 
 @Service
