@@ -31,8 +31,6 @@ class ArticleController(
     private val commandFacade: ArticleCommandUseCaseFacade,
     private val queryFacade: ArticleQueryUseCaseFacade
 ){
-    //TODO(ResponseDTO & 예외 처리)
-
     @GetMapping("/{articleId}")
     fun getArticleWithId(@AuthenticationPrincipal user: CustomUserDetails, @PathVariable articleId:Long): ReadArticleResult {
        return queryFacade.getPublishedArticleById(query = GetPublishedArticleByIdQuery(
