@@ -2,10 +2,10 @@ package dev.codeswamp.core.article.application.usecase.query.read.byslug
 
 import dev.codeswamp.core.article.application.readmodel.repository.PublishedArticleRepository
 import dev.codeswamp.core.article.application.usecase.query.read.ReadArticleResult
-import dev.codeswamp.core.article.domain.article.exception.article.ArticleNotFoundException
+import dev.codeswamp.core.article.application.exception.article.ArticleNotFoundException
+import dev.codeswamp.core.article.application.exception.folder.FolderPathNotFoundException
 import dev.codeswamp.core.article.domain.folder.service.FolderPathResolver
 import org.springframework.stereotype.Service
-import java.awt.geom.IllegalPathStateException
 
 @Service
 class GetPublishedArticleBySlugUseCaseImpl(
@@ -17,10 +17,10 @@ class GetPublishedArticleBySlugUseCaseImpl(
         val slug = path.last()
 
         val folderId = folderPathResolver.findFolderByFullPath(path.dropLast(1))?.id
-            ?: throw IllegalPathStateException("잘못된 URI입니다.")
+            ?: throw FolderPathNotFoundException(query.path)
 
         val article = publishedArticleRepository.findByFolderIdAndSlug(folderId, slug)
-            ?: throw ArticleNotFoundException("해당 경로의 글을 찾을 수 없습니다.")
+            ?: throw ArticleNotFoundException.bySlug("slug")
 
         article.assertReadableBy(query.userId)
 

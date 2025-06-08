@@ -1,6 +1,6 @@
-package dev.codeswamp.core.article.application.base.root
+package dev.codeswamp.core.article.application.rebase.root
 
-import dev.codeswamp.core.article.application.base.RebasePolicy
+import dev.codeswamp.core.article.application.rebase.RebasePolicy
 import dev.codeswamp.core.article.domain.article.model.Version
 
 class RootOnlySelectionPolicy : RebasePolicy {

@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.infrastructure.persistence.repositoryImpl
 
-import dev.codeswamp.core.article.application.base.RebasePolicy
+import dev.codeswamp.core.article.application.rebase.RebasePolicy
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug

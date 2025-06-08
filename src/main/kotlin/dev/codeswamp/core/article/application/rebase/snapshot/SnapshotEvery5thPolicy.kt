@@ -1,6 +1,6 @@
-package dev.codeswamp.core.article.application.base.snapshot
+package dev.codeswamp.core.article.application.rebase.snapshot
 
-import dev.codeswamp.core.article.application.base.RebasePolicy
+import dev.codeswamp.core.article.application.rebase.RebasePolicy
 import dev.codeswamp.core.article.domain.article.model.Version
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
 import org.springframework.context.annotation.Primary
