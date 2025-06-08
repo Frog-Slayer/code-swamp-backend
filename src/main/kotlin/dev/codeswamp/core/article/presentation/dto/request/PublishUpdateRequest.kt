@@ -10,7 +10,6 @@ data class PublishUpdateRequest (
     @JsonDeserialize(using = StringToLongDeserializer::class)
     val versionId: Long,
     val diff: String,
-    val type: String,
     val isPublic: Boolean,
     val thumbnailUrl: String?,
     val slug: String,

@@ -11,7 +11,6 @@ import dev.codeswamp.core.article.presentation.json.StringToLongDeserializer
 data class PublishRequest (
     val title: String,
     val diff: String,
-    val type: String,
     val isPublic: Boolean,
     val thumbnailUrl: String?,
     val slug: String,
