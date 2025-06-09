@@ -13,10 +13,10 @@ import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
 import org.springframework.data.redis.serializer.StringRedisSerializer
 
 @Configuration
-class RefreshTokenRedisConfig {
+class TokenRedisConfig {
 
     @Bean
-    fun refreshTokenRedisConnectionFactory() : LettuceConnectionFactory {
+    fun tokenRedisConnectionFactory() : LettuceConnectionFactory {
         val redisConfig = RedisStandaloneConfiguration().apply {
             hostName= "localhost"
             port = 6379
@@ -29,7 +29,7 @@ class RefreshTokenRedisConfig {
     @Bean
     fun refreshTokenTemplate(): RedisTemplate<String, ValidatedRefreshToken> {
         val template = RedisTemplate<String, ValidatedRefreshToken>()
-        template.connectionFactory = refreshTokenRedisConnectionFactory()
+        template.connectionFactory = tokenRedisConnectionFactory()
         template.keySerializer = StringRedisSerializer()
 
         val objectMapper = ObjectMapper().apply {
@@ -45,7 +45,7 @@ class RefreshTokenRedisConfig {
     @Bean(name = ["temporaryTokenTemplate"])
     fun temporaryTokenTemplate(): RedisTemplate<String, String> {
         val template = RedisTemplate<String, String>()
-        template.connectionFactory = refreshTokenRedisConnectionFactory()
+        template.connectionFactory = tokenRedisConnectionFactory()
 
         template.keySerializer = StringRedisSerializer()
         template.valueSerializer = StringRedisSerializer()
