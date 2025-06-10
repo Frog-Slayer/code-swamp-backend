@@ -156,12 +156,12 @@ data class VersionedArticle private constructor (
     }
 
     fun checkOwnership(userId: Long) {
-        if (authorId != userId) throw PrivateArticleForbiddenException("$id")
+        if (authorId != userId) throw PrivateArticleForbiddenException(id)
     }
 
     fun assertReadableBy(userId: Long?) {
         if (!metadata.isPublic && (userId == null || authorId != userId))
-            throw PrivateArticleForbiddenException("$id")
+            throw PrivateArticleForbiddenException(id)
     }
 
     fun withEvent(event: ArticleDomainEvent) : VersionedArticle {

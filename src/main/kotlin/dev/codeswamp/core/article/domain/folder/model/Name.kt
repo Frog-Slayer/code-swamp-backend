@@ -1,20 +1,23 @@
 package dev.codeswamp.core.article.domain.folder.model
 
+import dev.codeswamp.core.article.domain.article.exception.validation.InvalidFormatException
+
 @JvmInline
 value class Name private constructor(
     val value : String
 ) {
     companion object {
         fun of(name: String) : Name {
-            require(name.length in 1..31) { "Folder name must be between 1 and 31 characters." }
-            require(name.matches(Regex("^[a-zA-Z0-9가-힣_\\- ]+$"))) { "Folder name contains invalid characters." }
-            return Name(name)
+            val trimmed = name.trim()
+            if (trimmed.length !in 1..31) throw InvalidFormatException("Length of Folder name must be in 1 to 31.")
+            if (!trimmed.matches(Regex("^[a-zA-Z0-9가-힣_\\- ]+$"))) { "Folder name contains invalid characters." }
+            return Name(trimmed)
         }
 
         fun ofRoot(name: String) : Name {
-            require(name.startsWith("@")) { "Root folder name must start with '@'" }
-            require(name.length in 2..30) { "Root folder name must be between 2 and 30 characters." }
-            require(name.matches(Regex("^@[a-zA-Z0-9가-힣_\\-]+$"))) { "Root folder name contains invalid characters." }
+            if (!name.startsWith("@")) throw InvalidFormatException("Root folder name must start with '@'")
+            if (name.length !in 2..31) throw InvalidFormatException("Length of Root folder name must be in 2 to 31." )
+            if (!name.matches(Regex("^@[a-zA-Z0-9가-힣_\\-]+$"))) throw InvalidFormatException("Root folder name contains invalid characters." )
             return Name(name)
         }
     }

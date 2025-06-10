@@ -1,6 +1,8 @@
 package dev.codeswamp.core.article.domain.folder.service
 
+import dev.codeswamp.core.article.domain.article.exception.validation.DuplicatedFolderNameException
 import dev.codeswamp.core.article.domain.folder.model.Folder
+import dev.codeswamp.core.article.domain.folder.model.Name
 import dev.codeswamp.core.article.domain.folder.repository.FolderRepository
 import org.springframework.stereotype.Service
 
@@ -8,7 +10,7 @@ import org.springframework.stereotype.Service
 class DuplicatedFolderNameChecker (
     private val folderRepository: FolderRepository
 ){
-    fun checkDuplicatedFolderNameInSameLevel(folderId: Long, name: String) {
-        if (folderRepository.existsByParentIdAndName(folderId, name)) throw Exception("duplicated folder name")
+    fun checkDuplicatedFolderNameInSameLevel(folderId: Long, name: Name) {
+        if (folderRepository.existsByParentIdAndName(folderId, name.value)) throw DuplicatedFolderNameException(name.value)
     }
 }

@@ -2,8 +2,10 @@ package dev.codeswamp.core.article.domain.folder.model
 
 import dev.codeswamp.core.article.domain.AggregateRoot
 import dev.codeswamp.core.article.domain.ArticleDomainEvent
+import dev.codeswamp.core.article.domain.article.exception.folder.FolderMoveNotAllowedException
+import dev.codeswamp.core.article.domain.article.exception.folder.FolderForbiddenAccessException
+import dev.codeswamp.core.article.domain.article.exception.folder.RootFolderRenameException
 import dev.codeswamp.core.article.domain.folder.event.FolderPathChangedEvent
-import org.springframework.security.access.AccessDeniedException
 
 data class Folder private constructor(
     val id: Long,
@@ -18,16 +20,16 @@ data class Folder private constructor(
             ownerId: Long,
             name: String,
             parent: Folder,
-            checkDuplicatedFolderName: (Long, String) -> Unit
+            checkDuplicatedFolderName: (Long, Name) -> Unit
         ) : Folder {
             val folderName = Name.of(name)//formant check
-            checkDuplicatedFolderName(parent.id, name)
+            checkDuplicatedFolderName(parent.id, folderName)
 
             return Folder(
                 id,
                 ownerId,
                 folderName,
-                fullPath = "${parent.fullPath}/$name",
+                fullPath = "${parent.fullPath}/$folderName",
                 parentId = parent.id
             )
         }
@@ -62,17 +64,16 @@ data class Folder private constructor(
         )
     }
 
-    fun rename(newName: String, checkDuplicatedFolderName: (Long, String) -> Unit) : Folder{
-        parentId?.let{ checkDuplicatedFolderName(parentId, name.value) } ?: throw Exception("cannot rename root folder")
+    fun rename(newName: String, checkDuplicatedFolderName: (Long, Name) -> Unit) : Folder {
+        val newFolderName = Name.of(newName)
+        parentId?.let{ checkDuplicatedFolderName(parentId, newFolderName) } ?: throw RootFolderRenameException(name.value)
 
-        val folderName = Name.of(newName)
         val parentPath = fullPath.substringBeforeLast("/")
-
-        val newPath = "$parentPath/$newName"
+        val newPath = "$parentPath/$newFolderName"
 
         return this.copy(
             fullPath = newPath,
-            name = folderName
+            name = newFolderName
         ).withEvent(FolderPathChangedEvent(
             id,
             fullPath,
@@ -80,10 +81,10 @@ data class Folder private constructor(
         ))
     }
 
-    fun moveTo(newParent: Folder, checkDuplicatedFolderName: (Long, String) -> Unit) : Folder {
+    fun moveTo(newParent: Folder, checkDuplicatedFolderName: (Long, Name) -> Unit) : Folder {
         if (newParent.id == parentId || newParent.id == id) return this
-        if (isChild(newParent)) throw Exception("cannot move to descendants")
-        checkDuplicatedFolderName(newParent.id, name.value)
+        if (isChild(newParent)) throw FolderMoveNotAllowedException(fullPath, newParent.fullPath)
+        checkDuplicatedFolderName(newParent.id, name)
 
         val newPath = "${newParent.fullPath}/$name"
 
@@ -102,7 +103,7 @@ data class Folder private constructor(
     }
 
     fun checkOwnership(userId: Long) {
-        if (ownerId != userId) throw AccessDeniedException("You are not the owner of this folder")
+        if (ownerId != userId) throw FolderForbiddenAccessException(id)
     }
 
     fun withEvent(event: ArticleDomainEvent) : Folder {
