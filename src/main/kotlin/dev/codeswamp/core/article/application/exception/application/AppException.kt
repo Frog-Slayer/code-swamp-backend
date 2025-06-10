@@ -1,4 +1,11 @@
 package dev.codeswamp.core.article.application.exception.application
 
-open class AppException(message: String): RuntimeException(message)
+interface AppErrorCode {
+    val code : String
+}
+
+abstract class AppException(
+    val errorCode: AppErrorCode,
+    message: String
+): RuntimeException(message)
 

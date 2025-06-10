@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.domain.article.model.vo
 
-import dev.codeswamp.core.article.domain.article.exception.validation.InvalidFormatException
+import dev.codeswamp.core.article.domain.exception.validation.InvalidFormatException
 
 @JvmInline
 value class Slug private constructor(

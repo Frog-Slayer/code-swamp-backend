@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.domain.article.service
 
-import dev.codeswamp.core.article.domain.article.exception.article.ContentReconstructionException
+import dev.codeswamp.core.article.domain.article.exception.ContentReconstructionException
 import dev.codeswamp.core.article.domain.article.model.Version
 import dev.codeswamp.core.article.domain.article.repository.VersionRepository
 import dev.codeswamp.core.article.domain.support.DiffProcessor
@@ -11,7 +11,7 @@ class ArticleContentReconstructor(
     private val versionRepository: VersionRepository,
     private val diffProcessor: DiffProcessor
 ){
-    //TODO
+    //TODO diffChain & applyDiff 실패를 대비 try-catch로 예외 처리 필요
     fun reconstructFullContent(version: Version) : String {
         return when {
             version.isBaseVersion -> contentFromBaseVersion(version)

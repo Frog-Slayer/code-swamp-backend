@@ -1,4 +1,11 @@
 package dev.codeswamp.core.article.infrastructure.exception.infrastructure
 
-open class InfraException(message: String): RuntimeException(message)
+interface InfraErrorCode {
+    val code: String
+}
+
+abstract class InfraException(
+    val errorCode: InfraErrorCode,
+    message: String
+): RuntimeException(message)
 

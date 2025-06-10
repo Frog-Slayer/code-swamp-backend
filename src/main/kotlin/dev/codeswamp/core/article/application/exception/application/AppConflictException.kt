@@ -1,3 +1,12 @@
 package dev.codeswamp.core.article.application.exception.application
 
-open class AppConflictException(message: String): AppException(message)
+enum class AppConflictErrorCode(
+    override val code: String,
+) : AppErrorCode {
+    APP_CONFLICT("APP_CONFLICT"),
+}
+
+abstract class AppConflictException(
+    errorCode: AppConflictErrorCode,
+    message: String
+): AppException( errorCode, message )
