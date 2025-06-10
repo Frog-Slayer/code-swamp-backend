@@ -19,7 +19,7 @@ class MoveFolderUseCaseImpl(
         val folder = folderRepository.findById(command.folderId) ?: throw FolderNotFoundException.byId(command.folderId)
         folder.checkOwnership(command.userId)
 
-        val newParent = folderRepository.findById(command.parentId) ?: throw FolderNotFoundException.byId(command.parentId)
+        val newParent = folderRepository.findById(command.newParentId) ?: throw FolderNotFoundException.byId(command.newParentId)
         newParent.checkOwnership(command.userId)
 
         val moved = folder.moveTo(newParent, duplicatedFolderNameChecker::checkDuplicatedFolderNameInSameLevel)

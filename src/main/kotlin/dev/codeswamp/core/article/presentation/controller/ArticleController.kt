@@ -5,10 +5,10 @@ import dev.codeswamp.core.article.application.usecase.query.article.ArticleQuery
 import dev.codeswamp.core.article.application.usecase.query.article.read.byid.GetPublishedArticleByIdQuery
 import dev.codeswamp.core.article.application.usecase.query.article.read.byslug.GetPublishedArticleBySlugQuery
 import dev.codeswamp.core.article.application.usecase.query.article.read.withversion.GetVersionedArticleQuery
-import dev.codeswamp.core.article.presentation.dto.request.DraftRequest
-import dev.codeswamp.core.article.presentation.dto.request.DraftUpdateRequest
-import dev.codeswamp.core.article.presentation.dto.request.PublishRequest
-import dev.codeswamp.core.article.presentation.dto.request.PublishUpdateRequest
+import dev.codeswamp.core.article.presentation.dto.request.article.DraftRequest
+import dev.codeswamp.core.article.presentation.dto.request.article.DraftUpdateRequest
+import dev.codeswamp.core.article.presentation.dto.request.article.PublishRequest
+import dev.codeswamp.core.article.presentation.dto.request.article.PublishUpdateRequest
 import dev.codeswamp.core.article.presentation.dto.response.ArticleReadResponse
 import dev.codeswamp.core.article.presentation.dto.response.DraftResponse
 import dev.codeswamp.core.article.presentation.dto.response.PublishResponse

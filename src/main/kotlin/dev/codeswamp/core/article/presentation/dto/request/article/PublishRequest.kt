@@ -1,14 +1,11 @@
-package dev.codeswamp.core.article.presentation.dto.request
+package dev.codeswamp.core.article.presentation.dto.request.article
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import dev.codeswamp.core.article.application.usecase.command.article.publish.UpdatePublishCommand
+import dev.codeswamp.core.article.application.usecase.command.article.publish.CreatePublishCommand
 import dev.codeswamp.core.article.presentation.json.StringToLongDeserializer
 
-data class PublishUpdateRequest (
+data class PublishRequest (
     val title: String,
-
-    @JsonDeserialize(using = StringToLongDeserializer::class)
-    val versionId: Long,
     val diff: String,
     val isPublic: Boolean,
     val thumbnailUrl: String?,
@@ -18,11 +15,8 @@ data class PublishUpdateRequest (
     @JsonDeserialize(using = StringToLongDeserializer::class)
     val folderId: Long,
 ) {
-    fun toCommand(userId: Long?, articleId: Long) = UpdatePublishCommand(
+    fun toCommand(userId: Long?) = CreatePublishCommand(
         userId = requireNotNull(userId),
-        articleId = articleId,
-        versionId = versionId,
-
         title = title,
         diff = diff,
         folderId = folderId,

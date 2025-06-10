@@ -1,22 +1,20 @@
-package dev.codeswamp.core.article.presentation.dto.request
+package dev.codeswamp.core.article.presentation.dto.request.article
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import dev.codeswamp.core.article.application.usecase.command.article.draft.UpdateDraftCommand
+import dev.codeswamp.core.article.application.usecase.command.article.draft.CreateDraftCommand
 import dev.codeswamp.core.article.presentation.json.StringToLongDeserializer
 
-data class DraftUpdateRequest (
+data class DraftRequest (
     val title: String,
     val diff: String,
 
     @JsonDeserialize(using = StringToLongDeserializer::class)
     val folderId: Long,
 ) {
-    fun toCommand(userId: Long?, articleId: Long, versionId : Long) = UpdateDraftCommand(
+    fun toCommand(userId: Long?) = CreateDraftCommand(
         userId = requireNotNull(userId),
-        articleId = articleId,
-        versionId = versionId,
         title = title,
         diff = diff,
-        folderId = folderId,
+        folderId = folderId
     )
 }
