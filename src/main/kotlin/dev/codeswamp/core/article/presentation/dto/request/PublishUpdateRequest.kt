@@ -1,7 +1,7 @@
 package dev.codeswamp.core.article.presentation.dto.request
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import dev.codeswamp.core.article.application.usecase.command.publish.UpdatePublishCommand
+import dev.codeswamp.core.article.application.usecase.command.article.publish.UpdatePublishCommand
 import dev.codeswamp.core.article.presentation.json.StringToLongDeserializer
 
 data class PublishUpdateRequest (

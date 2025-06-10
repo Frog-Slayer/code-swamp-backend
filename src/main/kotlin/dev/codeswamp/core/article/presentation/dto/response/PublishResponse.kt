@@ -2,7 +2,7 @@ package dev.codeswamp.core.article.presentation.dto.response
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
-import dev.codeswamp.core.article.application.usecase.command.publish.PublishArticleResult
+import dev.codeswamp.core.article.application.usecase.command.article.publish.PublishArticleResult
 
 data class PublishResponse (
     @JsonSerialize(using = ToStringSerializer::class)

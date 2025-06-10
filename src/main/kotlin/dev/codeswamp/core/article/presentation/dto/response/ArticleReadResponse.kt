@@ -2,7 +2,7 @@ package dev.codeswamp.core.article.presentation.dto.response
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
-import dev.codeswamp.core.article.application.usecase.query.read.ReadArticleResult
+import dev.codeswamp.core.article.application.usecase.query.article.read.ReadArticleResult
 import java.time.Instant
 
 data class ArticleReadResponse (

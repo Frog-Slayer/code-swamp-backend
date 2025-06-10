@@ -1,15 +1,10 @@
 package dev.codeswamp.core.article.presentation.controller
 
-import dev.codeswamp.core.article.application.usecase.command.ArticleCommandUseCaseFacade
-import dev.codeswamp.core.article.application.usecase.command.draft.DraftArticleResult
-import dev.codeswamp.core.article.application.usecase.command.publish.CreatePublishCommand
-import dev.codeswamp.core.article.application.usecase.command.publish.PublishArticleResult
-import dev.codeswamp.core.article.application.usecase.command.publish.UpdatePublishCommand
-import dev.codeswamp.core.article.application.usecase.query.ArticleQueryUseCaseFacade
-import dev.codeswamp.core.article.application.usecase.query.read.ReadArticleResult
-import dev.codeswamp.core.article.application.usecase.query.read.byid.GetPublishedArticleByIdQuery
-import dev.codeswamp.core.article.application.usecase.query.read.byslug.GetPublishedArticleBySlugQuery
-import dev.codeswamp.core.article.application.usecase.query.read.withversion.GetVersionedArticleQuery
+import dev.codeswamp.core.article.application.usecase.command.article.ArticleCommandUseCaseFacade
+import dev.codeswamp.core.article.application.usecase.query.article.ArticleQueryUseCaseFacade
+import dev.codeswamp.core.article.application.usecase.query.article.read.byid.GetPublishedArticleByIdQuery
+import dev.codeswamp.core.article.application.usecase.query.article.read.byslug.GetPublishedArticleBySlugQuery
+import dev.codeswamp.core.article.application.usecase.query.article.read.withversion.GetVersionedArticleQuery
 import dev.codeswamp.core.article.presentation.dto.request.DraftRequest
 import dev.codeswamp.core.article.presentation.dto.request.DraftUpdateRequest
 import dev.codeswamp.core.article.presentation.dto.request.PublishRequest

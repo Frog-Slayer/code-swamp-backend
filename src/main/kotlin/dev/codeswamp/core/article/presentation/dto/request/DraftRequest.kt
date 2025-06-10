@@ -1,7 +1,7 @@
 package dev.codeswamp.core.article.presentation.dto.request
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
-import dev.codeswamp.core.article.application.usecase.command.draft.CreateDraftCommand
+import dev.codeswamp.core.article.application.usecase.command.article.draft.CreateDraftCommand
 import dev.codeswamp.core.article.presentation.json.StringToLongDeserializer
 
 data class DraftRequest (

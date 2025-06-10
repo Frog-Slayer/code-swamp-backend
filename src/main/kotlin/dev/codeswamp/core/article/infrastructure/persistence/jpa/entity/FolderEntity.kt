@@ -1,6 +1,7 @@
 package dev.codeswamp.core.article.infrastructure.persistence.jpa.entity
 
 import dev.codeswamp.core.article.domain.folder.model.Folder
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.FetchType
 import jakarta.persistence.GeneratedValue
@@ -13,30 +14,40 @@ import jakarta.persistence.ManyToOne
 data class FolderEntity(
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id: Long,
 
     var name: String,
 
-    val ownerId: Long,
+    var ownerId: Long,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
-    val parent: FolderEntity? = null,
+    var parent: FolderEntity? = null,
+
+    @Column(nullable = false, columnDefinition = "TEXT", unique = true)
+    var fullPath: String,
 ) {
     companion object {
         fun from(folder: Folder, parent: FolderEntity?) = FolderEntity(
             id = folder.id,
-            name = folder.name,
+            name = folder.name.value,
             ownerId = folder.ownerId,
-            parent = parent
+            parent = parent,
+            fullPath = folder.fullPath
         )
     }
 
-    fun toDomain() = Folder(
+    fun toDomain() = Folder.from(
         id = id,
         name = name,
         ownerId = ownerId,
-        parentId = parent?.id
+        parentId = parent?.id,
+        fullPath = fullPath
     )
+
+    fun update(name: String, parent: FolderEntity, fullPath: String) {
+        this.name = name
+        this.parent = parent
+        this.fullPath = fullPath
+    }
 }
