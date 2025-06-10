@@ -1,3 +1,13 @@
 package dev.codeswamp.core.article.infrastructure.exception.infrastructure
 
-open class InfraConflictException(message: String): InfraException(message)
+enum class InfraConflictErrorCode (
+    override val code: String,
+) : InfraErrorCode {
+    INFRA_CONFLICT("INFRA_CONFLICT"),
+    ARTICLE_VERSION_MISMATCH("ARTICLE_VERSION_MISMATCH"),
+}
+
+abstract class InfraConflictException(
+    errorCode: InfraConflictErrorCode,
+    message: String
+): InfraException( errorCode, message )

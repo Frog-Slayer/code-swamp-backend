@@ -16,7 +16,7 @@ class CreateFolderUseCaseImpl(
 ): CreateFolderUseCase {
 
     @Transactional
-    override fun create(command: CreateFolderCommand) {
+    override fun create(command: CreateFolderCommand) : CreateFolderResult {
         val parent = folderRepository.findById(command.parentId) ?: throw FolderNotFoundException.byId(command.parentId)
         parent.checkOwnership(command.userId)
 
@@ -29,6 +29,8 @@ class CreateFolderUseCaseImpl(
         )
 
         folderRepository.save(created)
+
+        return CreateFolderResult(created.id)
     }
 
     @Transactional

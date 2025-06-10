@@ -1,4 +1,4 @@
-package dev.codeswamp.core.article.presentation.dto.response
+package dev.codeswamp.core.article.presentation.dto.response.article
 
 import java.time.Instant
 
@@ -10,8 +10,4 @@ data class ArticleEditResponseDto (
 
     val isPublic: Boolean,
     val isPublished: Boolean,
-
-    //val contentsList: List<ArticleVersionsDto>,
-    //val emojis: List<Emoji>
-    //val comments: List<Comment>
 )

@@ -5,8 +5,8 @@ import dev.codeswamp.core.article.domain.ArticleDomainEvent
 import dev.codeswamp.core.article.domain.article.event.ArticleDraftedEvent
 import dev.codeswamp.core.article.domain.article.event.ArticlePublishedEvent
 import dev.codeswamp.core.article.domain.article.event.ArticleVersionCreatedEvent
-import dev.codeswamp.core.article.domain.article.exception.article.InvalidArticleStateException
-import dev.codeswamp.core.article.domain.article.exception.article.PrivateArticleForbiddenException
+import dev.codeswamp.core.article.domain.article.exception.InvalidArticleStateException
+import dev.codeswamp.core.article.domain.article.exception.PrivateArticleForbiddenException
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
 import java.time.Instant

@@ -1,6 +1,7 @@
 package dev.codeswamp.core.article.application.usecase.command.folder
 
 import dev.codeswamp.core.article.application.usecase.command.folder.create.CreateFolderCommand
+import dev.codeswamp.core.article.application.usecase.command.folder.create.CreateFolderResult
 import dev.codeswamp.core.article.application.usecase.command.folder.create.CreateFolderUseCase
 import dev.codeswamp.core.article.application.usecase.command.folder.create.CreateRootFolderCommand
 import dev.codeswamp.core.article.application.usecase.command.folder.delete.DeleteFolderCommand
@@ -19,8 +20,8 @@ class FolderUseCaseFacade (
     private val deleteFolderUseCase: DeleteFolderUseCase,
 ) {
 
-    fun create(command: CreateFolderCommand) {
-        createFolderUseCase.create(command)
+    fun create(command: CreateFolderCommand) : CreateFolderResult{
+        return createFolderUseCase.create(command)
     }
 
     fun createRoot(command: CreateRootFolderCommand) {

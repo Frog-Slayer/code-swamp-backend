@@ -2,9 +2,9 @@ package dev.codeswamp.core.article.domain.folder.model
 
 import dev.codeswamp.core.article.domain.AggregateRoot
 import dev.codeswamp.core.article.domain.ArticleDomainEvent
-import dev.codeswamp.core.article.domain.article.exception.folder.FolderMoveNotAllowedException
-import dev.codeswamp.core.article.domain.article.exception.folder.FolderForbiddenAccessException
-import dev.codeswamp.core.article.domain.article.exception.folder.RootFolderRenameException
+import dev.codeswamp.core.article.domain.folder.exception.FolderMoveNotAllowedException
+import dev.codeswamp.core.article.domain.folder.exception.ForbiddenFolderAccessException
+import dev.codeswamp.core.article.domain.folder.exception.RootFolderRenameException
 import dev.codeswamp.core.article.domain.folder.event.FolderPathChangedEvent
 
 data class Folder private constructor(
@@ -103,7 +103,7 @@ data class Folder private constructor(
     }
 
     fun checkOwnership(userId: Long) {
-        if (ownerId != userId) throw FolderForbiddenAccessException(id)
+        if (ownerId != userId) throw ForbiddenFolderAccessException(id)
     }
 
     fun withEvent(event: ArticleDomainEvent) : Folder {

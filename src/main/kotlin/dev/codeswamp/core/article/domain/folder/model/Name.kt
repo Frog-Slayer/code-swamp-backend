@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.domain.folder.model
 
-import dev.codeswamp.core.article.domain.article.exception.validation.InvalidFormatException
+import dev.codeswamp.core.article.domain.exception.validation.InvalidFormatException
 
 @JvmInline
 value class Name private constructor(

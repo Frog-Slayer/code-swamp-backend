@@ -1,4 +1,4 @@
-package dev.codeswamp.core.article.presentation.dto.response
+package dev.codeswamp.core.article.presentation.dto.response.article
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
