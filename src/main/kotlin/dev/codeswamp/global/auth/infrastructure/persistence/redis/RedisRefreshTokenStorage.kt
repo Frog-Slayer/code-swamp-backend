@@ -1,4 +1,4 @@
-package dev.codeswamp.global.auth.infrastructure.redis
+package dev.codeswamp.global.auth.infrastructure.persistence.redis
 
 import dev.codeswamp.global.auth.domain.model.token.ValidatedRefreshToken
 import dev.codeswamp.global.auth.domain.repository.TokenRepository

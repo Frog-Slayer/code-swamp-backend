@@ -1,4 +1,4 @@
-package dev.codeswamp.global.auth.infrastructure.persistence.entity
+package dev.codeswamp.global.auth.infrastructure.persistence.jpa.entity
 
 import dev.codeswamp.global.auth.domain.model.AuthUser
 import dev.codeswamp.global.auth.domain.model.Role

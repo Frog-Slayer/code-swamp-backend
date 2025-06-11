@@ -13,5 +13,7 @@ interface ArticleRepository {
 
     fun countVersionsOfArticle(articleId: Long): Long
     fun saveVersion(version: Version): Version;
+
+    fun deleteAllByFolderIdIn(folderIds: List<Long>)
     fun deleteById(id: Long)
 }

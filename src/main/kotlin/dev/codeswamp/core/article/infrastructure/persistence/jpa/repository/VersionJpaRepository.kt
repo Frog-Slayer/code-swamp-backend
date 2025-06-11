@@ -12,4 +12,5 @@ interface VersionJpaRepository : JpaRepository<VersionEntity, Long>{
     fun findAllByIdIsIn(diffs: List<Long>): List<VersionEntity>
     fun countByArticleId(articleId: Long) : Long
     fun deleteAllByArticleId(articleId: Long)
+    fun deleteAllByArticleIdIn(articleIds: List<Long>)
 }

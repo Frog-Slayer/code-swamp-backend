@@ -11,6 +11,8 @@ interface VersionNodeRepository : Neo4jRepository<VersionNode, Long> {
 
     fun deleteAllByArticleId(articleId: Long)
 
+    fun deleteAllByArticleIdIn(articleIds: List<Long>)
+
     @Query("MATCH p= (base: VersionNode)-[:NEXT*0..]->(target: VersionNode{versionId: \$versionId})" +
             """WHERE base.isBase = TRUE
             RETURN base

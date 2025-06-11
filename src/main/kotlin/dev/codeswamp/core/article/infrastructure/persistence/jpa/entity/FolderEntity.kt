@@ -12,7 +12,6 @@ import jakarta.persistence.ManyToOne
 
 @Entity
 data class FolderEntity(
-
     @Id
     val id: Long,
 

@@ -7,6 +7,7 @@ interface VersionRepository {
 
     fun findByIdOrNull(id: Long) : Version?
 
+    fun deleteAllByArticleIdIn(articleIds: List<Long>)
     fun deleteByArticleId(articleId: Long)
 
     fun findPreviousPublishedVersion(articleId: Long, versionId: Long) : Version?

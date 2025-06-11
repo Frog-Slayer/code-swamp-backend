@@ -1,4 +1,4 @@
-package dev.codeswamp.global.auth.infrastructure.redis
+package dev.codeswamp.global.auth.infrastructure.persistence.redis
 
 import dev.codeswamp.global.auth.application.signup.TemporaryTokenStorage
 import org.springframework.beans.factory.annotation.Qualifier

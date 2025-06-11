@@ -21,7 +21,7 @@ class GetPublishedArticleBySlugUseCaseImpl(
             ?: throw FolderNotFoundException.byPath(query.path)
 
         val article = publishedArticleRepository.findByFolderIdAndSlug(folderId, slug)
-            ?: throw ArticleNotFoundException.bySlug("slug")
+            ?: throw ArticleNotFoundException.bySlug(slug)
 
         article.assertReadableBy(query.userId)
 
