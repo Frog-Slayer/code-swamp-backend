@@ -2,6 +2,7 @@ package dev.codeswamp.core.article.domain.folder.model
 
 import dev.codeswamp.core.article.domain.AggregateRoot
 import dev.codeswamp.core.article.domain.ArticleDomainEvent
+import dev.codeswamp.core.article.domain.folder.event.FolderDeletedEvent
 import dev.codeswamp.core.article.domain.folder.exception.FolderMoveNotAllowedException
 import dev.codeswamp.core.article.domain.folder.exception.ForbiddenFolderAccessException
 import dev.codeswamp.core.article.domain.folder.exception.RootFolderRenameException
@@ -98,6 +99,12 @@ data class Folder private constructor(
         ))
     }
 
+    fun markAsDeleted(folderIdsToDelete: List<Long>) : Folder {
+        return this.withEvent(FolderDeletedEvent(
+            folderIdsToDelete
+        ))
+    }
+
     private fun isChild(newParent: Folder): Boolean {
         return newParent.fullPath.startsWith("$fullPath/")
     }
@@ -111,4 +118,6 @@ data class Folder private constructor(
         newFolder.addEvent(event)
         return newFolder
     }
+
+    fun isRoot() : Boolean = parentId == null
 }

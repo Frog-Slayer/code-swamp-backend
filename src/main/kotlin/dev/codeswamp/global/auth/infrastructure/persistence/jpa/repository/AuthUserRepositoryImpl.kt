@@ -1,8 +1,8 @@
-package dev.codeswamp.global.auth.infrastructure.persistence.repository
+package dev.codeswamp.global.auth.infrastructure.persistence.jpa.repository
 
 import dev.codeswamp.global.auth.domain.model.AuthUser
 import dev.codeswamp.global.auth.domain.repository.AuthUserRepository
-import dev.codeswamp.global.auth.infrastructure.persistence.entity.AuthUserEntity
+import dev.codeswamp.global.auth.infrastructure.persistence.jpa.entity.AuthUserEntity
 import org.springframework.stereotype.Repository
 
 @Repository

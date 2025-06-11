@@ -1,4 +1,4 @@
-package dev.codeswamp.global.auth.infrastructure.redis
+package dev.codeswamp.global.auth.infrastructure.persistence.redis
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -7,14 +7,12 @@ import dev.codeswamp.global.auth.domain.model.token.ValidatedRefreshToken
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
-import org.springframework.data.redis.connection.RedisStandaloneConfiguration
-import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer
 import org.springframework.data.redis.serializer.StringRedisSerializer
 
 @Configuration
-class TokenRedisConfig (
+class TokenRedisTemplate (
     private val redisConnectionFactory: RedisConnectionFactory,
 ) {
 
