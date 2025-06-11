@@ -2,11 +2,12 @@ package dev.codeswamp.core.article.domain.folder.model
 
 import dev.codeswamp.core.article.domain.AggregateRoot
 import dev.codeswamp.core.article.domain.ArticleDomainEvent
-import dev.codeswamp.core.article.domain.folder.event.FolderDeletedEvent
+import dev.codeswamp.core.article.domain.folder.event.FolderDeletionEvent
 import dev.codeswamp.core.article.domain.folder.exception.FolderMoveNotAllowedException
 import dev.codeswamp.core.article.domain.folder.exception.ForbiddenFolderAccessException
 import dev.codeswamp.core.article.domain.folder.exception.RootFolderRenameException
 import dev.codeswamp.core.article.domain.folder.event.FolderPathChangedEvent
+import java.time.Instant
 
 data class Folder private constructor(
     val id: Long,
@@ -99,9 +100,11 @@ data class Folder private constructor(
         ))
     }
 
-    fun markAsDeleted(folderIdsToDelete: List<Long>) : Folder {
-        return this.withEvent(FolderDeletedEvent(
-            folderIdsToDelete
+    fun markAsDeleted(folderIdsToDelete: List<Long>, deletedAt: Instant) : Folder {
+        return this.withEvent(FolderDeletionEvent(
+            id,
+            folderIdsToDelete,
+            deletedAt
         ))
     }
 

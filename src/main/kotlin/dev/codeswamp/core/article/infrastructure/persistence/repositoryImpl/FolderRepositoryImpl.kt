@@ -31,8 +31,16 @@ class FolderRepositoryImpl(
     }
 
     override fun updateDescendentsFullPath(oldFullPath: String, newFullPath: String) {
-        folderJpaRepository.bulkUpdateFullPath(oldFullPath, newFullPath)
+        folderJpaRepository.bulkUpdateFullPath(oldFullPath, newFullPath, "$oldFullPath/%")
         entityManager.clear()
+    }
+
+    override fun findAllDescendantIdsByFolder(folder: Folder): List<Long> {
+        return folderJpaRepository.findAllDescendantIdsByFolderFullPath("${folder.fullPath}/%")
+    }
+
+    override fun deleteAllById(folderIds: List<Long>) {
+        folderJpaRepository.deleteAllById(folderIds)
     }
 
     override fun findAllByIds(folderIds: List<Long>): List<Folder> {

@@ -48,9 +48,14 @@ class VersionRepositoryImpl(
         return versionJpaRepository.findByIdOrNull(id)?.toDomain()
     }
 
+    override fun deleteAllByArticleIdIn(articleIds: List<Long>) {
+        versionJpaRepository.deleteAllByArticleIdIn(articleIds)
+        versionNodeRepository.deleteAllByArticleIdIn(articleIds) //TODO => 별도 이벤트로 분리
+    }
+
     override fun deleteByArticleId(articleId: Long) {
         versionJpaRepository.deleteAllByArticleId(articleId)
-        versionNodeRepository.deleteAllByArticleId(articleId)
+        versionNodeRepository.deleteAllByArticleId(articleId) // TODO => 별도 이벤트 분리
     }
 
     override fun findPreviousPublishedVersion(articleId: Long, versionId: Long): Version? {

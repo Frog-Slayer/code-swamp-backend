@@ -59,6 +59,12 @@ class ArticleRepositoryImpl (
         return versionRepository.save(version)
     }
 
+    override fun deleteAllByFolderIdIn(folderIds: List<Long>) {
+        val articleIds = articleMetadataJpaRepository.findAllIdsByFolderIdIn(folderIds)
+        articleMetadataJpaRepository.deleteAllByIdIn(articleIds)
+        versionRepository.deleteAllByArticleIdIn(articleIds)
+    }
+
     private fun saveMetadata(article: VersionedArticle) : ArticleMetadataEntity{
         val entity = ArticleMetadataEntity.from(article)
         return articleMetadataJpaRepository.findByIdOrNull(entity.id)
