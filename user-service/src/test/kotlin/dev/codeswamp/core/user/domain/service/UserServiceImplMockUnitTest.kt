@@ -1,9 +1,11 @@
 package dev.codeswamp.core.user.domain.service
 
-import dev.codeswamp.core.user.domain.model.Nickname
-import dev.codeswamp.core.user.domain.model.User
-import dev.codeswamp.core.user.domain.model.Username
-import dev.codeswamp.core.user.domain.repository.UserRepository
+import dev.codeswamp.user.domain.model.Nickname
+import dev.codeswamp.user.domain.model.User
+import dev.codeswamp.user.domain.model.Username
+import dev.codeswamp.user.domain.repository.UserRepository
+import dev.codeswamp.user.domain.service.UserService
+import dev.codeswamp.user.domain.service.UserServiceImpl
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -17,7 +19,7 @@ import org.junit.jupiter.api.assertDoesNotThrow
 @DisplayName("UserService Mock 단위 테스트")
 class UserServiceImplMockUnitTest {
 
-    private lateinit var userService:  UserService;
+    private lateinit var userService: UserService;
     private lateinit var userRepository: UserRepository;
     private lateinit var user : User
 

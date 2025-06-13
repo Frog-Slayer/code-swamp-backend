@@ -1,9 +1,10 @@
 package dev.codeswamp.core.user.domain.service
 
 
-import dev.codeswamp.core.user.domain.model.Nickname
-import dev.codeswamp.core.user.domain.model.User
-import dev.codeswamp.core.user.domain.model.Username
+import dev.codeswamp.user.domain.model.Nickname
+import dev.codeswamp.user.domain.model.User
+import dev.codeswamp.user.domain.model.Username
+import dev.codeswamp.user.domain.service.UserService
 
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
