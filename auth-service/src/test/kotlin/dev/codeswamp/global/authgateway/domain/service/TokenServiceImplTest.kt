@@ -1,10 +1,10 @@
 package dev.codeswamp.global.authgateway.domain.service
 
-import dev.codeswamp.authgateway.domain.service.AuthUserService
-import dev.codeswamp.authgateway.domain.model.Role
-import dev.codeswamp.authgateway.domain.model.AuthUser
-import dev.codeswamp.authgateway.domain.service.TokenService
-import dev.codeswamp.authgateway.domain.util.TokenParser
+import dev.codeswamp.auth.domain.service.AuthUserService
+import dev.codeswamp.auth.domain.model.Role
+import dev.codeswamp.auth.domain.model.AuthUser
+import dev.codeswamp.auth.domain.service.TokenService
+import dev.codeswamp.auth.domain.service.TokenParser
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.BeforeAll
