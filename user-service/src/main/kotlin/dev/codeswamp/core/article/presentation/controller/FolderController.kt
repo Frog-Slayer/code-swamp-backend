@@ -8,7 +8,7 @@ import dev.codeswamp.core.article.application.usecase.command.folder.rename.Rena
 import dev.codeswamp.core.article.presentation.dto.request.folder.CreateFolderRequest
 import dev.codeswamp.core.article.presentation.dto.request.folder.MoveFolderRequest
 import dev.codeswamp.core.article.presentation.dto.request.folder.RenameFolderRequest
-import dev.codeswamp.global.auth.infrastructure.security.user.CustomUserDetails
+import dev.codeswamp.global.authgateway.infrastructure.security.user.CustomUserDetails
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.DeleteMapping

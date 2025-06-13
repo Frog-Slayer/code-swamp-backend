@@ -1,7 +1,6 @@
 package dev.codeswamp.core.user.domain.service
 
 import dev.codeswamp.core.user.domain.model.Nickname
-import dev.codeswamp.global.auth.domain.model.Role
 import dev.codeswamp.core.user.domain.model.User
 import dev.codeswamp.core.user.domain.model.Username
 import dev.codeswamp.core.user.domain.repository.UserRepository

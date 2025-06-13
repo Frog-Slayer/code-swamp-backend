@@ -12,7 +12,7 @@ import dev.codeswamp.core.article.presentation.dto.request.article.PublishUpdate
 import dev.codeswamp.core.article.presentation.dto.response.article.ArticleReadResponse
 import dev.codeswamp.core.article.presentation.dto.response.article.DraftResponse
 import dev.codeswamp.core.article.presentation.dto.response.article.PublishResponse
-import dev.codeswamp.global.auth.infrastructure.security.user.CustomUserDetails
+import dev.codeswamp.global.authgateway.infrastructure.security.user.CustomUserDetails
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping

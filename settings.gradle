@@ -1,11 +1,9 @@
 rootProject.name = 'codeswamp'
 
 include (
-        "auth-core",
         "auth-gateway",
         "article-command",
         "article-query",
-        "auth-core",
         "user-service",
         "image-service",
 )
