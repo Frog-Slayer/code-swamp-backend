@@ -37,6 +37,7 @@ class ServletHttpTokenAccessor (
             isHttpOnly = true
             secure = true
             maxAge = accessTokenExpiration.toInt()
+            setAttribute("SameSite", "None")
         }
 
         val refreshToken = Cookie("refresh_token", tokenPair.refreshToken.value).apply {
@@ -44,6 +45,7 @@ class ServletHttpTokenAccessor (
             isHttpOnly = true
             secure = true
             maxAge = refreshTokenExpiration.toInt()
+            setAttribute("SameSite", "None")
         }
 
         response.addCookie(refreshToken)
