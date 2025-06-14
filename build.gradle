@@ -53,7 +53,7 @@ dependencies {
 	implementation 'com.google.cloud:google-cloud-storage'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 
-	runtimeOnly 'com.mysql:mysql-connector-j'
+	runtimeOnly 'org.postgresql:postgresql'
 	runtimeOnly 'com.h2database:h2'
 
     testImplementation 'io.projectreactor:reactor-test'

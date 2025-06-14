@@ -1,19 +1,15 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
+    url: jdbc:postgresql://localhost:5433/mydb
+    driver-class-name: org.postgresql.Driver
+    username: spring
+    password: boot
   jpa:
     hibernate:
       ddl-auto: update
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   data:
     redis:
       host: localhost
@@ -24,6 +20,10 @@ spring:
     authentication:
       username: neo4j
       password: codeswamp
+
+meilisearch:
+  url: http://localhost:7700
+  api-key: Uyflv5mWWF3Apyp23PhvAPyFpVnJB6CC_coToMPFcrk
 
 logging:
   level:

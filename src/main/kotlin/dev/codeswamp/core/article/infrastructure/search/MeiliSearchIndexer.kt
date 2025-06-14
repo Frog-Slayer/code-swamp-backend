@@ -1,4 +1,4 @@
-package dev.codeswamp.core.article.infrastructure.persistence.search
+package dev.codeswamp.core.article.infrastructure.search
 
 import dev.codeswamp.core.article.application.dto.command.ArticleIndexDTO
 import dev.codeswamp.core.article.application.dto.command.ArticleSearchDTO
