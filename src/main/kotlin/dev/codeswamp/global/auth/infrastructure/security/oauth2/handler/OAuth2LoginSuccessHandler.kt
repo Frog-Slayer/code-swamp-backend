@@ -10,6 +10,7 @@ import dev.codeswamp.global.auth.infrastructure.security.oauth2.factory.UserInfo
 import dev.codeswamp.global.auth.infrastructure.web.HttpTokenAccessor
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService
@@ -26,10 +27,11 @@ class OAuth2LoginSuccessHandler(
     private val authApplicationService: AuthApplicationService,
     private val temporaryTokenService: TemporaryTokenService,
     private val authorizedClientService: OAuth2AuthorizedClientService,
-    private val tokenAccessor: HttpTokenAccessor
+    private val tokenAccessor: HttpTokenAccessor,
+    @Value("\${frontend.url}") private val frontendUrl: String
 ) : AuthenticationSuccessHandler {
 
-    val frontendCallbackUrl: String = "http://localhost:3000/auth/callback"
+    val frontendCallbackUrl: String = "$frontendUrl/auth/callback"
 
     override fun onAuthenticationSuccess(
         request: HttpServletRequest,

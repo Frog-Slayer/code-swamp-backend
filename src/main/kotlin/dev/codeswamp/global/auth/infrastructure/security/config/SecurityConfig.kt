@@ -12,6 +12,7 @@ import dev.codeswamp.global.auth.infrastructure.security.util.FilterSkipMatcher
 import dev.codeswamp.global.auth.infrastructure.web.HttpTokenAccessor
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -35,6 +36,7 @@ class SecurityConfig (
     private val httpTokenAccessor: HttpTokenAccessor,
     private val customLogoutHandler: CustomLogoutHandler,
     private val customLogoutSuccessHandler: CustomLogoutSuccessHandler,
+    @Value("\${frontend.url}") private val frontendUrl : String,
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
@@ -53,7 +55,7 @@ class SecurityConfig (
     @Bean
     fun corsConfigurationSource() = UrlBasedCorsConfigurationSource().apply {
         registerCorsConfiguration("/**", CorsConfiguration().apply {
-           allowedOrigins = listOf("http://localhost:3000")
+           allowedOrigins = listOf(frontendUrl)
             allowedHeaders = listOf("*")
             allowedMethods = listOf("*")
             exposedHeaders = listOf("Authorization")

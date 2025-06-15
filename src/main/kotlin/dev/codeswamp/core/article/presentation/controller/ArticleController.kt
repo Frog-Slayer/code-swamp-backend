@@ -48,7 +48,7 @@ class ArticleController(
         @PathVariable username: String,
         httpServletRequest: HttpServletRequest
     ) : ArticleReadResponse {
-        val fullPath = httpServletRequest.requestURI
+        val fullPath = httpServletRequest.requestURI.removePrefix("/api/articles/")
 
         return ArticleReadResponse.from( queryFacade.getPublishedArticleBySlug(GetPublishedArticleBySlugQuery(
             userId = user.getId(),
