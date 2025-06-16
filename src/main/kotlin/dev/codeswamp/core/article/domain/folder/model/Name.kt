@@ -20,6 +20,8 @@ value class Name private constructor(
             if (!name.matches(Regex("^@[a-zA-Z0-9_\\-]+$"))) throw InvalidFormatException("Root folder name contains invalid characters." )
             return Name(name)
         }
+
+        fun from(name: String) = Name(name)
     }
 
 
