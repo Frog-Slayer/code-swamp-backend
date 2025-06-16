@@ -31,7 +31,7 @@ data class Folder private constructor(
                 id,
                 ownerId,
                 folderName,
-                fullPath = "${parent.fullPath}/$folderName",
+                fullPath = "${parent.fullPath}/${folderName.value}",
                 parentId = parent.id
             )
         }
@@ -60,7 +60,7 @@ data class Folder private constructor(
         ) = Folder(
             id,
             ownerId,
-            Name.of(name),
+            Name.from(name),
             fullPath,
             parentId
         )
@@ -71,7 +71,7 @@ data class Folder private constructor(
         parentId?.let{ checkDuplicatedFolderName(parentId, newFolderName) } ?: throw RootFolderRenameException(name.value)
 
         val parentPath = fullPath.substringBeforeLast("/")
-        val newPath = "$parentPath/$newFolderName"
+        val newPath = "$parentPath/${newFolderName.value}"
 
         return this.copy(
             fullPath = newPath,
@@ -88,7 +88,7 @@ data class Folder private constructor(
         if (isChild(newParent)) throw FolderMoveNotAllowedException(fullPath, newParent.fullPath)
         checkDuplicatedFolderName(newParent.id, name)
 
-        val newPath = "${newParent.fullPath}/$name"
+        val newPath = "${newParent.fullPath}/${name.value}"
 
         return this.copy(
                 fullPath = newPath,
