@@ -24,7 +24,7 @@ data class Folder private constructor(
             parent: Folder,
             checkDuplicatedFolderName: (Long, Name) -> Unit
         ) : Folder {
-            val folderName = Name.of(name)//formant check
+            val folderName = Name.of(name)//format check
             checkDuplicatedFolderName(parent.id, folderName)
 
             return Folder(

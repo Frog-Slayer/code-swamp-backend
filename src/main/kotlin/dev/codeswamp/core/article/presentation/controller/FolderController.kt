@@ -11,6 +11,7 @@ import dev.codeswamp.core.article.presentation.dto.request.folder.CreateFolderRe
 import dev.codeswamp.core.article.presentation.dto.request.folder.MoveFolderRequest
 import dev.codeswamp.core.article.presentation.dto.request.folder.RenameFolderRequest
 import dev.codeswamp.core.article.presentation.dto.response.SimpleResponse
+import dev.codeswamp.core.article.presentation.dto.response.folder.CreateFolderResponse
 import dev.codeswamp.core.article.presentation.dto.response.folder.FolderInfoResponse
 import dev.codeswamp.core.article.presentation.dto.response.folder.GetFoldersResponse
 import dev.codeswamp.global.auth.infrastructure.security.user.CustomUserDetails
@@ -38,7 +39,7 @@ class FolderController(
     fun create(
         @AuthenticationPrincipal user : CustomUserDetails,
         @RequestBody request: CreateFolderRequest
-    ) : ResponseEntity<SimpleResponse> {
+    ) : ResponseEntity<CreateFolderResponse> {
         val createResult = folderCommandUseCaseFacade.create(CreateFolderCommand(
             userId = requireNotNull(user.getId()),
             name = request.name,
@@ -47,7 +48,7 @@ class FolderController(
 
         return ResponseEntity
             .created(URI("/folders/${createResult.folderId}"))
-            .body(SimpleResponse("created folder successfully"))
+            .body(CreateFolderResponse.from(createResult))
     }
 
     @PatchMapping( "/{folderId}/rename")

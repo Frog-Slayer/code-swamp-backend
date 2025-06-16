@@ -7,9 +7,7 @@ import dev.codeswamp.core.article.application.usecase.query.folder.getuserfolder
 data class FolderInfoResponse (
     @JsonSerialize(using = ToStringSerializer::class)
     val id: Long,
-
     val name: String,
-
     @JsonSerialize(using = ToStringSerializer::class)
     val parentId: Long?
 )
