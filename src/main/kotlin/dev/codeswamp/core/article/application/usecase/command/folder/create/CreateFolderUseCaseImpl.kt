@@ -30,7 +30,7 @@ class CreateFolderUseCaseImpl(
 
         folderRepository.save(created)
 
-        return CreateFolderResult(created.id)
+        return CreateFolderResult(created.id, parent.id, created.name.value)
     }
 
     @Transactional

@@ -13,7 +13,7 @@ class GetPublishedArticleBySlugUseCaseImpl(
     private val publishedArticleRepository: PublishedArticleRepository,
 ): GetPublishedArticleBySlugUseCase {
     override fun handle(query: GetPublishedArticleBySlugQuery): ReadArticleResult {
-        val fullPath = query.path.split("/").drop(2) // drop "", "/article"
+        val fullPath = query.path.split("/")
         val folderPath = fullPath.dropLast(1).joinToString("/")
         val slug = fullPath.last()
 

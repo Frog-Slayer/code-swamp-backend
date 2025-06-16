@@ -53,4 +53,14 @@ class DiffProcessorImplTest {
         val restored = processor.buildFullContent(origin, diffList)
         assertEquals(next5, restored)
     }
+
+    @Test
+    fun applyDiffTest() {
+        val content = "가나다라마바사아자챀타파하\nㅁㅇㅁ나엄너ㅔ뭎체ㅜ제푸메재두패ㅔ전에ㅐㅓ레ㅐㅓ"
+        val content2 = "가나다라마바사아자챀타파하\nㅁㅇㅁ나엄너ㅔ뭎체ㅜ제푸메재두패레ㅐㅓ"
+
+        val diff = processor.calculateDiff(content, content2)
+
+        assertEquals(content2, processor.applyDiff(content, diff))
+    }
 }

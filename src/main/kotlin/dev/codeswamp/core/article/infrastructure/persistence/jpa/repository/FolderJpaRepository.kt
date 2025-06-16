@@ -29,4 +29,6 @@ interface FolderJpaRepository : JpaRepository<FolderEntity, Long> {
     fun findAllDescendantIdsByFolderFullPath(@Param("fullPathPattern") fullPathPattern: String): List<Long>
     fun existsByParentIdAndName(parentId: Long, name: String): Boolean
     fun findByFullPath(fullPath: String): FolderEntity?
+
+    fun findAllByOwnerId(ownerId: Long): List<FolderEntity>
 }
