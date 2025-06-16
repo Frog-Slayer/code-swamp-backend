@@ -54,4 +54,8 @@ class FolderRepositoryImpl(
     override fun existsByParentIdAndName(parentId: Long, name: String): Boolean {
        return folderJpaRepository.existsByParentIdAndName(parentId, name)
     }
+
+    override fun findAllByOwnerId(userId: Long): List<Folder> {
+        return folderJpaRepository.findAllByOwnerId(userId).map { it.toDomain() }
+    }
 }

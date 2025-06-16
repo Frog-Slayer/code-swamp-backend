@@ -14,4 +14,6 @@ interface FolderRepository {
     fun findAllByIds(folderIds: List<Long>) : List<Folder>
     fun findFolderByFolderPath(folderPath: String): Folder?
     fun existsByParentIdAndName(parentId: Long, name: String): Boolean
+
+    fun findAllByOwnerId(userId: Long): List<Folder>
 }

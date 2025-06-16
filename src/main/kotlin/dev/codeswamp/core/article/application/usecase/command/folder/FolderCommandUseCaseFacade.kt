@@ -13,7 +13,7 @@ import dev.codeswamp.core.article.application.usecase.command.folder.rename.Rena
 import org.springframework.stereotype.Service
 
 @Service
-class FolderUseCaseFacade (
+class FolderCommandUseCaseFacade (
     private val createFolderUseCase: CreateFolderUseCase,
     private val moveFolderUseCase: MoveFolderUseCase,
     private val renameFolderUseCase: RenameFolderUseCase,

@@ -14,6 +14,7 @@ import dev.codeswamp.core.article.presentation.dto.response.article.DraftRespons
 import dev.codeswamp.core.article.presentation.dto.response.article.PublishResponse
 import dev.codeswamp.global.auth.infrastructure.security.user.CustomUserDetails
 import jakarta.servlet.http.HttpServletRequest
+import org.slf4j.LoggerFactory
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.net.URLDecoder
 
 @RestController
 @RequestMapping("/articles")
@@ -29,7 +31,8 @@ class ArticleController(
     private val commandFacade: ArticleCommandUseCaseFacade,
     private val queryFacade: ArticleQueryUseCaseFacade
 ){
-    //TODO: ResponseEntity로 래핑
+    private val logger = LoggerFactory.getLogger(ArticleController::class.java)
+
     @GetMapping("/{articleId}")
     fun getArticleWithId(
         @AuthenticationPrincipal user: CustomUserDetails,
@@ -43,12 +46,15 @@ class ArticleController(
     }
 
     @GetMapping("/@{username}/**")
-    fun getArticleWithUsernameAndPath(
+    fun getArticleByPathAndSlug(
         @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable username: String,
         httpServletRequest: HttpServletRequest
     ) : ArticleReadResponse {
-        val fullPath = httpServletRequest.requestURI.removePrefix("/api/articles/")
+        val rawPath = httpServletRequest.requestURI.removePrefix("/api/articles/")
+        val fullPath = URLDecoder.decode(rawPath, "UTF-8")
+
+        logger.info("full path: {}", fullPath)
 
         return ArticleReadResponse.from( queryFacade.getPublishedArticleBySlug(GetPublishedArticleBySlugQuery(
             userId = user.getId(),
