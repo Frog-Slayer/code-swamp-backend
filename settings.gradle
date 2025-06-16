@@ -1,1 +1,11 @@
 rootProject.name = 'codeswamp'
+
+include(
+    "services:article-command",
+    "services:article-query",
+    "services:auth-service",
+    "services:user-service",
+    "services:image-service",
+    "shared:auth-common",
+    "shared:common-grpc",
+)
