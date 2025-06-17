@@ -1,16 +1,17 @@
 syntax = "proto3";
 
-option java_package = "com.example.grpc";
+option java_package = "dev.codeswamp.grpc";
 option java_multiple_files = true;
 
-service Greeter {
-  rpc SayHello (HelloRequest) returns (HelloReply);
+service  UserService{
+  rpc FetchUserProfile(UserProfileRequest) returns (UserProfileResponse);
 }
 
-message HelloRequest {
-  string name = 1;
+message UserProfileRequest{
+  int64 userId = 1;
 }
 
-message HelloReply {
-  string message = 1;
+message UserProfileResponse{
+  string nickname = 1;
+  string profileImage = 2;
 }
