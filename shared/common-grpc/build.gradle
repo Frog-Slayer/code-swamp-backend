@@ -18,9 +18,9 @@ repositories {
 
 dependencies {
 	implementation 'org.jetbrains.kotlin:kotlin-reflect'
-	implementation 'io.grpc:grpc-kotlin-stub:1.4.1'
-	implementation 'io.grpc:grpc-protobuf:1.73.0'
-	implementation 'com.google.protobuf:protobuf-kotlin:4.31.1'
+	api 'io.grpc:grpc-kotlin-stub:1.4.1'
+	api 'io.grpc:grpc-protobuf:1.73.0'
+	api 'com.google.protobuf:protobuf-kotlin:4.31.1'
 }
 
 protobuf {

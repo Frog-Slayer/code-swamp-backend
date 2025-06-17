@@ -1,4 +1,9 @@
 package dev.codeswamp.user.infrastructure.grpc.sever
 
-class UserProfileProviderImpl {
+import dev.codeswamp.grpc.UserServiceGrpcKt
+
+class UserProfileServiceImpl : UserServiceGrpcKt.UserServiceCoroutineImplBase() {
+
+
+
 }
