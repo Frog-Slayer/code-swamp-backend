@@ -6,8 +6,8 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy
 
 @SpringBootApplication
 @EnableAspectJAutoProxy
-class CodeswampApplication
+class UserServiceApplication
 
 fun main(args: Array<String>) {
-	runApplication<CodeswampApplication>(*args)
+	runApplication<UserServiceApplication>(*args)
 }
