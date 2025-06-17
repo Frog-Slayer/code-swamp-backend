@@ -1,6 +1,6 @@
 package dev.codeswamp.user.application.service
 
-import dev.codeswamp.user.application.acl.FolderAcl
+import dev.codeswamp.user.application.port.outgoing.RootFolderInitializer
 import dev.codeswamp.user.application.dto.SignUpCommand
 import dev.codeswamp.user.domain.model.Nickname
 import dev.codeswamp.user.domain.model.User
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service
 @Service
 class UserApplicationServiceImpl(
     private val userService: UserService,
-    private val folderAcl: FolderAcl,
+    private val rootFolderInitializer: RootFolderInitializer,
 ) : UserApplicationService {
 
     @Transactional
@@ -30,7 +30,7 @@ class UserApplicationServiceImpl(
         val user = userService.save(signUpUser)
         val userId = requireNotNull(user.id)
 
-        folderAcl.createRootFolder(userId, command.username)
+        rootFolderInitializer.createRootFolder(userId, command.username)
         return user
     }
 

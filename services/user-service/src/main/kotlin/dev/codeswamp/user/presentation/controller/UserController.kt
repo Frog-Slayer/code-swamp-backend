@@ -1,6 +1,6 @@
 package dev.codeswamp.user.presentation.controller
 
-import dev.codeswamp.user.application.acl.AuthAcl
+import dev.codeswamp.user.application.port.outgoing.SignupTokenVerifier
 import dev.codeswamp.user.application.dto.SignUpCommand
 import dev.codeswamp.user.application.service.UserApplicationService
 import dev.codeswamp.user.presentation.dto.request.SignUpRequestDto
@@ -16,12 +16,12 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/users")
 class UserController(
     private val userApplicationService: UserApplicationService,
-    private val authAcl: AuthAcl
+    private val signupTokenVerifier: SignupTokenVerifier
 ) {
 
     @PostMapping("/signup")
     fun signup(@RequestBody signUpRequestDto: SignUpRequestDto) {
-        val userId = authAcl.verifyTokenAndCreateAuthUser(signUpRequestDto.token, signUpRequestDto.email)
+        val userId = signupTokenVerifier.verifyTokenAndCreateUser(signUpRequestDto.token, signUpRequestDto.email)
 
         userApplicationService.signUp(
             SignUpCommand(
