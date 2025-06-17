@@ -9,18 +9,16 @@ import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestAttribute
 import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/users")
 class UserController(
     private val userApplicationService: UserApplicationService,
     private val signupTokenVerifier: SignupTokenVerifier
 ) {
 
     @PostMapping("/signup")
-    fun signup(@RequestBody signUpRequestDto: SignUpRequestDto) {
+    suspend fun signup(@RequestBody signUpRequestDto: SignUpRequestDto) {
         val userId = signupTokenVerifier.verifyTokenAndCreateUser(signUpRequestDto.token, signUpRequestDto.email)
 
         userApplicationService.signUp(
@@ -34,7 +32,8 @@ class UserController(
     }
 
     @PatchMapping("/nickname")
-    fun modifyNickname(@RequestAttribute userId: Long?, nickname : String) {
+    suspend fun modifyNickname(@RequestAttribute userId: Long?, nickname : String) {
+        TODO("not implemented")
     }
 
     @GetMapping("/nickname/validate")

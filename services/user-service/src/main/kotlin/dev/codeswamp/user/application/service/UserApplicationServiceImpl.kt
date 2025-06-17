@@ -17,7 +17,7 @@ class UserApplicationServiceImpl(
 ) : UserApplicationService {
 
     @Transactional
-    override fun signUp(command: SignUpCommand): User {
+    override suspend fun signUp(command: SignUpCommand): User {
         requireNotNull(command.username ) { "$command.username is required" }
         requireNotNull(command.nickname ) { "$command.nickname is required" }
 
@@ -35,7 +35,7 @@ class UserApplicationServiceImpl(
     }
 
     @Transactional
-    override fun modifyUserNickname(
+    override suspend fun modifyUserNickname(
         user: User,
         nicknameDto: NicknameChangeRequestDto
     ) {
@@ -44,7 +44,7 @@ class UserApplicationServiceImpl(
     }
 
     @Transactional
-    override fun modifyUserProfileImage(user: User, profileImageUrl: String?) {
+    override suspend fun modifyUserProfileImage(user: User, profileImageUrl: String?) {
         user.profileUrl = profileImageUrl
         userService.save(user)//명시적 호출 필요
     }

@@ -10,19 +10,19 @@ import org.springframework.stereotype.Service
 class UserServiceImpl(
     private val userRepository: UserRepository
 ) : UserService {
-    override fun save(user: User) : User {
+    override suspend fun save(user: User) : User {
         return userRepository.save(user)
     }
 
-    override fun findById(id: Long): User? {
+    override suspend fun findById(id: Long): User? {
         return userRepository.findById(id)
     }
 
-    override fun findUserByUsername(username: Username): User? {
+    override suspend fun findUserByUsername(username: Username): User? {
         return userRepository.findByUsername(username)
     }
 
-    override fun findUserByNickname(nickname: Nickname): User? {
+    override suspend fun findUserByNickname(nickname: Nickname): User? {
         return userRepository.findByNickname(nickname)
     }
 }

@@ -6,9 +6,9 @@ import dev.codeswamp.user.presentation.dto.request.NicknameChangeRequestDto
 
 interface UserApplicationService {
     //회원정보 완성
-    fun signUp(command: SignUpCommand): User
+    suspend fun signUp(command: SignUpCommand): User
 
-    fun modifyUserNickname(user: User, nicknameDto: NicknameChangeRequestDto)
+    suspend fun modifyUserNickname(user: User, nicknameDto: NicknameChangeRequestDto)
 
-    fun modifyUserProfileImage(user: User, profileImageUrl: String?)
+    suspend fun modifyUserProfileImage(user: User, profileImageUrl: String?)
 }

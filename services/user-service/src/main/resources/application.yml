@@ -7,6 +7,6 @@ spring:
     import: application-secret.yml
   jpa:
     show-sql: false
-  servlet:
-    multipart:
-      max-file-size: 5MB
+
+server:
+  port: 8081

@@ -7,3 +7,6 @@ spring:
     import: application-secret.yml
   jpa:
     show-sql: false
+
+server:
+  port: 8080

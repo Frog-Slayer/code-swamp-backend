@@ -19,10 +19,10 @@ data class UserEntity (
     val id: Long? = null,
 
     @Column(unique = true)
-    val username: String? = null,//변경 불가(사용자 ID)
+    val username: String,
 
     @Column(unique = true)
-    var nickname: String? = null,
+    var nickname: String,
 
     var profileUrl: String? = null,
 ) {

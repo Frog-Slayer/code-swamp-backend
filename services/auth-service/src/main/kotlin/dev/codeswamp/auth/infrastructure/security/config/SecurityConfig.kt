@@ -37,7 +37,6 @@ class SecurityConfig (
 
     @Bean
     fun skipPathList(): List<String> = listOf(
-        "/users/signup",
         "/auth/refresh",
         "/auth/temp-login",
         "/oauth2/authorization/**",

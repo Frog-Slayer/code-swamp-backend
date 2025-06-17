@@ -5,8 +5,8 @@ import dev.codeswamp.user.domain.model.User
 import dev.codeswamp.user.domain.model.Username
 
 interface UserService {
-    fun save(user: User) : User
-    fun findById(id: Long): User?
-    fun findUserByUsername(username: Username): User?
-    fun findUserByNickname(nickname: Nickname): User?
+    suspend fun save(user: User) : User
+    suspend fun findById(id: Long): User?
+    suspend fun findUserByUsername(username: Username): User?
+    suspend fun findUserByNickname(nickname: Nickname): User?
 }
