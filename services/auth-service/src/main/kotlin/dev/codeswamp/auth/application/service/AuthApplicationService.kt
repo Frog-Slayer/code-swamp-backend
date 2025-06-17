@@ -1,10 +1,11 @@
 package dev.codeswamp.auth.application.service
 
-import dev.codeswamp.auth.application.acl.UserProfileFetcher
 import dev.codeswamp.auth.application.dto.TemporaryLoginResult
 import dev.codeswamp.auth.application.dto.ValidatedTokenPair
+import dev.codeswamp.auth.application.port.outgoing.UserProfileFetcher
 import dev.codeswamp.auth.application.signup.TemporaryTokenService
 import dev.codeswamp.auth.domain.model.AuthUser
+import dev.codeswamp.auth.domain.model.Role
 import dev.codeswamp.auth.domain.model.token.RawAccessToken
 import dev.codeswamp.auth.domain.model.token.RawRefreshToken
 import dev.codeswamp.auth.domain.model.token.ValidatedAccessToken
@@ -30,6 +31,16 @@ class AuthApplicationService (
     private val tokenRotator: RefreshTokenRotator,
     private val tokenParser: TokenParser,
 ) {
+
+    suspend fun signup(email: String, signupToken: String) : Long {
+        if (!temporaryTokenService.authenticate(email, signupToken)) throw IllegalStateException("Invalid or expired signup token")
+
+        return authUserRepository.save(AuthUser(
+            username = email,
+            roles = listOf(Role.USER)
+        )).id ?: throw RuntimeException("Failed to create user")
+    }
+
     suspend fun  findByUsername(username: String): AuthUser? {
         return authUserRepository.findByUsername(username)
     }

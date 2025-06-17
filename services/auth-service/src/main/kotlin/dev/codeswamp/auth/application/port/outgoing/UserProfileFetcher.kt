@@ -1,4 +1,4 @@
-package dev.codeswamp.auth.application.acl
+package dev.codeswamp.auth.application.port.outgoing
 
 import dev.codeswamp.auth.application.dto.UserProfile
 

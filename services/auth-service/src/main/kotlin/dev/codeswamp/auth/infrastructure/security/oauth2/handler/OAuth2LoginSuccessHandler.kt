@@ -1,7 +1,7 @@
 package dev.codeswamp.auth.infrastructure.security.oauth2.handler
 
-import dev.codeswamp.auth.application.acl.UserProfileFetcher
 import dev.codeswamp.auth.application.dto.ValidatedTokenPair
+import dev.codeswamp.auth.application.port.outgoing.UserProfileFetcher
 import dev.codeswamp.auth.application.service.AuthApplicationService
 import dev.codeswamp.auth.application.signup.TemporaryTokenService
 import dev.codeswamp.auth.domain.model.AuthUser

@@ -1,6 +1,6 @@
 package dev.codeswamp.auth.presentation.controller
 
-import dev.codeswamp.auth.application.acl.UserProfileFetcher
+import dev.codeswamp.auth.application.port.outgoing.UserProfileFetcher
 import dev.codeswamp.auth.application.service.AuthApplicationService
 import dev.codeswamp.auth.application.signup.TemporaryTokenService
 import dev.codeswamp.auth.infrastructure.web.HttpTokenAccessor
@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/auth")
 class AuthController(
     private val authApplicationService: AuthApplicationService,
-    private val temporaryTokenService: TemporaryTokenService,
     private val userProfileFetcher: UserProfileFetcher,
     private val httpTokenAccessor: HttpTokenAccessor,
 ){

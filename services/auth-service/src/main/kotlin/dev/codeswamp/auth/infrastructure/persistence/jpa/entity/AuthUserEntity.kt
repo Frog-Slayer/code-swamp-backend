@@ -19,6 +19,7 @@ data class AuthUserEntity(
     @Column(unique = true)
     val username: String,
 
+    //TODO: 권한 생각해보고 -> 리스트로 관리할 필요가 있는 경우 별도로 분리할 것
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 16)
     val role : Role
@@ -27,7 +28,7 @@ data class AuthUserEntity(
         return AuthUser(
             id = id,
             username = username,
-            role = role
+            roles = listOf(role)
         )
     }
 
@@ -36,7 +37,7 @@ data class AuthUserEntity(
             return AuthUserEntity(
                 id = authUser.id,
                 username = authUser.username,
-                role = authUser.role
+                role = authUser.roles.first() //TODO
             )
         }
     }

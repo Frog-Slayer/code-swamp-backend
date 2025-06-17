@@ -1,9 +1,10 @@
 package dev.codeswamp.user.domain.model
 
-class Nickname private constructor(val value: String?) {
+//TODO -> to value class
+class Nickname private constructor(val value: String) {
     companion object {
-        fun of(nickname: String?): Nickname {
-            require(nickname == null || isValidNickname(nickname)) {
+        fun of(nickname: String): Nickname {
+            require(isValidNickname(nickname)) {
                 "Nickname $nickname is not valid"
             }
 
@@ -20,6 +21,6 @@ class Nickname private constructor(val value: String?) {
     }
 
     override fun hashCode(): Int {
-        return value?.hashCode() ?: 0
+        return value.hashCode() ?: 0
     }
 }

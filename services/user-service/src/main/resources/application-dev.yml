@@ -16,3 +16,14 @@ logging:
     org.springframework.context: DEBUG
     org.springframework.data.neo4j : DEBUG
     org.springframework.security: DEBUG
+
+grpc:
+  server:
+    port: 9090
+  client:
+    folder:
+      address: dns:///article-command:9090
+      negotiation-type: plaintext
+    auth-service:
+      address: dns:///auth-service:9090
+      negotiation-type: plaintext
