@@ -27,6 +27,8 @@ repositories {
 
 dependencies {
 	implementation project(":shared:auth-common")
+	implementation project(":shared:common-grpc")
+
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-graphql'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
