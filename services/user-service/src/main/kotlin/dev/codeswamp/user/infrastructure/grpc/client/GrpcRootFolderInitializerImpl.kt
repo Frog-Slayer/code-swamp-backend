@@ -12,11 +12,7 @@ class GrpcRootFolderInitializerImpl : RootFolderInitializer {
     @GrpcClient("folder") lateinit var stub: FolderServiceGrpcKt.FolderServiceCoroutineStub
 
     override suspend fun createRootFolder(userId: Long, username: String): Boolean {
-        val request = CreateRootFolderRequest.newBuilder()
-            .setUserId(userId)
-            .setUsername(username)
-            .build()
-
-        return stub.createRootFolder(request).success
+        //TODO 이벤트 큐 기반으로 변경
+        return true
     }
 }

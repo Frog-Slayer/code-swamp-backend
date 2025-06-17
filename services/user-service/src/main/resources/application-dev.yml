@@ -10,20 +10,20 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: ""
 
 logging:
   level:
-    org.springframework.context: DEBUG
-    org.springframework.data.neo4j : DEBUG
-    org.springframework.security: DEBUG
+    root: debug
 
 grpc:
   server:
     port: 9091
   client:
-    folder:
-      address: dns:///article-command:9090
-      negotiation-type: plaintext
     auth-service:
-      address: dns:///auth-service:9090
+      address: static://localhost:9090
       negotiation-type: plaintext

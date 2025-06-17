@@ -23,5 +23,5 @@ grpc:
     port: 9090
   client:
     user-service:
-      address: dns:///user-service:9090
+      address: static://localhost:9091
       negotiation-type: plaintext

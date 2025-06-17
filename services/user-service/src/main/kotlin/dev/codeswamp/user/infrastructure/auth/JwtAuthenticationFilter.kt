@@ -26,7 +26,7 @@ class JwtAuthenticationFilter(
             ?.takeIf { !Instant.now().isAfter(it.expiration)}
             ?.userId
 
-        httpRequest.attributes["userId"] = userId
+        if (userId != null) httpRequest.attributes["userId"] = userId
 
         return chain.filter(exchange)
     }

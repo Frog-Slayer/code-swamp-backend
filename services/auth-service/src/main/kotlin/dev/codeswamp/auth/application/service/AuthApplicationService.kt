@@ -33,7 +33,8 @@ class AuthApplicationService (
 ) {
 
     suspend fun signup(email: String, signupToken: String) : Long {
-        if (!temporaryTokenService.authenticate(email, signupToken)) throw IllegalStateException("Invalid or expired signup token")
+        if (!temporaryTokenService.authenticate(signupToken, email))
+            throw IllegalStateException("Invalid or expired signup token")
 
         return authUserRepository.save(AuthUser(
             username = email,

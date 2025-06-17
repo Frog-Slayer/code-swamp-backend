@@ -1,6 +1,7 @@
 package dev.codeswamp.auth.infrastructure.persistence.redis
 
 import dev.codeswamp.auth.application.signup.TemporaryTokenStorage
+import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Repository
@@ -10,18 +11,24 @@ import java.time.Duration
 class RedisTemporaryTokenStorage (
     @Qualifier("temporaryTokenTemplate") private val redisTemplate: RedisTemplate<String, String>
 ) : TemporaryTokenStorage {
-    override fun save(token: String, email: String, timeToLiveInMinutes: Long) {
+    private val logger =  LoggerFactory.getLogger(javaClass)
+
+    override suspend fun save(token: String, email: String, timeToLiveInMinutes: Long) {
         val key = "tmp_token:$token"
         val duration = Duration.ofMinutes(timeToLiveInMinutes)
+        logger.info("save temporary token: $key")
+
         redisTemplate.opsForValue().set( key, email, duration )
     }
 
-    override fun get(token: String): String? {
+    override suspend fun get(token: String): String? {
         val key = "tmp_token:$token"
-        return  redisTemplate.opsForValue().get(key)
+        logger.info("Retrieving temporary token: $key")
+        val value = redisTemplate.opsForValue().get(key)
+        return value
     }
 
-    override fun delete(token: String) {
+    override suspend fun delete(token: String) {
         val key = "tmp_token:$token"
         redisTemplate.delete(key)
     }

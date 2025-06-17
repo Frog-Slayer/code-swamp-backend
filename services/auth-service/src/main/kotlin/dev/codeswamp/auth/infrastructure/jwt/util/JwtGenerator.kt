@@ -26,7 +26,7 @@ class JwtGenerator(
         val now = Instant.now()
         val value = Jwts.builder()
             .subject(user.username)
-            .content("userId", user.id.toString())
+            .claim("userId", user.id.toString())
             .issuedAt(Date.from(now))
             .expiration(Date.from(now.plusSeconds(accessTokenExpiration)))
             .signWith(secretKey)
