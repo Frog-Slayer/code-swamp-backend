@@ -49,6 +49,8 @@ dependencies {
 	implementation 'io.github.java-diff-utils:java-diff-utils:4.15'
 	implementation 'com.vladsch.flexmark:flexmark-all:0.64.8'
 
+	implementation 'org.springframework.kafka:spring-kafka'
+
 	implementation platform('com.google.cloud:libraries-bom:26.61.0')
 	implementation 'com.google.cloud:google-cloud-storage'
 	implementation 'org.springframework.boot:spring-boot-starter-actuator'
