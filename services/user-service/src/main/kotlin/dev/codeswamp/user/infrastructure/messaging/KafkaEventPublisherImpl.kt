@@ -2,7 +2,7 @@ package dev.codeswamp.user.infrastructure.messaging
 
 import dev.codeswamp.infrakafka.publisher.KafkaEventPublisher
 import dev.codeswamp.user.application.event.ApplicationEvent
-import dev.codeswamp.user.application.port.outgoing.EventPublisher
+import dev.codeswamp.user.application.port.outgoing.messaging.EventPublisher
 import dev.codeswamp.user.domain.user.DomainEvent
 import dev.codeswamp.user.infrastructure.messaging.mapper.ApplicationEventKafkaMapper
 import dev.codeswamp.user.infrastructure.messaging.mapper.DomainEventKafkaMapper

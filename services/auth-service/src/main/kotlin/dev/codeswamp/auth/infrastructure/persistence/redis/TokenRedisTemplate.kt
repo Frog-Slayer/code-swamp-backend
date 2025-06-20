@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import dev.codeswamp.auth.domain.model.token.ValidatedRefreshToken
+import dev.codeswamp.auth.infrastructure.persistence.redis.dto.RedisValidatedRefreshToken
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
@@ -15,10 +16,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer
 class TokenRedisTemplate (
     private val redisConnectionFactory: RedisConnectionFactory,
 ) {
-
     @Bean
-    fun refreshTokenTemplate(): RedisTemplate<String, ValidatedRefreshToken> {
-        val template = RedisTemplate<String, ValidatedRefreshToken>()
+    fun refreshTokenTemplate(): RedisTemplate<String, RedisValidatedRefreshToken> {
+        val template = RedisTemplate<String, RedisValidatedRefreshToken>()
         template.connectionFactory = redisConnectionFactory
         template.keySerializer = StringRedisSerializer()
 
@@ -27,7 +27,7 @@ class TokenRedisTemplate (
                registerModule(KotlinModule.Builder().build())
         }
 
-        template.valueSerializer = Jackson2JsonRedisSerializer(objectMapper, ValidatedRefreshToken::class.java)
+        template.valueSerializer = Jackson2JsonRedisSerializer(objectMapper, RedisValidatedRefreshToken::class.java)
 
         return template
     }

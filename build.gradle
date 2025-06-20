@@ -1,4 +1,5 @@
 plugins {
+	id 'java'
 	id 'org.jetbrains.kotlin.jvm' version '1.9.25' apply(false)
 	id 'org.jetbrains.kotlin.plugin.spring' version '1.9.25' apply(false)
 	id 'org.springframework.boot' version '3.4.5' apply(false)
@@ -12,17 +13,31 @@ allprojects {
 	repositories {
 		mavenCentral()
 	}
-}
-
-subprojects {
-	apply plugin: "org.jetbrains.kotlin.jvm"
-	apply plugin: "org.jetbrains.kotlin.plugin.spring"
-	apply plugin: 'org.springframework.boot'
-	apply plugin: 'io.spring.dependency-management'
 
 	java {
 		toolchain {
 			languageVersion = JavaLanguageVersion.of(17)
+		}
+	}
+}
+
+
+subprojects {
+	apply plugin: "org.jetbrains.kotlin.jvm"
+
+	dependencies {
+
+		implementation 'org.jetbrains.kotlin:kotlin-reflect'
+
+		implementation 'com.fasterxml.jackson.core:jackson-databind:2.19.0'
+		implementation 'com.fasterxml.jackson.module:jackson-module-kotlin:2.19.0'
+		implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.19.0'
+
+	}
+
+	configurations {
+		compileOnly {
+			extendsFrom annotationProcessor
 		}
 	}
 
@@ -32,35 +47,27 @@ subprojects {
 		}
 	}
 
-	configurations {
-		compileOnly {
-			extendsFrom annotationProcessor
-		}
-	}
-
-	allOpen {
-		annotation 'jakarta.persistence.Entity'
-		annotation 'jakarta.persistence.MappedSuperclass'
-		annotation 'jakarta.persistence.Embeddable'
-	}
-
 	tasks.named('test') {
 		useJUnitPlatform()
 	}
+}
+
+def springModules = [
+        "services:article-command",
+        "services:article-query",
+        "services:auth-service",
+        "services:user-service",
+        "services:image-service",
+        "shared:infra-kafka",
+]
+
+configure(springModules.collect { project(it)}) {
+	apply plugin: "org.jetbrains.kotlin.plugin.spring"
+	apply plugin: 'org.springframework.boot'
+	apply plugin: 'io.spring.dependency-management'
 
 	dependencies {
 		implementation 'org.springframework.boot:spring-boot-starter'
-
-		implementation 'org.jetbrains.kotlin:kotlin-reflect'
-		implementation 'com.fasterxml.jackson.module:jackson-module-kotlin'
-		implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-
-		testImplementation 'io.projectreactor:reactor-test'
 		testImplementation 'org.springframework.boot:spring-boot-starter-test'
-		testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
-		testImplementation 'io.mockk:mockk:1.14.2'
-		testImplementation 'org.assertj:assertj-core:3.27.3'
-		testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	}
 }
-

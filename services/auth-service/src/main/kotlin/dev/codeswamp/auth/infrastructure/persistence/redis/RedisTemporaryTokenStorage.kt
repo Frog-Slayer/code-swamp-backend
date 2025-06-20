@@ -21,15 +21,10 @@ class RedisTemporaryTokenStorage (
         redisTemplate.opsForValue().set( key, email, duration )
     }
 
-    override suspend fun get(token: String): String? {
+    override suspend fun getAndDelete(token: String): String? {
         val key = "tmp_token:$token"
         logger.info("Retrieving temporary token: $key")
-        val value = redisTemplate.opsForValue().get(key)
+        val value = redisTemplate.opsForValue().getAndDelete(key)
         return value
-    }
-
-    override suspend fun delete(token: String) {
-        val key = "tmp_token:$token"
-        redisTemplate.delete(key)
     }
 }

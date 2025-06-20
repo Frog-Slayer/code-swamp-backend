@@ -1,10 +1,11 @@
 package dev.codeswamp.user.presentation.controller
 
-import dev.codeswamp.user.application.port.outgoing.SignupTokenVerifier
 import dev.codeswamp.user.application.usecase.register.RegisterUserCommand
-import dev.codeswamp.user.application.usecase.UserApplicationService
-import dev.codeswamp.user.presentation.dto.request.SignUpRequestDto
+import dev.codeswamp.user.application.usecase.UserUseCaseFacade
+import dev.codeswamp.user.presentation.dto.request.SignUpRequest
+import dev.codeswamp.user.presentation.dto.response.SignUpSuccessResponse
 import org.slf4j.LoggerFactory
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -14,24 +15,25 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class UserController(
-    private val userApplicationService: UserApplicationService,
-    private val signupTokenVerifier: SignupTokenVerifier
+    private val userUseCaseFacade: UserUseCaseFacade,
 ) {
     private val logger = LoggerFactory.getLogger(javaClass)
 
     @PostMapping("/signup")
-    suspend fun signup(@RequestBody signUpRequestDto: SignUpRequestDto) {
+    suspend fun signup(@RequestBody signUpRequest: SignUpRequest) : ResponseEntity<SignUpSuccessResponse> {
         logger.info("signup")
 
-        userApplicationService.registerUserWithAuth(
+        val result =userUseCaseFacade.registerUserWithAuthentication(
             RegisterUserCommand(
-                token = signUpRequestDto.token,
-                email =  signUpRequestDto.email,
-                username = signUpRequestDto.username,
-                nickname = signUpRequestDto.nickname,
-                profileImageUrl = signUpRequestDto.profileImageUrl
+                token = signUpRequest.token,
+                email =  signUpRequest.email,
+                username = signUpRequest.username,
+                nickname = signUpRequest.nickname,
+                profileImageUrl = signUpRequest.profileImageUrl
             )
         )
+
+        return ResponseEntity.ok(SignUpSuccessResponse(result.otp))
     }
 
     @PatchMapping("/nickname")

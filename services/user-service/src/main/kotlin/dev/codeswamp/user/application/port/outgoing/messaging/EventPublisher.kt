@@ -1,4 +1,4 @@
-package dev.codeswamp.user.application.port.outgoing
+package dev.codeswamp.user.application.port.outgoing.messaging
 
 import dev.codeswamp.user.application.event.ApplicationEvent
 import dev.codeswamp.user.domain.user.DomainEvent

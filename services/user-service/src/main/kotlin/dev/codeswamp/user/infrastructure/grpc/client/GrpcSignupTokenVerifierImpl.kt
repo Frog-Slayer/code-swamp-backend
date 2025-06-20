@@ -1,16 +1,10 @@
 package dev.codeswamp.user.infrastructure.grpc.client
 
-import dev.codeswamp.grpc.AuthServiceGrpc
 import dev.codeswamp.grpc.AuthServiceGrpcKt
-import dev.codeswamp.grpc.CreateRootFolderRequest
-import dev.codeswamp.grpc.FolderServiceGrpcKt
 import dev.codeswamp.grpc.TokenAuthenticationRequest
-import dev.codeswamp.grpc.TokenAuthenticationRequestKt
-import dev.codeswamp.user.application.port.outgoing.RootFolderInitializer
 import dev.codeswamp.user.application.port.outgoing.SignupTokenVerifier
-import io.grpc.ManagedChannel
+import dev.codeswamp.user.application.port.outgoing.VerificationResult
 import net.devh.boot.grpc.client.inject.GrpcClient
-import org.springframework.stereotype.Component
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,14 +13,19 @@ class GrpcSignupTokenVerifierImpl(
     @GrpcClient("auth-service")
     private lateinit var stub: AuthServiceGrpcKt.AuthServiceCoroutineStub
 
-    override suspend fun verifyTokenAndCreateUser(signupToken: String, email: String): Long {
+    override suspend fun verifyTokenAndCreateUser(signupToken: String, email: String): VerificationResult {
         try {
             val request = TokenAuthenticationRequest.newBuilder()
                 .setEmail(email)
                 .setSignupToken(signupToken)
                 .build()
 
-            return stub.verifyTokenAndCreateUser(request).userId
+            val response = stub.verifyTokenAndCreateUser(request)
+
+            return VerificationResult(
+                response.userId,
+                response.otp
+            )
         } catch (e: Exception) {
             throw e
         }

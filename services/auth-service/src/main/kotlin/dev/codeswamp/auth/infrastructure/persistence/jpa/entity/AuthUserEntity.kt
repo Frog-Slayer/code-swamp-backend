@@ -22,7 +22,7 @@ data class AuthUserEntity(
     val role : Role
 ) {
     fun toDomain(): AuthUser {
-        return AuthUser(
+        return AuthUser.of(
             id = id,
             email = username,
             roles = listOf(role)

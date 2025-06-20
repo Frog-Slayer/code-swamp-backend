@@ -19,6 +19,12 @@ import dev.codeswamp.auth.domain.service.TokenValidator
 import dev.codeswamp.auth.domain.support.IdGenerator
 import org.springframework.stereotype.Service
 
+
+data class SignUpResult(
+    val userId: Long,
+    val otp: String,
+)
+
 @Service
 class AuthApplicationService (
     private val temporaryTokenService: TemporaryTokenService,
@@ -33,15 +39,18 @@ class AuthApplicationService (
     private val tokenParser: TokenParser,
 ) {
 
-    suspend fun signup(email: String, signupToken: String) : Long {
+    suspend fun signup(email: String, signupToken: String) :  SignUpResult{
         if (!temporaryTokenService.authenticate(signupToken, email))
             throw IllegalStateException("Invalid or expired signup token")
 
-        return authUserRepository.save(
+        return SignUpResult(
+            authUserRepository.save(
             AuthUser.createUser(
                 generateId = { idGenerator.generateId() },
                 email = email,
-        )).id
+            )).id,
+            temporaryTokenService.generateOtp(email)
+        )
     }
 
     suspend fun  findByUsername(username: String): AuthUser? {
@@ -74,7 +83,6 @@ class AuthApplicationService (
 
     suspend fun loginWithTemporaryToken(email: String, token: String): TemporaryLoginResult {
         val isTokenValid = temporaryTokenService.authenticate(token, email)
-        temporaryTokenService.deleteTemporaryToken(token)
 
         if (!isTokenValid) throw Exception("token is invalid")
 
@@ -83,7 +91,7 @@ class AuthApplicationService (
         val accessToken = tokenGenerator.generateAccessToken(authUser)
         val refreshToken = issueAndStoreRefreshToken(authUser)
 
-        val userProfile = requireNotNull(authUser.id?.let { userProfileFetcher.fetchUserProfile(it) })
+        val userProfile = userProfileFetcher.fetchUserProfile(authUser.id)
 
         return TemporaryLoginResult(
             ValidatedTokenPair(accessToken, refreshToken),
@@ -92,7 +100,7 @@ class AuthApplicationService (
     }
 
     suspend fun deleteRefreshTokenByUserId(userId: Long) {
-        val refreshToken = tokenRepository.findRefreshTokenByUserId(userId)?.let {
+        tokenRepository.findRefreshTokenByUserId(userId)?.let {
             tokenRepository.delete(it)
         }
     }

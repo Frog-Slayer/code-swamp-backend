@@ -18,7 +18,7 @@ class TokenValidator(
     fun validateAccessToken(accessToken: RawAccessToken) : ValidatedAccessToken {
         require( !accessToken.expired()) {"Token expired!"}
 
-        val authUser = AuthUser(
+        val authUser = AuthUser.of(
             id = accessToken.userId,
             email = accessToken.username,
             roles = accessToken.roles.map {
@@ -39,7 +39,7 @@ class TokenValidator(
         val savedRefreshToken = tokenRepository.findRefreshTokenByToken(refreshToken.value)
             ?: throw IllegalStateException("No user found for token ${refreshToken.value}")//TODO
 
-        val authUserId = savedRefreshToken.authUser.id ?: throw IllegalStateException("No user found")
+        val authUserId = savedRefreshToken.authUser.id
         val authUser = authUserRepository.findById(authUserId) ?: throw IllegalStateException("No user found")
 
         return ValidatedRefreshToken(

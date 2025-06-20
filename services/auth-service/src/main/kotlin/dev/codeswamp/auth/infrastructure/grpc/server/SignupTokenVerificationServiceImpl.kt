@@ -16,7 +16,10 @@ class SignupTokenVerificationServiceImpl (
     override suspend fun verifyTokenAndCreateUser(request: TokenAuthenticationRequest): UserIdResponse {
         try {
             val result = authApplicationService.signup(request.email, request.signupToken)
-            return UserIdResponse.newBuilder().setUserId(result).build()
+            return UserIdResponse.newBuilder()
+                .setUserId(result.userId)
+                .setOtp(result.otp)
+                .build()
         } catch (e: IllegalStateException) {
             throw Status.UNAUTHENTICATED.withDescription(e.message).asRuntimeException()
         } catch (e : Exception) {

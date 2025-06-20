@@ -1,12 +1,8 @@
 package dev.codeswamp.user.infrastructure.persistence.entity
 
-import dev.codeswamp.user.domain.user.model.Nickname
 import dev.codeswamp.user.domain.user.model.User
-import dev.codeswamp.user.domain.user.model.Username
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 

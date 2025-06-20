@@ -2,7 +2,7 @@ package dev.codeswamp.user.application.usecase.register
 
 import dev.codeswamp.user.application.event.AuthUserRollbackRequestedEvent
 import dev.codeswamp.user.application.exception.InvalidSignupTokenException
-import dev.codeswamp.user.application.port.outgoing.EventPublisher
+import dev.codeswamp.user.application.port.outgoing.messaging.EventPublisher
 import dev.codeswamp.user.application.port.outgoing.SignupTokenVerifier
 import dev.codeswamp.user.application.transaction.UserTransactionalService
 import dev.codeswamp.user.domain.user.model.User
@@ -15,12 +15,13 @@ class RegisterUserUseCaseImpl(
     private val signupTokenVerifier: SignupTokenVerifier,
 ) : RegisterUserUseCase {
 
-    override suspend fun handle(command: RegisterUserCommand) {
+    override suspend fun handle(command: RegisterUserCommand) : RegisterUserResult {
+
         try {
-            val authUserId = signupTokenVerifier.verifyTokenAndCreateUser(command.token, command.email)//GRPC
+            val verificationResult = signupTokenVerifier.verifyTokenAndCreateUser(command.token, command.email)
 
             val user = userTransactionalService.create(
-                authUserId,
+                verificationResult.userId,
                 command.username,
                 command.nickname,
                 command.profileImageUrl
@@ -28,6 +29,10 @@ class RegisterUserUseCaseImpl(
 
             val events = user.pullEvents()
             events.forEach {  eventPublisher.publish(it) }
+
+            return RegisterUserResult(
+                otp = verificationResult.otp
+            )
         } catch (e : InvalidSignupTokenException) {//authUser가 만들어지지 않았음이 확실한 경우
             throw e
         } catch (e : Exception) {//그외 : 보상

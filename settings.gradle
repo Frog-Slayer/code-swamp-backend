@@ -11,4 +11,3 @@ include(
         "shared:infra-kafka",
         "shared:id-generator"
 )
-include 'shared:id-generator'
