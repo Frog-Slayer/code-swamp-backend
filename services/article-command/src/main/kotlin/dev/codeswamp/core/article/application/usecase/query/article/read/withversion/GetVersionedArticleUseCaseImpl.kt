@@ -1,9 +1,9 @@
 package dev.codeswamp.core.article.application.usecase.query.article.read.withversion
 
 import dev.codeswamp.core.article.application.cache.FolderDeletionCache
-import dev.codeswamp.core.article.application.usecase.query.article.read.ReadArticleResult
 import dev.codeswamp.core.article.application.exception.article.ArticleNotFoundException
 import dev.codeswamp.core.article.application.exception.folder.FolderNotFoundException
+import dev.codeswamp.core.article.application.usecase.query.article.read.ReadArticleResult
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
 import dev.codeswamp.core.article.domain.article.service.ArticleContentReconstructor
 import org.springframework.stereotype.Service

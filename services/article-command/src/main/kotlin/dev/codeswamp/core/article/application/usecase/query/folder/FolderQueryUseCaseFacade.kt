@@ -1,6 +1,5 @@
 package dev.codeswamp.core.article.application.usecase.query.folder
 
-import dev.codeswamp.core.article.application.usecase.command.folder.FolderCommandUseCaseFacade
 import dev.codeswamp.core.article.application.usecase.query.folder.getuserfolders.GetAllFoldersForUserQuery
 import dev.codeswamp.core.article.application.usecase.query.folder.getuserfolders.GetAllFoldersForUserResult
 import dev.codeswamp.core.article.application.usecase.query.folder.getuserfolders.GetAllFoldersForUserUseCase

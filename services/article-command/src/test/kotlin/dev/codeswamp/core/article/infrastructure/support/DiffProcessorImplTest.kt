@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.infrastructure.support
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import kotlin.test.Test
 
 class DiffProcessorImplTest {

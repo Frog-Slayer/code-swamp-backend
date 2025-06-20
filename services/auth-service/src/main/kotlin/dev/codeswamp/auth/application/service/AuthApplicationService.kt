@@ -16,6 +16,7 @@ import dev.codeswamp.auth.domain.service.RefreshTokenRotator
 import dev.codeswamp.auth.domain.service.TokenGenerator
 import dev.codeswamp.auth.domain.service.TokenParser
 import dev.codeswamp.auth.domain.service.TokenValidator
+import dev.codeswamp.auth.domain.support.IdGenerator
 import org.springframework.stereotype.Service
 
 @Service
@@ -25,7 +26,7 @@ class AuthApplicationService (
     private val authUserRepository: AuthUserRepository,
 
     private val tokenRepository: TokenRepository,
-
+    private val idGenerator: IdGenerator,
     private val tokenValidator: TokenValidator,
     private val tokenGenerator: TokenGenerator,
     private val tokenRotator: RefreshTokenRotator,
@@ -36,10 +37,11 @@ class AuthApplicationService (
         if (!temporaryTokenService.authenticate(signupToken, email))
             throw IllegalStateException("Invalid or expired signup token")
 
-        return authUserRepository.save(AuthUser(
-            username = email,
-            roles = listOf(Role.USER)
-        )).id ?: throw RuntimeException("Failed to create user")
+        return authUserRepository.save(
+            AuthUser.createUser(
+                generateId = { idGenerator.generateId() },
+                email = email,
+        )).id
     }
 
     suspend fun  findByUsername(username: String): AuthUser? {

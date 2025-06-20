@@ -6,7 +6,7 @@ import com.google.cloud.storage.Storage
 import dev.codeswamp.global.image.application.ImageStorage
 import dev.codeswamp.global.image.infrastructure.config.GcsProperties
 import org.springframework.stereotype.Component
-import java.util.UUID
+import java.util.*
 
 @Component
 class GcsImageStorage(

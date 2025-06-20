@@ -2,17 +2,11 @@ package dev.codeswamp.core.user.domain.service
 
 
 import dev.codeswamp.core.user.domain.model.Nickname
-import dev.codeswamp.global.auth.domain.model.Role
 import dev.codeswamp.core.user.domain.model.User
 import dev.codeswamp.core.user.domain.model.Username
-import dev.codeswamp.core.user.domain.repository.UserRepository
-import dev.codeswamp.core.user.infrastructure.persistence.repository.UserJpaRepository
-
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.hibernate.exception.ConstraintViolationException
 import org.junit.jupiter.api.BeforeAll
-
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertDoesNotThrow

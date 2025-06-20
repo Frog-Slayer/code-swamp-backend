@@ -1,11 +1,8 @@
-package dev.codeswamp.core.article.infrastructure.support
+package dev.codeswamp
 
-import dev.codeswamp.core.article.domain.support.IdGenerator
-import org.springframework.stereotype.Component
 import java.time.Instant
 
-@Component
-object SnowflakeIdGenerator : IdGenerator {
+object SnowflakeIdGenerator {
     private const val EPOCH = 1748790000
     private const val WORKER_ID_BITS = 10L
     private const val SEQUENCE_BITS = 12L
@@ -26,7 +23,7 @@ object SnowflakeIdGenerator : IdGenerator {
     }
 
     @Synchronized
-    override fun generateId(): Long {
+    fun generateId(): Long {
         var timestamp = timeGen()
         if (timestamp < lastTimestamp) {
             throw RuntimeException("Clock moved backwards. Refusing to generate id")

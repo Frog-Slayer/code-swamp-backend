@@ -1,7 +1,7 @@
 package dev.codeswamp.core.article.infrastructure.persistence.jpa.repository
 
-import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.VersionStateJpa
 import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.VersionEntity
+import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.VersionStateJpa
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

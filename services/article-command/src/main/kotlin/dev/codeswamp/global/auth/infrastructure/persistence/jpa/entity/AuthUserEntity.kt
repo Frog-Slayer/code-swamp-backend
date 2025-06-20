@@ -2,13 +2,7 @@ package dev.codeswamp.global.auth.infrastructure.persistence.jpa.entity
 
 import dev.codeswamp.global.auth.domain.model.AuthUser
 import dev.codeswamp.global.auth.domain.model.Role
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity
 data class AuthUserEntity(

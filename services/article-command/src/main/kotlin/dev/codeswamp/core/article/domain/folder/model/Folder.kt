@@ -3,10 +3,10 @@ package dev.codeswamp.core.article.domain.folder.model
 import dev.codeswamp.core.article.domain.AggregateRoot
 import dev.codeswamp.core.article.domain.ArticleDomainEvent
 import dev.codeswamp.core.article.domain.folder.event.FolderDeletionEvent
+import dev.codeswamp.core.article.domain.folder.event.FolderPathChangedEvent
 import dev.codeswamp.core.article.domain.folder.exception.FolderMoveNotAllowedException
 import dev.codeswamp.core.article.domain.folder.exception.ForbiddenFolderAccessException
 import dev.codeswamp.core.article.domain.folder.exception.RootFolderRenameException
-import dev.codeswamp.core.article.domain.folder.event.FolderPathChangedEvent
 import java.time.Instant
 
 data class Folder private constructor(

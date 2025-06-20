@@ -2,8 +2,8 @@ package dev.codeswamp.global.auth.domain.service.impl
 
 import dev.codeswamp.global.auth.domain.model.AuthUser
 import dev.codeswamp.global.auth.domain.model.token.RawAccessToken
-import dev.codeswamp.global.auth.domain.model.token.ValidatedAccessToken
 import dev.codeswamp.global.auth.domain.model.token.RawRefreshToken
+import dev.codeswamp.global.auth.domain.model.token.ValidatedAccessToken
 import dev.codeswamp.global.auth.domain.model.token.ValidatedRefreshToken
 import dev.codeswamp.global.auth.domain.repository.TokenRepository
 import dev.codeswamp.global.auth.domain.service.AuthUserService

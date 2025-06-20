@@ -56,13 +56,4 @@ class AuthController(
             userProfile
         )
     }
-
-    @GetMapping("/test")
-    fun test() : TestJSON {
-        return TestJSON()
-    }
 }
-
-data class TestJSON (
-    val testVal : String = "success"
-)

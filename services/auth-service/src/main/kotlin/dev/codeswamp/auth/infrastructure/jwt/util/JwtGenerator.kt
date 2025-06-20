@@ -25,7 +25,7 @@ class JwtGenerator(
     override fun generateAccessToken(user: AuthUser): ValidatedAccessToken {
         val now = Instant.now()
         val value = Jwts.builder()
-            .subject(user.username)
+            .subject(user.email)
             .claim("userId", user.id.toString())
             .issuedAt(Date.from(now))
             .expiration(Date.from(now.plusSeconds(accessTokenExpiration)))
@@ -42,7 +42,7 @@ class JwtGenerator(
     override fun generateRefreshToken(user: AuthUser): ValidatedRefreshToken {
         val now = Instant.now()
         val value = Jwts.builder()
-            .subject(user.username) //TODO
+            .subject(user.email) //TODO
             .issuedAt(Date.from(now))
             .expiration(Date.from(now.plusSeconds(refreshTokenExpiration)))
             .signWith(secretKey)

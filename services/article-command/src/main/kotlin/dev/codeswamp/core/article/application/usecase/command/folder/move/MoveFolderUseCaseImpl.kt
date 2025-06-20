@@ -1,6 +1,5 @@
 package dev.codeswamp.core.article.application.usecase.command.folder.move
 
-import dev.codeswamp.core.article.application.cache.FolderDeletionCache
 import dev.codeswamp.core.article.application.exception.folder.FolderNotFoundException
 import dev.codeswamp.core.article.domain.folder.repository.FolderRepository
 import dev.codeswamp.core.article.domain.folder.service.DuplicatedFolderNameChecker

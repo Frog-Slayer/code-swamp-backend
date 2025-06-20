@@ -1,7 +1,5 @@
 package dev.codeswamp.core.article.domain
 
-import dev.codeswamp.core.article.domain.ArticleDomainEvent
-
 abstract class AggregateRoot {
     private val domainEvents = mutableListOf<ArticleDomainEvent>()
 

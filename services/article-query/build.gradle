@@ -6,26 +6,8 @@ plugins {
 	id 'org.jetbrains.kotlin.plugin.jpa' version '1.9.25'
 }
 
-group = 'dev.codeswamp'
-version = '0.0.1-SNAPSHOT'
-
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
-}
-
-configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-}
-
-repositories {
-	mavenCentral()
-}
-
 dependencies {
+	implementation project(":shared:id-generator")
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-data-neo4j'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'

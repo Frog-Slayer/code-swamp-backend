@@ -1,11 +1,7 @@
 package dev.codeswamp.core.article.infrastructure.persistence.jpa.entity
 
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
-import jakarta.persistence.UniqueConstraint
+import jakarta.persistence.*
 import java.time.Instant
 
 @Entity

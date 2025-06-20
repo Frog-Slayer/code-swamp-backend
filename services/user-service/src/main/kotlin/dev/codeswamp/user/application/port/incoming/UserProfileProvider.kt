@@ -17,7 +17,7 @@ class UserProfileProvider(
 
         return UserProfile(
             nickname= user.nickname.value,
-            profileImage = user.profileUrl ?: ""
+            profileImage = user.profileImage ?: ""
         )
     }
 }

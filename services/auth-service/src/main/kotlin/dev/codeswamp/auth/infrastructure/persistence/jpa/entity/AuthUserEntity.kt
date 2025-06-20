@@ -6,15 +6,12 @@ import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 
 @Entity
 data class AuthUserEntity(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id: Long,
 
     @Column(unique = true)
     val username: String,
@@ -27,7 +24,7 @@ data class AuthUserEntity(
     fun toDomain(): AuthUser {
         return AuthUser(
             id = id,
-            username = username,
+            email = username,
             roles = listOf(role)
         )
     }
@@ -36,7 +33,7 @@ data class AuthUserEntity(
         fun from(authUser: AuthUser): AuthUserEntity {
             return AuthUserEntity(
                 id = authUser.id,
-                username = authUser.username,
+                username = authUser.email,
                 role = authUser.roles.first() //TODO
             )
         }

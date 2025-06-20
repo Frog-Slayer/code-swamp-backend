@@ -4,7 +4,6 @@ import dev.codeswamp.global.auth.domain.model.token.RawAccessToken
 import dev.codeswamp.global.auth.infrastructure.security.user.CustomUserDetails
 import org.springframework.security.authentication.AbstractAuthenticationToken
 import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.userdetails.UserDetails
 
 sealed class Principal {
     data class AccessToken(val token: RawAccessToken) : Principal()

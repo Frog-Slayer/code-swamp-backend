@@ -93,7 +93,7 @@ class OAuth2LoginSuccessHandler(
             .fromUriString(frontendCallbackUrl)
             .queryParam("isNewUser", false)
             .queryParam("accessToken", accessToken.value)
-            .queryParam("email", user.username)
+            .queryParam("email", user.email)
             .queryParam("name",userProfile.nickname)//여기
             .queryParam("profileImage", userProfile.profileImage)//여기
         .build().encode().toUriString()

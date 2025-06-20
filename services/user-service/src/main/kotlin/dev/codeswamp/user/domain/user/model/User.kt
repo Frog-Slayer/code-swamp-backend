@@ -8,18 +8,18 @@ data class User private constructor(
     val id: Long,
     val username: Username,//변경 불가(사용자 ID)
     val nickname: Nickname,
-    val profileUrl: String? = null,
+    val profileImage: String? = null,
 ) : AggregateRoot() {
     companion object {
         fun of (
             id: Long,
             username: String,
             nickname: String,
-            profileUrl: String? = null) = User(
+            profileImage: String? = null) = User(
                 id = id,
                 username = Username.of(username),
                 nickname = Nickname.of(nickname),
-                profileUrl = profileUrl
+                profileImage = profileImage
         )
     }
 
@@ -29,9 +29,9 @@ data class User private constructor(
         )
     }
 
-    fun modifyProfileUrl(profileUrl: String?) : User {
+    fun modifyProfileImage(profileImage: String?) : User {
         return this.copy(
-            profileUrl = profileUrl
+            profileImage = profileImage
         )
     }
 

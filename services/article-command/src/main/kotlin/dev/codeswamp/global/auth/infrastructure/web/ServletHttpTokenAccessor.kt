@@ -4,8 +4,6 @@ import dev.codeswamp.global.auth.application.dto.ValidatedTokenPair
 import dev.codeswamp.global.auth.application.service.AuthApplicationService
 import dev.codeswamp.global.auth.domain.model.token.RawAccessToken
 import dev.codeswamp.global.auth.domain.model.token.RawRefreshToken
-import dev.codeswamp.global.auth.domain.model.token.ValidatedAccessToken
-import dev.codeswamp.global.auth.domain.model.token.ValidatedRefreshToken
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

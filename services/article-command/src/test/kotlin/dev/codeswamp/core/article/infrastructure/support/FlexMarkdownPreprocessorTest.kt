@@ -1,6 +1,5 @@
 package dev.codeswamp.core.article.infrastructure.support
 
-import org.junit.jupiter.api.Assertions.*
 import kotlin.test.Test
 
 class FlexMarkdownPreprocessorTest {

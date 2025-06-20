@@ -4,7 +4,6 @@ import dev.codeswamp.core.article.domain.article.model.Version
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
 import dev.codeswamp.core.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
-import dev.codeswamp.core.article.domain.article.model.vo.Title
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
 import dev.codeswamp.core.article.domain.article.repository.VersionRepository
 import dev.codeswamp.core.article.infrastructure.exception.article.ArticleVersionMismatchException

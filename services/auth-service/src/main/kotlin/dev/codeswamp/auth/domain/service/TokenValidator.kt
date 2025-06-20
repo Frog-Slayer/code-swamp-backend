@@ -20,7 +20,7 @@ class TokenValidator(
 
         val authUser = AuthUser(
             id = accessToken.userId,
-            username = accessToken.username,
+            email = accessToken.username,
             roles = accessToken.roles.map {
                 Role.from(it) ?: throw IllegalArgumentException("Invalid role value!")
             }

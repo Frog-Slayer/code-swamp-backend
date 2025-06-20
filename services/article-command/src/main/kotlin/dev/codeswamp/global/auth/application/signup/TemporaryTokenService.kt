@@ -1,7 +1,7 @@
 package dev.codeswamp.global.auth.application.signup
 
 import org.springframework.stereotype.Service
-import java.util.UUID
+import java.util.*
 
 @Service
 class TemporaryTokenService(

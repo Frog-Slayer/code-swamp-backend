@@ -1,9 +1,9 @@
 package dev.codeswamp.core.article.application.usecase.query.article.read.byslug
 
-import dev.codeswamp.core.article.application.readmodel.repository.PublishedArticleRepository
-import dev.codeswamp.core.article.application.usecase.query.article.read.ReadArticleResult
 import dev.codeswamp.core.article.application.exception.article.ArticleNotFoundException
 import dev.codeswamp.core.article.application.exception.folder.FolderNotFoundException
+import dev.codeswamp.core.article.application.readmodel.repository.PublishedArticleRepository
+import dev.codeswamp.core.article.application.usecase.query.article.read.ReadArticleResult
 import dev.codeswamp.core.article.domain.folder.repository.FolderRepository
 import org.springframework.stereotype.Service
 

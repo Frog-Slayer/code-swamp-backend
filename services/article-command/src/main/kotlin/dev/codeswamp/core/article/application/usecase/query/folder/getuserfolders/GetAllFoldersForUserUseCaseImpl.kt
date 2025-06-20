@@ -1,7 +1,6 @@
 package dev.codeswamp.core.article.application.usecase.query.folder.getuserfolders
 
 import dev.codeswamp.core.article.domain.folder.repository.FolderRepository
-import dev.codeswamp.core.article.infrastructure.persistence.jpa.entity.FolderEntity
 import org.springframework.stereotype.Service
 
 @Service

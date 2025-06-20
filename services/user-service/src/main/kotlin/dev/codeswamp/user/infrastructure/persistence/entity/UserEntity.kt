@@ -13,10 +13,8 @@ import jakarta.persistence.Table
 @Entity
 @Table(name = "users")
 data class UserEntity (
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+    val id: Long,
 
     @Column(unique = true)
     val username: String,
@@ -24,14 +22,14 @@ data class UserEntity (
     @Column(unique = true)
     var nickname: String,
 
-    var profileUrl: String? = null,
+    var profileImage: String? = null,
 ) {
     fun toDomain(): User {
-        return User(
+        return User.of(
             id = id,
-            username = Username.Companion.of(username),
-            nickname = Nickname.Companion.of(nickname),
-            profileUrl = profileUrl,
+            username = username,
+            nickname = nickname,
+            profileImage = profileImage,
         )
     }
 
@@ -41,7 +39,7 @@ data class UserEntity (
                 id = user.id,
                 username = user.username.value,
                 nickname = user.nickname.value,
-                profileUrl = user.profileUrl,
+                profileImage = user.profileImage,
             )
         }
     }

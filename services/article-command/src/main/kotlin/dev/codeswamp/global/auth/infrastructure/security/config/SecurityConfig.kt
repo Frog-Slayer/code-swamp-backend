@@ -4,9 +4,9 @@ import dev.codeswamp.global.auth.application.service.AuthApplicationService
 import dev.codeswamp.global.auth.infrastructure.security.filter.TokenAuthenticationFilter
 import dev.codeswamp.global.auth.infrastructure.security.handler.CustomLogoutHandler
 import dev.codeswamp.global.auth.infrastructure.security.handler.CustomLogoutSuccessHandler
-import dev.codeswamp.global.auth.infrastructure.security.oauth2.service.CustomOAuth2Service
 import dev.codeswamp.global.auth.infrastructure.security.oauth2.handler.OAuth2LoginFailureHandler
 import dev.codeswamp.global.auth.infrastructure.security.oauth2.handler.OAuth2LoginSuccessHandler
+import dev.codeswamp.global.auth.infrastructure.security.oauth2.service.CustomOAuth2Service
 import dev.codeswamp.global.auth.infrastructure.security.provider.TokenAuthenticationProvider
 import dev.codeswamp.global.auth.infrastructure.security.util.FilterSkipMatcher
 import dev.codeswamp.global.auth.infrastructure.web.HttpTokenAccessor

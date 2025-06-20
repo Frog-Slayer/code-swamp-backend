@@ -1,7 +1,7 @@
 package dev.codeswamp.global.auth.presentation.controller
 
-import dev.codeswamp.global.auth.application.service.AuthApplicationService
 import dev.codeswamp.global.auth.application.acl.UserProfileFetcher
+import dev.codeswamp.global.auth.application.service.AuthApplicationService
 import dev.codeswamp.global.auth.application.signup.TemporaryTokenService
 import dev.codeswamp.global.auth.infrastructure.web.HttpTokenAccessor
 import dev.codeswamp.global.auth.presentation.dto.AuthResult
@@ -9,11 +9,7 @@ import dev.codeswamp.global.auth.presentation.dto.TemporaryLoginRequest
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.LoggerFactory
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/auth")

@@ -4,7 +4,6 @@ import dev.codeswamp.global.auth.infrastructure.security.user.CustomUserDetails
 import dev.codeswamp.global.image.application.ImageService
 import dev.codeswamp.global.image.application.dto.UploadImageCommand
 import dev.codeswamp.global.image.presentation.dto.ImageUploadResponse
-import org.springframework.http.ResponseEntity
 import org.springframework.security.access.AccessDeniedException
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PostMapping

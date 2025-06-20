@@ -11,7 +11,8 @@ import dev.codeswamp.core.article.domain.support.DiffProcessor
 import dev.codeswamp.core.article.domain.support.IdGenerator
 import dev.codeswamp.core.article.infrastructure.persistence.graph.repository.VersionNodeRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest

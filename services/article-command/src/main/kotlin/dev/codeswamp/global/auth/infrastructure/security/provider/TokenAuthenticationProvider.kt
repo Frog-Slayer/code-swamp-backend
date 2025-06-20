@@ -3,7 +3,6 @@ package dev.codeswamp.global.auth.infrastructure.security.provider
 import dev.codeswamp.global.auth.application.service.AuthApplicationService
 import dev.codeswamp.global.auth.domain.model.token.RawAccessToken
 import dev.codeswamp.global.auth.infrastructure.security.token.AuthenticationToken
-import dev.codeswamp.global.auth.infrastructure.security.token.Principal
 import dev.codeswamp.global.auth.infrastructure.security.user.CustomUserDetails
 import org.slf4j.LoggerFactory
 import org.springframework.security.authentication.AuthenticationProvider

@@ -1,18 +1,13 @@
 package dev.codeswamp.global.auth.domain.service
 
-import dev.codeswamp.global.auth.domain.model.Role
 import dev.codeswamp.global.auth.domain.model.AuthUser
+import dev.codeswamp.global.auth.domain.model.Role
 import dev.codeswamp.global.auth.domain.util.TokenParser
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import java.lang.IllegalStateException
 import kotlin.test.assertNotNull
 
 @DisplayName("TokenService 단위 테스트")
