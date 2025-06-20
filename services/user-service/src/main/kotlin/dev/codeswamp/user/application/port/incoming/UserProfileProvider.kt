@@ -1,6 +1,6 @@
 package dev.codeswamp.user.application.port.incoming
 
-import dev.codeswamp.user.domain.repository.UserRepository
+import dev.codeswamp.user.domain.user.repository.UserRepository
 import org.springframework.stereotype.Service
 
 data class UserProfile (

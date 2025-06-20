@@ -1,8 +1,8 @@
 package dev.codeswamp.user.presentation.controller
 
 import dev.codeswamp.user.application.port.outgoing.SignupTokenVerifier
-import dev.codeswamp.user.application.dto.SignUpCommand
-import dev.codeswamp.user.application.service.UserApplicationService
+import dev.codeswamp.user.application.usecase.register.RegisterUserCommand
+import dev.codeswamp.user.application.usecase.UserApplicationService
 import dev.codeswamp.user.presentation.dto.request.SignUpRequestDto
 import org.slf4j.LoggerFactory
 import org.springframework.web.bind.annotation.GetMapping
@@ -22,11 +22,11 @@ class UserController(
     @PostMapping("/signup")
     suspend fun signup(@RequestBody signUpRequestDto: SignUpRequestDto) {
         logger.info("signup")
-        val userId = signupTokenVerifier.verifyTokenAndCreateUser(signUpRequestDto.token, signUpRequestDto.email)
 
-        userApplicationService.signUp(
-            SignUpCommand(
-                userId = userId,
+        userApplicationService.registerUserWithAuth(
+            RegisterUserCommand(
+                token = signUpRequestDto.token,
+                email =  signUpRequestDto.email,
                 username = signUpRequestDto.username,
                 nickname = signUpRequestDto.nickname,
                 profileImageUrl = signUpRequestDto.profileImageUrl

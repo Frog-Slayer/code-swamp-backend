@@ -1,9 +1,9 @@
 package dev.codeswamp.user.infrastructure.persistence.repository
 
-import dev.codeswamp.user.domain.model.Nickname
-import dev.codeswamp.user.domain.model.User
-import dev.codeswamp.user.domain.model.Username
-import dev.codeswamp.user.domain.repository.UserRepository
+import dev.codeswamp.user.domain.user.model.Nickname
+import dev.codeswamp.user.domain.user.model.User
+import dev.codeswamp.user.domain.user.model.Username
+import dev.codeswamp.user.domain.user.repository.UserRepository
 import dev.codeswamp.user.infrastructure.persistence.entity.UserEntity
 import org.springframework.stereotype.Repository
 

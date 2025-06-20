@@ -1,4 +1,4 @@
-package dev.codeswamp.user.domain.model
+package dev.codeswamp.user.domain.user.model
 
 //TODO -> to value class
 class Nickname private constructor(val value: String) {
