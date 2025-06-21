@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.infrastructure.support
 
-import dev.codeswamp.article.infrastructure.support.FlexMarkdownPreprocessor
+import dev.codeswamp.articlecommand.infrastructure.support.FlexMarkdownPreprocessor
 import kotlin.test.Test
 
 class FlexMarkdownPreprocessorTest {

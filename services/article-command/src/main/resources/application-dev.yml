@@ -1,15 +1,10 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5433/mydb
-    driver-class-name: org.postgresql.Driver
+  config:
+    import: 'classpath:infra-kafka-application.yml'
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5433/mydb
     username: spring
     password: boot
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
   data:
     redis:
       host: localhost
@@ -20,15 +15,14 @@ spring:
     authentication:
       username: neo4j
       password: codeswamp
-
-meilisearch:
-  url: http://localhost:7700
-  api-key: Uyflv5mWWF3Apyp23PhvAPyFpVnJB6CC_coToMPFcrk
+  kafka:
+    consumer:
+      group-id: article-command
 
 logging:
   level:
     org.springframework.context: DEBUG
-    org.springframework.data.neo4j : DEBUG
+    org.springframework.data.neo4j: DEBUG
     org.springframework.security: DEBUG
 
 server:

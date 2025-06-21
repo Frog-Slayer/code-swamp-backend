@@ -53,12 +53,12 @@ subprojects {
 }
 
 def springModules = [
-        "services:article-command",
-        "services:article-query",
-        "services:auth-service",
-        "services:user-service",
-        "services:image-service",
-        "shared:infra-kafka",
+        ":services:article-command",
+        ":services:article-query",
+        ":services:auth-service",
+        ":services:user-service",
+        ":services:image-service",
+        ":shared:infra-kafka",
 ]
 
 configure(springModules.collect { project(it)}) {

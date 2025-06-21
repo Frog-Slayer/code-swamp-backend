@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.infrastructure.support
 
-import dev.codeswamp.article.infrastructure.support.DiffProcessorImpl
+import dev.codeswamp.articlecommand.infrastructure.support.DiffProcessorImpl
 import org.junit.jupiter.api.Assertions.assertEquals
 import kotlin.test.Test
 

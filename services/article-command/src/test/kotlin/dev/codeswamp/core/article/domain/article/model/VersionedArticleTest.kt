@@ -1,7 +1,7 @@
 package dev.codeswamp.core.article.domain.article.model
 
-import dev.codeswamp.article.domain.article.event.ArticlePublishedEvent
-import dev.codeswamp.article.domain.article.event.ArticleVersionCreatedEvent
+import dev.codeswamp.article.domain.article.event.PublishedEvent
+import dev.codeswamp.article.domain.article.event.VersionCreatedEvent
 import dev.codeswamp.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
 import org.assertj.core.api.Assertions.assertThat
@@ -41,23 +41,24 @@ class VersionedArticleTest {
         assertThat(article.currentVersion.fullContent).isEqualTo("full-content")
     }
 
-    private fun baseArticle() = VersionedArticle.create (
-            id = id,
-            authorId = authorId,
-            createdAt = createdAt,
-            metadata = metadata,
-            diff = "full-content",
-            fullContent = "full-content",
-            versionId = 1L,
-            title= "title"
+    private fun baseArticle() = VersionedArticle.create(
+        id = id,
+        authorId = authorId,
+        createdAt = createdAt,
+        metadata = metadata,
+        diff = "full-content",
+        fullContent = "full-content",
+        versionId = 1L,
+        title = "title"
     )
 
     @Test
     fun `diff가 없고 title 변화가 없으면 기존 version을 반환`() {
         val article = baseArticle()
 
-        val updated = article.updateVersionIfChanged(diff = "", title = "title", generateId = { 2L }, createdAt = Instant.now(),
-            shouldRebase = { version -> false},
+        val updated = article.updateVersionIfChanged(
+            diff = "", title = "title", generateId = { 2L }, createdAt = Instant.now(),
+            shouldRebase = { version -> false },
             reconstructFullContent = { version -> "" }
         )
 
@@ -68,7 +69,8 @@ class VersionedArticleTest {
     fun `diff가 있으면 새 version을 반환`() {
         val article = baseArticle()
 
-        val updated = article.updateVersionIfChanged(diff = "+++updated", title = "title", generateId = { 2L }, createdAt = Instant.now(),
+        val updated = article.updateVersionIfChanged(
+            diff = "+++updated", title = "title", generateId = { 2L }, createdAt = Instant.now(),
             shouldRebase = { version -> false },
             reconstructFullContent = { version -> "" }
         )
@@ -77,14 +79,15 @@ class VersionedArticleTest {
         assertThat(updated.currentVersion.diff).isEqualTo("+++updated")
         assertThat(updated.currentVersion.id).isEqualTo(2L)
 
-        assertThat(updated.pullEvents().first()).isInstanceOf(ArticleVersionCreatedEvent::class.java)
+        assertThat(updated.pullEvents().first()).isInstanceOf(VersionCreatedEvent::class.java)
     }
 
     @Test
     fun `title 변화 시 version을 반환`() {
         val article = baseArticle()
 
-        val updated = article.updateVersionIfChanged(diff = "", title = "title2", generateId = { 2L }, createdAt = Instant.now(),
+        val updated = article.updateVersionIfChanged(
+            diff = "", title = "title2", generateId = { 2L }, createdAt = Instant.now(),
             shouldRebase = { version -> false },
             reconstructFullContent = { version -> "" }
         )
@@ -93,27 +96,27 @@ class VersionedArticleTest {
         assertThat(updated.currentVersion.title?.value).isEqualTo("title2")
         assertThat(updated.currentVersion.id).isEqualTo(2L)
 
-        assertThat(updated.pullEvents().first()).isInstanceOf(ArticleVersionCreatedEvent::class.java)
+        assertThat(updated.pullEvents().first()).isInstanceOf(VersionCreatedEvent::class.java)
     }
 
     @Test
     fun `publish 시 slug 중복 검사 후 published 상태로 변경하고 이벤트를 추가`() {
         val article = baseArticle()
-        val checker = {_: VersionedArticle, _:Long, _: Slug -> }
+        val checker = { _: VersionedArticle, _: Long, _: Slug -> }
 
         val published = article.publish(checker)
 
         assertThat(published.isPublished).isTrue()
         assertThat(published.currentVersion.state).isEqualTo(VersionState.PUBLISHED)
 
-        assertThat(published.pullEvents().first()).isInstanceOf(ArticlePublishedEvent::class.java)
+        assertThat(published.pullEvents().first()).isInstanceOf(PublishedEvent::class.java)
     }
 
 
     @Test
     fun `published 상태에서 archive 시 예외 발생`() {
         val article = baseArticle()
-        val checker = {_: VersionedArticle, _:Long, _: Slug -> }
+        val checker = { _: VersionedArticle, _: Long, _: Slug -> }
 
         val published = article.publish(checker)
 

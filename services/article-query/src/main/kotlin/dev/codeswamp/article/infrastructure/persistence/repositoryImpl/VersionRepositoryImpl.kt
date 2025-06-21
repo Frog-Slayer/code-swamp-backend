@@ -20,7 +20,7 @@ class VersionRepositoryImpl(
     private val baseVersionJpaRepository: BaseVersionJpaRepository,
     private val eventPublisher: ApplicationEventPublisher
 ) : VersionRepository {
-    override fun save(version: Version): Version {
+    override suspend fun save(version: Version): Version {
         val entity = VersionEntity.Companion.from(version)
         val existingEntity = versionJpaRepository.findByIdOrNull(entity.id)
 
@@ -46,31 +46,31 @@ class VersionRepositoryImpl(
         return ret;
     }
 
-    override fun findByIdOrNull(id: Long): Version? {
+    override suspend fun findByIdOrNull(id: Long): Version? {
         return versionJpaRepository.findByIdOrNull(id)?.toDomain()
     }
 
-    override fun deleteAllByArticleIdIn(articleIds: List<Long>) {
+    override suspend fun deleteAllByArticleIdIn(articleIds: List<Long>) {
         versionJpaRepository.deleteAllByArticleIdIn(articleIds)
         versionNodeRepository.deleteAllByArticleIdIn(articleIds) //TODO => 별도 이벤트로 분리
     }
 
-    override fun deleteByArticleId(articleId: Long) {
+    override suspend fun deleteByArticleId(articleId: Long) {
         versionJpaRepository.deleteAllByArticleId(articleId)
         versionNodeRepository.deleteAllByArticleId(articleId) // TODO => 별도 이벤트 분리
     }
 
-    override fun findPreviousPublishedVersion(articleId: Long, versionId: Long): Version? {
+    override suspend fun findPreviousPublishedVersion(articleId: Long, versionId: Long): Version? {
         return versionJpaRepository.findTopByArticleIdAndIdLessThanAndStateOrderByIdDesc(articleId, versionId, VersionStateJpa.PUBLISHED)?.toDomain()
     }
 
-    override fun findNearestBaseTo(versionId: Long): Version? {
+    override suspend fun findNearestBaseTo(versionId: Long): Version? {
        return versionNodeRepository.findBaseNodeNearestTo(versionId)
                         ?.let { versionJpaRepository.findByIdOrNull(it.versionId) }
                         ?.toDomain()
     }
 
-    override fun findDiffChainBetween(baseId: Long, targetId: Long): List<String> {
+    override suspend fun findDiffChainBetween(baseId: Long, targetId: Long): List<String> {
         return versionNodeRepository.findShortestPathBetween(baseId, targetId)
                 .map { it.versionId }
                 .let { versionJpaRepository.findAllByIdIsIn(it)}
