@@ -3,6 +3,7 @@ package dev.codeswamp.articlecommand.domain.folder.repository
 import dev.codeswamp.articlecommand.domain.folder.model.Folder
 
 interface FolderRepository {
+    suspend fun create(folder: Folder): Folder
     suspend fun save(folder: Folder): Folder
     suspend fun delete(folder: Folder)
     suspend fun findById(folderId: Long): Folder?

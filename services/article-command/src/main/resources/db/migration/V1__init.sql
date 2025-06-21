@@ -1,3 +1,15 @@
+CREATE TABLE folder (
+        id BIGINT PRIMARY KEY,
+        name TEXT NOT NULL,
+        owner_id BIGINT NOT NULL,
+        parent_id BIGINT,
+        full_path TEXT NOT NULL UNIQUE,
+
+        CONSTRAINT fk_folder_parent
+            FOREIGN KEY (parent_id) REFERENCES folder(id)
+                ON DELETE SET NULL
+);
+
 CREATE TABLE article_metadata (
      id BIGINT PRIMARY KEY,
      title TEXT,
@@ -24,23 +36,11 @@ CREATE TABLE version (
       state VARCHAR(50) NOT NULL,
       is_base BOOLEAN NOT NULL,
 
-      CONSTRAINT fk_versions_article FOREIGN KEY (article_id) REFERENCES article(id),
-      CONSTRAINT fk_versions_prev_version FOREIGN KEY (prev_version_id) REFERENCES versions(id)
-);
-
-CREATE TABLE folder (
-        id BIGINT PRIMARY KEY,
-        name TEXT NOT NULL,
-        owner_id BIGINT NOT NULL,
-        parent_id BIGINT,
-        full_path TEXT NOT NULL UNIQUE,
-
-        CONSTRAINT fk_folder_parent
-            FOREIGN KEY (parent_id) REFERENCES folder(id)
-                ON DELETE SET NULL
+      CONSTRAINT fk_versions_article FOREIGN KEY (article_id) REFERENCES article_metadata(id),
+      CONSTRAINT fk_versions_prev_version FOREIGN KEY (prev_version_id) REFERENCES version(id)
 );
 
 CREATE TABLE base_version (
-                              version_id BIGINT PRIMARY KEY,
-                              content TEXT NOT NULL
+      version_id BIGINT PRIMARY KEY REFERENCES version(id),
+      content TEXT NOT NULL
 );

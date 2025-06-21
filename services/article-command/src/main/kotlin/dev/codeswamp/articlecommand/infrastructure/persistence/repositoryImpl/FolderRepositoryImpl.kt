@@ -4,16 +4,34 @@ import dev.codeswamp.articlecommand.domain.folder.model.Folder
 import dev.codeswamp.articlecommand.domain.folder.repository.FolderRepository
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity.FolderEntity
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.FolderR2dbcRepository
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Repository
 
 @Repository
 class FolderRepositoryImpl(
     private val folderR2dbcRepository: FolderR2dbcRepository,
 ) : FolderRepository {
+    private val logger = LoggerFactory.getLogger(javaClass)
+
+    override suspend fun create(folder: Folder): Folder {
+        logger.info("create folder: $folder")
+        try {
+            return folderR2dbcRepository.insertFolder(
+                id = folder.id,
+                name = folder.name.value,
+                ownerId = folder.ownerId,
+                parentId = folder.parentId,
+                fullPath = folder.fullPath
+            ).toDomain()
+        } catch (e: Exception) {
+            logger.info("failed to create folder: ${e.message}")
+            throw e
+        }
+    }
 
     override suspend fun save(folder: Folder): Folder {
-        val parent = folder.parentId?.let { folderR2dbcRepository.findById(folder.parentId) }
-        val saved = folderR2dbcRepository.save(FolderEntity.Companion.from(folder, parent)).toDomain()
+        val saved = folderR2dbcRepository.save(FolderEntity.Companion.from(folder)).toDomain()
+
         return saved
     }
 

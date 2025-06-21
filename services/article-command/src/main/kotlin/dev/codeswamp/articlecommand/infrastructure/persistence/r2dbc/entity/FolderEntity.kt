@@ -22,11 +22,11 @@ data class FolderEntity(
     var fullPath: String,
 ) {
     companion object {
-        fun from(folder: Folder, parent: FolderEntity?) = FolderEntity(
+        fun from(folder: Folder) = FolderEntity(
             id = folder.id,
             name = folder.name.value,
             ownerId = folder.ownerId,
-            parentId = parent?.id,
+            parentId = folder.parentId,
             fullPath = folder.fullPath
         )
     }

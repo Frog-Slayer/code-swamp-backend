@@ -5,15 +5,19 @@ import dev.codeswamp.articlecommand.application.usecase.command.folder.create.Cr
 import dev.codeswamp.articlecommand.application.usecase.command.folder.create.CreateRootFolderCommand
 import dev.codeswamp.core.common.event.Event
 import dev.codeswamp.core.common.event.EventHandler
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
 @Component
 class UserRegisteredEventHandler(
     private val createFolderUseCase: CreateFolderUseCase,
 ) : EventHandler<UserRegisteredEvent> {
+    private val logger = LoggerFactory.getLogger(javaClass)
     override fun canHandle(event: Event): Boolean = event is UserRegisteredEvent
 
     override suspend fun handle(event: UserRegisteredEvent) {
+        logger.info("User registered: $event")
+
         createFolderUseCase.createRoot(
             CreateRootFolderCommand(
                 name = event.username,

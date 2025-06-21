@@ -3,6 +3,7 @@ package dev.codeswamp.articlecommand.infrastructure.messaging.listener
 import dev.codeswamp.articlecommand.application.port.incoming.MessageDispatcher
 import dev.codeswamp.articlecommand.infrastructure.messaging.mapper.KafkaEventTranslator
 import dev.codeswamp.infrakafka.event.KafkaEvent
+import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
 import org.springframework.messaging.handler.annotation.Payload
@@ -13,6 +14,7 @@ class UserEventListener(
     private val eventTranslator: KafkaEventTranslator,
     private val dispatcher: MessageDispatcher,
 ) {
+    private val logger = LoggerFactory.getLogger(javaClass)
 
     @KafkaListener(
         topics = ["user-service"],
@@ -24,6 +26,7 @@ class UserEventListener(
         ack: Acknowledgment
     ) {
         try {
+            logger.info("listen event")
             val internalEvent = eventTranslator.translate(event)
             dispatcher.dispatch(internalEvent)
             ack.acknowledge()

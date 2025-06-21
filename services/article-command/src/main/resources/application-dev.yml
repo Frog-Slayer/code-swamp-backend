@@ -12,6 +12,7 @@ spring:
     password: boot
     locations: classpath:db/migration
     baseline-on-migrate: true
+    enabled: true
 
   data:
     redis:
@@ -27,8 +28,9 @@ spring:
 logging:
   level:
     org.springframework.context: DEBUG
+    org.springframework.data.r2dbc: DEBUG
     org.springframework.data.neo4j: DEBUG
-    org.springframework.security: DEBUG
+    io.r2dbc: DEBUG
 
 frontend:
   url: "http://localhost:3000"

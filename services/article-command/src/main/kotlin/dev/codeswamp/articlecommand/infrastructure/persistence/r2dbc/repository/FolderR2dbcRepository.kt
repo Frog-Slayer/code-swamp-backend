@@ -1,5 +1,6 @@
 package dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository
 
+import dev.codeswamp.articlecommand.domain.folder.model.Name
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity.FolderEntity
 import org.springframework.data.r2dbc.repository.Modifying
 import org.springframework.data.r2dbc.repository.Query
@@ -9,6 +10,19 @@ import org.springframework.data.repository.query.Param
 interface FolderR2dbcRepository : CoroutineCrudRepository<FolderEntity, Long> {
     override suspend fun findById(id: Long): FolderEntity?
     suspend fun findAllByIdIsIn(ids: List<Long>): List<FolderEntity>
+
+    @Query("""
+        INSERT INTO folder (id, name, owner_id, parent_id, full_path)
+        VALUES (:id, :name, :ownerId, :parentId, :fullPath)
+        RETURNING *
+    """)
+    suspend fun insertFolder(
+        @Param("id") id: Long,
+        @Param("name") name: String,
+        @Param("ownerId") ownerId: Long,
+        @Param("parentId") parentId: Long?,
+        @Param("fullPath") fullPath: String
+    ): FolderEntity
 
     @Modifying
     @Query(
