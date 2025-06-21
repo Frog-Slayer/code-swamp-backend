@@ -15,9 +15,6 @@ spring:
     authentication:
       username: neo4j
       password: codeswamp
-  kafka:
-    consumer:
-      group-id: article-command
 
 logging:
   level:
