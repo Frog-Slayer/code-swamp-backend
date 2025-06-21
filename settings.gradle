@@ -10,5 +10,6 @@ include(
         "shared:auth-common",
         "shared:common-grpc",
         "shared:infra-kafka",
-        "shared:id-generator"
+        "shared:id-generator",
+        "shared:ddd-core"
 )
