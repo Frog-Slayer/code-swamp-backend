@@ -22,9 +22,5 @@ logging:
     org.springframework.data.neo4j: DEBUG
     org.springframework.security: DEBUG
 
-server:
-  servlet:
-    context-path: /api
-
 frontend:
   url: "http://localhost:3000"

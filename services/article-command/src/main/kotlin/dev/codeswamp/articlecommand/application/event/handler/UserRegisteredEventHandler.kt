@@ -10,13 +10,15 @@ import org.springframework.stereotype.Component
 @Component
 class UserRegisteredEventHandler(
     private val createFolderUseCase: CreateFolderUseCase,
-): EventHandler<UserRegisteredEvent> {
+) : EventHandler<UserRegisteredEvent> {
     override fun canHandle(event: Event): Boolean = event is UserRegisteredEvent
 
     override suspend fun handle(event: UserRegisteredEvent) {
-        createFolderUseCase.createRoot(CreateRootFolderCommand(
-            name = event.username,
-            userId = event.userId
-        ))
+        createFolderUseCase.createRoot(
+            CreateRootFolderCommand(
+                name = event.username,
+                userId = event.userId
+            )
+        )
     }
 }

@@ -6,9 +6,9 @@ import org.springframework.data.r2dbc.repository.Query
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.data.repository.query.Param
 
-interface FolderJpaRepository : CoroutineCrudRepository<FolderEntity, Long> {
-    override suspend fun findById(id: Long) : FolderEntity?
-    suspend fun findAllByIdIsIn(ids: List<Long>) : List<FolderEntity>
+interface FolderR2dbcRepository : CoroutineCrudRepository<FolderEntity, Long> {
+    override suspend fun findById(id: Long): FolderEntity?
+    suspend fun findAllByIdIsIn(ids: List<Long>): List<FolderEntity>
 
     @Modifying
     @Query(

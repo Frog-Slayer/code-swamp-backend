@@ -3,54 +3,54 @@ package dev.codeswamp.articlecommand.infrastructure.persistence.repositoryImpl
 import dev.codeswamp.articlecommand.domain.folder.model.Folder
 import dev.codeswamp.articlecommand.domain.folder.repository.FolderRepository
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity.FolderEntity
-import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.FolderJpaRepository
+import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.FolderR2dbcRepository
 import org.springframework.stereotype.Repository
 
 @Repository
 class FolderRepositoryImpl(
-    private val folderJpaRepository: FolderJpaRepository,
+    private val folderR2dbcRepository: FolderR2dbcRepository,
 ) : FolderRepository {
 
     override suspend fun save(folder: Folder): Folder {
-        val parent = folder.parentId?.let { folderJpaRepository.findById(folder.parentId) }
-        val saved = folderJpaRepository.save(FolderEntity.Companion.from(folder, parent)).toDomain()
+        val parent = folder.parentId?.let { folderR2dbcRepository.findById(folder.parentId) }
+        val saved = folderR2dbcRepository.save(FolderEntity.Companion.from(folder, parent)).toDomain()
         return saved
     }
 
     //TODO: bulk로 하위 폴더 전부 삭제
     override suspend fun delete(folder: Folder) {
-        folderJpaRepository.deleteById(folder.id)
+        folderR2dbcRepository.deleteById(folder.id)
     }
 
     override suspend fun findById(folderId: Long): Folder? {
-        return folderJpaRepository.findById(folderId)?.toDomain()
+        return folderR2dbcRepository.findById(folderId)?.toDomain()
     }
 
     override suspend fun updateDescendentsFullPath(oldFullPath: String, newFullPath: String) {
-        folderJpaRepository.bulkUpdateFullPath(oldFullPath, newFullPath, "$oldFullPath/%")
+        folderR2dbcRepository.bulkUpdateFullPath(oldFullPath, newFullPath, "$oldFullPath/%")
     }
 
     override suspend fun findAllDescendantIdsByFolder(folder: Folder): List<Long> {
-        return folderJpaRepository.findAllDescendantIdsByFolderFullPath("${folder.fullPath}/%")
+        return folderR2dbcRepository.findAllDescendantIdsByFolderFullPath("${folder.fullPath}/%")
     }
 
     override suspend fun deleteAllById(folderIds: List<Long>) {
-        folderJpaRepository.deleteAllById(folderIds)
+        folderR2dbcRepository.deleteAllById(folderIds)
     }
 
     override suspend fun findAllByIds(folderIds: List<Long>): List<Folder> {
-        return folderJpaRepository.findAllByIdIsIn(folderIds).map { it.toDomain() }
+        return folderR2dbcRepository.findAllByIdIsIn(folderIds).map { it.toDomain() }
     }
 
     override suspend fun findFolderByFolderPath(folderPath: String): Folder? {
-        return folderJpaRepository.findByFullPath(folderPath)?.toDomain()
+        return folderR2dbcRepository.findByFullPath(folderPath)?.toDomain()
     }
 
     override suspend fun existsByParentIdAndName(parentId: Long, name: String): Boolean {
-        return folderJpaRepository.existsByParentIdAndName(parentId, name)
+        return folderR2dbcRepository.existsByParentIdAndName(parentId, name)
     }
 
     override suspend fun findAllByOwnerId(userId: Long): List<Folder> {
-        return folderJpaRepository.findAllByOwnerId(userId).map { it.toDomain() }
+        return folderR2dbcRepository.findAllByOwnerId(userId).map { it.toDomain() }
     }
 }

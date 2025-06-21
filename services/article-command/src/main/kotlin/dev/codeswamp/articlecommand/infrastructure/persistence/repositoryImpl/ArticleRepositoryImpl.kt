@@ -8,14 +8,14 @@ import dev.codeswamp.articlecommand.domain.article.repository.ArticleRepository
 import dev.codeswamp.articlecommand.domain.article.repository.VersionRepository
 import dev.codeswamp.articlecommand.infrastructure.exception.article.ArticleVersionMismatchException
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity.ArticleMetadataEntity
-import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.ArticleMetadataJpaRepository
-import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.VersionJpaRepository
+import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.ArticleMetadataR2dbcRepository
+import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.VersionR2dbcRepository
 import org.springframework.stereotype.Repository
 
 @Repository
 class ArticleRepositoryImpl(
-    private val articleMetadataJpaRepository: ArticleMetadataJpaRepository,
-    private val versionJpaRepository: VersionJpaRepository,
+    private val articleMetadataR2dbcRepository: ArticleMetadataR2dbcRepository,
+    private val versionR2dbcRepository: VersionR2dbcRepository,
     private val versionRepository: VersionRepository
 ) : ArticleRepository {
 
@@ -27,11 +27,11 @@ class ArticleRepositoryImpl(
     }
 
     override suspend fun findIdByFolderIdAndSlug(folderId: Long, slug: String): Long? {
-        return articleMetadataJpaRepository.findIdByFolderIdAndSlug(folderId, slug)
+        return articleMetadataR2dbcRepository.findIdByFolderIdAndSlug(folderId, slug)
     }
 
     override suspend fun findByIdAndVersionId(articleId: Long, versionId: Long): VersionedArticle? {
-        val savedMetadataEntity = articleMetadataJpaRepository.findById(articleId)
+        val savedMetadataEntity = articleMetadataR2dbcRepository.findById(articleId)
         val savedVersion = versionRepository.findByIdOrNull(versionId)
 
         if (savedMetadataEntity == null || savedVersion == null) return null
@@ -53,7 +53,7 @@ class ArticleRepositoryImpl(
     }
 
     override suspend fun countVersionsOfArticle(articleId: Long): Long {
-        return versionJpaRepository.countByArticleId(articleId)
+        return versionR2dbcRepository.countByArticleId(articleId)
     }
 
     override suspend fun saveVersion(version: Version): Version {
@@ -61,21 +61,21 @@ class ArticleRepositoryImpl(
     }
 
     override suspend fun deleteAllByFolderIdIn(folderIds: List<Long>) {
-        val articleIds = articleMetadataJpaRepository.findAllIdsByFolderIdIn(folderIds)
-        articleMetadataJpaRepository.deleteAllByIdIn(articleIds)
+        val articleIds = articleMetadataR2dbcRepository.findAllIdsByFolderIdIn(folderIds)
+        articleMetadataR2dbcRepository.deleteAllByIdIn(articleIds)
         versionRepository.deleteAllByArticleIdIn(articleIds)
     }
 
     private suspend fun saveMetadata(article: VersionedArticle): ArticleMetadataEntity {
         val entity = ArticleMetadataEntity.Companion.from(article)
-        return articleMetadataJpaRepository.findById(entity.id)
+        return articleMetadataR2dbcRepository.findById(entity.id)
             ?.apply { updateTo(entity) }
-            ?: articleMetadataJpaRepository.save(entity)
+            ?: articleMetadataR2dbcRepository.save(entity)
     }
 
     override suspend fun deleteById(id: Long) {
-        articleMetadataJpaRepository.deleteById(id)
-        versionJpaRepository.deleteAllByArticleId(id)
+        articleMetadataR2dbcRepository.deleteById(id)
+        versionR2dbcRepository.deleteAllByArticleId(id)
     }
 
     private fun toDomain(metadata: ArticleMetadataEntity, version: Version): VersionedArticle {

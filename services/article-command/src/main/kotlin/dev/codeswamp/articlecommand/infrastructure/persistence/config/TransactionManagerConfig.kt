@@ -1,6 +1,5 @@
 package dev.codeswamp.articlecommand.infrastructure.persistence.config
 
-import com.ibm.icu.impl.Row
 import io.r2dbc.spi.ConnectionFactory
 import org.neo4j.driver.Driver
 import org.springframework.context.annotation.Bean
@@ -21,8 +20,7 @@ class TransactionManagerConfig {
 
     @Primary
     @Bean(name = ["transactionManager"])
-    fun r2dbcTransactionManager(factory: ConnectionFactory) : R2dbcTransactionManager
-    = R2dbcTransactionManager(factory)
+    fun r2dbcTransactionManager(factory: ConnectionFactory): R2dbcTransactionManager = R2dbcTransactionManager(factory)
 
 
     @Bean

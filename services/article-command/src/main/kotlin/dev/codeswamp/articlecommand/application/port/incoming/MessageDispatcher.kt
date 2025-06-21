@@ -5,9 +5,9 @@ import dev.codeswamp.core.common.event.EventHandler
 import org.springframework.stereotype.Component
 
 @Component
-class MessageDispatcher (
-    private val handlers : List<EventHandler<ApplicationEvent>>
-){
+class MessageDispatcher(
+    private val handlers: List<EventHandler<ApplicationEvent>>
+) {
     suspend fun dispatch(event: ApplicationEvent) {
         handlers.filter { it.canHandle(event) }
             .forEach { it.handle(event) }

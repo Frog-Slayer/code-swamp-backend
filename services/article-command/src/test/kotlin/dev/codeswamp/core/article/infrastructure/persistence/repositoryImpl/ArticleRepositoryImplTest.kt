@@ -1,15 +1,15 @@
 package dev.codeswamp.core.article.infrastructure.persistence.repositoryImpl
 
-import dev.codeswamp.article.domain.article.model.vo.ArticleMetadata
-import dev.codeswamp.article.domain.article.service.SlugUniquenessChecker
-import dev.codeswamp.article.domain.support.DiffProcessor
+import dev.codeswamp.articlecommand.application.rebase.RebasePolicy
+import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
+import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
+import dev.codeswamp.articlecommand.domain.article.model.vo.Slug
+import dev.codeswamp.articlecommand.domain.article.repository.ArticleRepository
+import dev.codeswamp.articlecommand.domain.article.service.ArticleContentReconstructor
+import dev.codeswamp.articlecommand.domain.article.service.SlugUniquenessChecker
+import dev.codeswamp.articlecommand.domain.support.DiffProcessor
 import dev.codeswamp.articlecommand.infrastructure.persistence.graph.repository.VersionNodeRepository
-import dev.codeswamp.core.article.application.rebase.RebasePolicy
-import dev.codeswamp.core.article.domain.article.model.VersionedArticle
-import dev.codeswamp.core.article.domain.article.model.vo.Slug
-import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
-import dev.codeswamp.core.article.domain.article.service.ArticleContentReconstructor
-import dev.codeswamp.core.article.domain.support.IdGenerator
+import dev.codeswamp.core.domain.IdGenerator
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -56,7 +56,7 @@ class ArticleRepositoryImplTest(
     )
 
     @Test
-    fun `새 Draft 저장 후 정상 조회`() {
+    suspend fun `새 Draft 저장 후 정상 조회`() {
         val article = baseArticle().draft(slugChecker::checkSlugUniqueness)
 
         articleRepository.save(article)
@@ -68,7 +68,7 @@ class ArticleRepositoryImplTest(
     }
 
     @Test
-    fun `diff 업데이트 후 저장`() {
+    suspend fun `diff 업데이트 후 저장`() {
         val article = baseArticle().draft(slugChecker::checkSlugUniqueness)
 
         articleRepository.save(article)
@@ -93,7 +93,7 @@ class ArticleRepositoryImplTest(
     }
 
     @Test
-    fun `Rebase 테스트`() {
+    suspend fun `Rebase 테스트`() {
         val article = baseArticle().draft(slugChecker::checkSlugUniqueness)
         articleRepository.save(article)
 

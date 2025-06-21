@@ -5,4 +5,4 @@ import dev.codeswamp.core.application.event.ApplicationEvent
 data class UserRegisteredEvent(
     val userId: Long,
     val username: String,
-)  : ApplicationEvent
+) : ApplicationEvent

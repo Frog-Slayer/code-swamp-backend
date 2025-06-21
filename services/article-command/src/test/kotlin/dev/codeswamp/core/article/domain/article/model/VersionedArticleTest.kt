@@ -1,9 +1,12 @@
 package dev.codeswamp.core.article.domain.article.model
 
-import dev.codeswamp.article.domain.article.event.PublishedEvent
-import dev.codeswamp.article.domain.article.event.VersionCreatedEvent
-import dev.codeswamp.article.domain.article.model.vo.ArticleMetadata
-import dev.codeswamp.core.article.domain.article.model.vo.Slug
+import dev.codeswamp.articlecommand.domain.article.event.PublishedEvent
+import dev.codeswamp.articlecommand.domain.article.event.VersionCreatedEvent
+import dev.codeswamp.articlecommand.domain.article.model.VersionState
+import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
+import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
+import dev.codeswamp.articlecommand.domain.article.model.vo.Slug
+import kotlinx.coroutines.runBlocking
 import org.assertj.core.api.Assertions.assertThat
 import org.assertj.core.api.Assertions.assertThatThrownBy
 import org.junit.jupiter.api.Test
@@ -53,7 +56,7 @@ class VersionedArticleTest {
     )
 
     @Test
-    fun `diff가 없고 title 변화가 없으면 기존 version을 반환`() {
+    fun `diff가 없고 title 변화가 없으면 기존 version을 반환`() : Unit = runBlocking {
         val article = baseArticle()
 
         val updated = article.updateVersionIfChanged(
@@ -66,7 +69,7 @@ class VersionedArticleTest {
     }
 
     @Test
-    fun `diff가 있으면 새 version을 반환`() {
+    fun `diff가 있으면 새 version을 반환`() : Unit = runBlocking {
         val article = baseArticle()
 
         val updated = article.updateVersionIfChanged(
@@ -83,7 +86,7 @@ class VersionedArticleTest {
     }
 
     @Test
-    fun `title 변화 시 version을 반환`() {
+    fun `title 변화 시 version을 반환`(): Unit = runBlocking {
         val article = baseArticle()
 
         val updated = article.updateVersionIfChanged(
@@ -100,7 +103,7 @@ class VersionedArticleTest {
     }
 
     @Test
-    fun `publish 시 slug 중복 검사 후 published 상태로 변경하고 이벤트를 추가`() {
+    fun `publish 시 slug 중복 검사 후 published 상태로 변경하고 이벤트를 추가`() : Unit = runBlocking {
         val article = baseArticle()
         val checker = { _: VersionedArticle, _: Long, _: Slug -> }
 
@@ -114,10 +117,9 @@ class VersionedArticleTest {
 
 
     @Test
-    fun `published 상태에서 archive 시 예외 발생`() {
+    fun `published 상태에서 archive 시 예외 발생`(): Unit = runBlocking{
         val article = baseArticle()
         val checker = { _: VersionedArticle, _: Long, _: Slug -> }
-
         val published = article.publish(checker)
 
         assertThatThrownBy { published.archive() }

@@ -6,23 +6,23 @@ import dev.codeswamp.articlecommand.infrastructure.event.event.VersionNodeSaveEv
 import dev.codeswamp.articlecommand.infrastructure.persistence.graph.repository.VersionNodeRepository
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity.VersionEntity
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity.VersionStateJpa
-import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.BaseVersionJpaRepository
-import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.VersionJpaRepository
+import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.BaseVersionR2dbcRepository
+import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.VersionR2dbcRepository
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Repository
 
 @Repository
 class VersionRepositoryImpl(
-    private val versionJpaRepository: VersionJpaRepository,
+    private val versionR2dbcRepository: VersionR2dbcRepository,
     private val versionNodeRepository: VersionNodeRepository,
-    private val baseVersionJpaRepository: BaseVersionJpaRepository,
+    private val baseVersionR2dbcRepository: BaseVersionR2dbcRepository,
     private val eventPublisher: ApplicationEventPublisher
 ) : VersionRepository {
 
     override suspend fun save(version: Version): Version {
         val entity = VersionEntity.Companion.from(version)
 
-        val saved = versionJpaRepository.save(entity).toDomain()
+        val saved = versionR2dbcRepository.save(entity).toDomain()
 
         eventPublisher.publishEvent(
             VersionNodeSaveEvent(
@@ -37,40 +37,40 @@ class VersionRepositoryImpl(
     }
 
     override suspend fun findByIdOrNull(id: Long): Version? {
-        return versionJpaRepository.findById(id)?.toDomain()
+        return versionR2dbcRepository.findById(id)?.toDomain()
     }
 
     override suspend fun deleteAllByArticleIdIn(articleIds: List<Long>) {
-        versionJpaRepository.deleteAllByArticleIdIn(articleIds)
+        versionR2dbcRepository.deleteAllByArticleIdIn(articleIds)
         versionNodeRepository.deleteAllByArticleIdIn(articleIds) //TODO => 별도 이벤트로 분리
     }
 
     override suspend fun deleteByArticleId(articleId: Long) {
-        versionJpaRepository.deleteAllByArticleId(articleId)
+        versionR2dbcRepository.deleteAllByArticleId(articleId)
         versionNodeRepository.deleteAllByArticleId(articleId) // TODO => 별도 이벤트 분리
     }
 
     override suspend fun findPreviousPublishedVersion(articleId: Long, versionId: Long): Version? {
-        return versionJpaRepository.findTopByArticleIdAndIdLessThanAndStateOrderByIdDesc(articleId, versionId, VersionStateJpa.PUBLISHED)
+        return versionR2dbcRepository.findTopByArticleIdAndIdLessThanAndStateOrderByIdDesc(articleId, versionId, VersionStateJpa.PUBLISHED)
             ?.toDomain()
     }
 
     override suspend fun findNearestBaseTo(versionId: Long): Version? {
         return versionNodeRepository.findBaseNodeNearestTo(versionId)
-            ?.let { versionJpaRepository.findById(it.versionId) }
+            ?.let { versionR2dbcRepository.findById(it.versionId) }
             ?.toDomain()
     }
 
     override suspend fun findDiffChainBetween(baseId: Long, targetId: Long): List<String> {
         return versionNodeRepository.findShortestPathBetween(baseId, targetId)
             .map { it.versionId }
-            .let { versionJpaRepository.findAllByIdIsIn(it) }
+            .let { versionR2dbcRepository.findAllByIdIsIn(it) }
             .sortedBy { it.createdAt }
             .map { it.diff }
     }
 
     suspend fun VersionEntity.toDomain(): Version {
-        val fullContent = if (this.isBaseVersion) baseVersionJpaRepository.findById(id)?.content else null
+        val fullContent = if (this.isBaseVersion) baseVersionR2dbcRepository.findById(id)?.content else null
         return this.toDomain(fullContent)
     }
 }

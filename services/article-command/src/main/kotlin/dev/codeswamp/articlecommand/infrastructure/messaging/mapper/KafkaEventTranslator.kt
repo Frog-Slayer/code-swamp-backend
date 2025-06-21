@@ -17,5 +17,5 @@ class KafkaEventTranslator : EventTranslator<KafkaEvent, ApplicationEvent> {
         }
     }
 
-    fun KafkaUserRegisteredEvent.toInternalEvent() = UserRegisteredEvent(userId =  userId, username = username)
+    fun KafkaUserRegisteredEvent.toInternalEvent() = UserRegisteredEvent(userId = userId, username = username)
 }

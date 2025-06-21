@@ -5,4 +5,4 @@ import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface BaseVersionJpaRepository : CoroutineCrudRepository<BaseVersionEntity, Long>
+interface BaseVersionR2dbcRepository : CoroutineCrudRepository<BaseVersionEntity, Long>

@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 class UserEventListener(
     private val eventTranslator: KafkaEventTranslator,
     private val dispatcher: MessageDispatcher,
-){
+) {
 
     @KafkaListener(
         topics = ["user-service"],
@@ -22,12 +22,16 @@ class UserEventListener(
     suspend fun listen(
         @Payload event: KafkaEvent,
         ack: Acknowledgment
-    ){
+    ) {
         try {
             val internalEvent = eventTranslator.translate(event)
             dispatcher.dispatch(internalEvent)
             ack.acknowledge()
-        } catch (e : Exception) {
+        } catch (e:  IllegalArgumentException) {
+            ack.acknowledge()
+            throw e
+        } catch (e: Exception) {
+            //TODO
             //log & dlq & retry
         }
     }

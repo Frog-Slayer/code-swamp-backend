@@ -12,6 +12,6 @@ class KafkaInfraEventPublisherImpl(
 
     override fun publish(event: InfraEvent) {
         val kafkaEvent = InfraEventKafkaMapper.translate(event)
-        kafkaPublisher.publish("user-service", kafkaEvent.key, kafkaEvent)
+        kafkaPublisher.publish("article-command", kafkaEvent.key, kafkaEvent)
     }
 }
