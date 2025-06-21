@@ -5,6 +5,14 @@ spring:
     url: r2dbc:postgresql://localhost:5433/mydb
     username: spring
     password: boot
+
+  flyway:
+    url: jdbc:postgresql://localhost:5433/mydb
+    user: spring
+    password: boot
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
   data:
     redis:
       host: localhost

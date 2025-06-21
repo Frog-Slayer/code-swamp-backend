@@ -6,7 +6,7 @@ import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import java.time.Instant
 
-@Table(name = "versions")
+@Table(name = "version")
 data class VersionEntity(
     @Id//도메인에서 생성
     val id: Long,
