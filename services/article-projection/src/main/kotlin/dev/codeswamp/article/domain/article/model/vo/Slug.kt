@@ -15,7 +15,7 @@ value class Slug private constructor(
             if (value.isNullOrBlank()) return null
             val trimmed = value.trim()
             validate(trimmed)
-            return Slug( trimmed)
+            return Slug(trimmed)
         }
 
         private fun validate(value: String) {

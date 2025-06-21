@@ -1,15 +1,15 @@
 spring:
-#  datasource:
-#    url: jdbc:postgresql://localhost:5433/mydb
-#    driver-class-name: org.postgresql.Driver
-#    username: spring
-#    password: boot
-#  jpa:
-#    hibernate:
-#      ddl-auto: update
-#    properties:
-#      hibernate:
-#        dialect: org.hibernate.dialect.PostgreSQLDialect
+  #  datasource:
+  #    url: jdbc:postgresql://localhost:5433/mydb
+  #    driver-class-name: org.postgresql.Driver
+  #    username: spring
+  #    password: boot
+  #  jpa:
+  #    hibernate:
+  #      ddl-auto: update
+  #    properties:
+  #      hibernate:
+  #        dialect: org.hibernate.dialect.PostgreSQLDialect
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
@@ -35,7 +35,7 @@ spring:
 logging:
   level:
     org.springframework.context: DEBUG
-    org.springframework.data.neo4j : DEBUG
+    org.springframework.data.neo4j: DEBUG
     org.springframework.security: DEBUG
 
 grpc:

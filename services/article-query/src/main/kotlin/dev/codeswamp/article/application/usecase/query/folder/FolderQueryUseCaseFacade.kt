@@ -8,9 +8,9 @@ import org.springframework.stereotype.Service
 @Service
 class FolderQueryUseCaseFacade(
     private val getAllFoldersForUserUseCase: GetAllFoldersForUserUseCase,
-){
+) {
 
-    fun getUserFolders(query: GetAllFoldersForUserQuery) : GetAllFoldersForUserResult {
+    fun getUserFolders(query: GetAllFoldersForUserQuery): GetAllFoldersForUserResult {
         return getAllFoldersForUserUseCase.handle(query)
     }
 }

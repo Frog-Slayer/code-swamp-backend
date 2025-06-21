@@ -1,10 +1,7 @@
 package dev.codeswamp.image.presentation
 
 import dev.codeswamp.image.application.ImageService
-import dev.codeswamp.image.application.dto.UploadImageCommand
 import dev.codeswamp.image.presentation.dto.ImageUploadResponse
-import org.springframework.security.access.AccessDeniedException
-import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -22,13 +19,13 @@ class ImageController(
 
         /**
         val uploadImageCommand = UploadImageCommand(
-            userName = user?.username ?: throw AccessDeniedException("do not have authority"),
-            contentType = file.contentType ?: throw IllegalArgumentException("file must have file contentType"),
-            bytes = file.bytes,
+        userName = user?.username ?: throw AccessDeniedException("do not have authority"),
+        contentType = file.contentType ?: throw IllegalArgumentException("file must have file contentType"),
+        bytes = file.bytes,
         )
 
         val imageUrl = imageService.upload(uploadImageCommand);
         return ImageUploadResponse(imageUrl)
-        */
+         */
     }
 }

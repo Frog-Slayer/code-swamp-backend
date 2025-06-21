@@ -2,7 +2,7 @@ package dev.codeswamp.article.presentation.dto.response.article
 
 import java.time.Instant
 
-data class ArticleCardResponseDto (
+data class ArticleCardResponseDto(
     val thumbnailUrl: String,
     val title: String,
     val summary: String,

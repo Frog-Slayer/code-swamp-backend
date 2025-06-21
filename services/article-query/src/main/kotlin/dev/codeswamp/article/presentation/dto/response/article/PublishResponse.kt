@@ -4,13 +4,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import dev.codeswamp.article.application.usecase.command.article.publish.PublishArticleResult
 
-data class PublishResponse (
+data class PublishResponse(
     @JsonSerialize(using = ToStringSerializer::class)
-    val articleId : Long,
+    val articleId: Long,
 
     @JsonSerialize(using = ToStringSerializer::class)
-    val versionId : Long
-){
+    val versionId: Long
+) {
     companion object {
         fun from(publishArticleResult: PublishArticleResult) = PublishResponse(
             articleId = publishArticleResult.articleId,

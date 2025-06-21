@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 class ArticleQueryUseCaseFacade(
     private val getVersionedArticleUseCase: GetVersionedArticleUseCase,
 ) {
-    fun getVersionedArticle (query: GetVersionedArticleQuery): ReadArticleResult {
+    fun getVersionedArticle(query: GetVersionedArticleQuery): ReadArticleResult {
         return getVersionedArticleUseCase.handle(query)
     }
 }

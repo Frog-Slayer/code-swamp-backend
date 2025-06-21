@@ -10,7 +10,7 @@ data class ArticleIndexDTO(
     val isPublic: Boolean,
 ) {
     companion object {
-        fun from(versionedArticle: VersionedArticle, preprocessedText: String) : ArticleIndexDTO {
+        fun from(versionedArticle: VersionedArticle, preprocessedText: String): ArticleIndexDTO {
             return ArticleIndexDTO(
                 articleId = versionedArticle.id,
                 authorId = versionedArticle.authorId,

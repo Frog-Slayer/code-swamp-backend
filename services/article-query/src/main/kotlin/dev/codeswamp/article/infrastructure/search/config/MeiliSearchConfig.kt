@@ -10,7 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient
 @Configuration
 class MeiliSearchConfig(
     @Value("\${meilisearch.url}") private val meiliSearchUrl: String,
-    @Value("\${meilisearch.api-key}") private val  meiliSearchApiKey: String,
+    @Value("\${meilisearch.api-key}") private val meiliSearchApiKey: String,
 ) {
 
     @Bean

@@ -9,8 +9,8 @@ import org.springframework.transaction.event.TransactionPhase
 import org.springframework.transaction.event.TransactionalEventListener
 
 @Component
-class FolderPathChangedEventHandler (
-    private val folderRepository : FolderRepository
+class FolderPathChangedEventHandler(
+    private val folderRepository: FolderRepository
 ) {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)

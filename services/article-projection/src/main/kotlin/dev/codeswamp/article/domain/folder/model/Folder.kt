@@ -23,7 +23,7 @@ data class Folder private constructor(
             name: String,
             parent: Folder,
             checkDuplicatedFolderName: (Long, Name) -> Unit
-        ) : Folder {
+        ): Folder {
             val folderName = Name.of(name)//format check
             checkDuplicatedFolderName(parent.id, folderName)
 
@@ -66,9 +66,9 @@ data class Folder private constructor(
         )
     }
 
-    fun rename(newName: String, checkDuplicatedFolderName: (Long, Name) -> Unit) : Folder {
+    fun rename(newName: String, checkDuplicatedFolderName: (Long, Name) -> Unit): Folder {
         val newFolderName = Name.of(newName)
-        parentId?.let{ checkDuplicatedFolderName(parentId, newFolderName) } ?: throw RootFolderRenameException(name.value)
+        parentId?.let { checkDuplicatedFolderName(parentId, newFolderName) } ?: throw RootFolderRenameException(name.value)
 
         val parentPath = fullPath.substringBeforeLast("/")
         val newPath = "$parentPath/${newFolderName.value}"
@@ -85,7 +85,7 @@ data class Folder private constructor(
         )
     }
 
-    fun moveTo(newParent: Folder, checkDuplicatedFolderName: (Long, Name) -> Unit) : Folder {
+    fun moveTo(newParent: Folder, checkDuplicatedFolderName: (Long, Name) -> Unit): Folder {
         if (newParent.id == parentId || newParent.id == id) return this
         if (isChild(newParent)) throw FolderMoveNotAllowedException(fullPath, newParent.fullPath)
         checkDuplicatedFolderName(newParent.id, name)
@@ -93,9 +93,9 @@ data class Folder private constructor(
         val newPath = "${newParent.fullPath}/${name.value}"
 
         return this.copy(
-                fullPath = newPath,
-                parentId = newParent.id
-            ).withEvent(
+            fullPath = newPath,
+            parentId = newParent.id
+        ).withEvent(
             FolderPathChangedEvent(
                 id,
                 fullPath,
@@ -104,7 +104,7 @@ data class Folder private constructor(
         )
     }
 
-    fun markAsDeleted(folderIdsToDelete: List<Long>, deletedAt: Instant) : Folder {
+    fun markAsDeleted(folderIdsToDelete: List<Long>, deletedAt: Instant): Folder {
         return this.withEvent(
             FolderDeletionEvent(
                 id,
@@ -122,11 +122,11 @@ data class Folder private constructor(
         if (ownerId != userId) throw ForbiddenFolderAccessException(id)
     }
 
-    fun withEvent(event: ArticleDomainEvent) : Folder {
+    fun withEvent(event: ArticleDomainEvent): Folder {
         val newFolder = this.copy()
         newFolder.addEvent(event)
         return newFolder
     }
 
-    fun isRoot() : Boolean = parentId == null
+    fun isRoot(): Boolean = parentId == null
 }

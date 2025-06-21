@@ -9,11 +9,13 @@ import org.springframework.data.repository.query.Param
 interface FolderJpaRepository : JpaRepository<FolderEntity, Long> {
 
     @Modifying
-    @Query("""
+    @Query(
+        """
         UPDATE FolderEntity f 
         SET f.fullPath = CONCAT(:newFullPath, SUBSTRING(f.fullPath, LENGTH(:oldFullPath) + 1))
         WHERE f.fullPath LIKE :pattern
-    """)
+    """
+    )
     fun bulkUpdateFullPath(
         @Param("oldFullPath") oldFullPath: String,
         @Param("newFullPath") newFullPath: String,
@@ -21,11 +23,13 @@ interface FolderJpaRepository : JpaRepository<FolderEntity, Long> {
     ): Int
 
 
-    @Query ("""
+    @Query(
+        """
         SELECT f.id
         FROM FolderEntity f 
         WHERE f.fullPath LIKE :fullPathPattern
-    """)
+    """
+    )
     fun findAllDescendantIdsByFolderFullPath(@Param("fullPathPattern") fullPathPattern: String): List<Long>
     fun existsByParentIdAndName(parentId: Long, name: String): Boolean
     fun findByFullPath(fullPath: String): FolderEntity?

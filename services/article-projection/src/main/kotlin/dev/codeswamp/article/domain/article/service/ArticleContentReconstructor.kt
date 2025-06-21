@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service
 class ArticleContentReconstructor(
     private val versionRepository: VersionRepository,
     private val diffProcessor: DiffProcessor
-){
+) {
     //TODO diffChain & applyDiff 실패를 대비 try-catch로 예외 처리 필요
-    fun reconstructFullContent(version: Version) : String {
+    fun reconstructFullContent(version: Version): String {
         return when {
             version.isBaseVersion -> contentFromBaseVersion(version)
             version.previousVersionId == null -> contentFromInitialDiff(version.diff)
@@ -20,11 +20,11 @@ class ArticleContentReconstructor(
         }
     }
 
-    fun contentFromInitialDiff(diff: String) : String {
+    fun contentFromInitialDiff(diff: String): String {
         return applyDiff("", diff)
     }
 
-    private fun contentFromBaseVersion(version: Version) : String {
+    private fun contentFromBaseVersion(version: Version): String {
         return version.fullContent
             ?: throw ContentReconstructionException("base version ${version.id} has no content")
     }
@@ -48,7 +48,7 @@ class ArticleContentReconstructor(
     }
 
 
-    private fun applyDiff(content: String, diff: String) : String {
+    private fun applyDiff(content: String, diff: String): String {
         return diffProcessor.applyDiff(content, diff)
     }
 

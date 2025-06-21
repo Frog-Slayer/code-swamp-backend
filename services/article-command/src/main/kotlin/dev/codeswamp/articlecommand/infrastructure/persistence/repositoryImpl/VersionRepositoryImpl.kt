@@ -16,13 +16,20 @@ class VersionRepositoryImpl(
     private val versionR2dbcRepository: VersionR2dbcRepository,
     private val versionNodeRepository: VersionNodeRepository,
     private val baseVersionR2dbcRepository: BaseVersionR2dbcRepository,
-    private val eventPublisher: ApplicationEventPublisher
+    private val eventPublisher: ApplicationEventPublisher//TODO: InfraEvent
 ) : VersionRepository {
-
-    override suspend fun save(version: Version): Version {
+    override suspend fun create(version: Version): Version {
         val entity = VersionEntity.Companion.from(version)
-
-        val saved = versionR2dbcRepository.save(entity).toDomain()
+        val saved = versionR2dbcRepository.insert(
+            id = entity.id,
+            articleId = entity.articleId,
+            prevVersionId = entity.previousVersionId,
+            title = entity.title,
+            diff = entity.diff,
+            createdAt = entity.createdAt,
+            state = entity.state.toString(),
+            isBaseVersion = entity.isBaseVersion,
+        )
 
         eventPublisher.publishEvent(
             VersionNodeSaveEvent(
@@ -33,7 +40,24 @@ class VersionRepositoryImpl(
             )
         )
 
-        return saved
+        return saved.toDomain()
+    }
+
+    override suspend fun save(version: Version): Version {
+        val entity = VersionEntity.Companion.from(version)
+
+        val saved = versionR2dbcRepository.save(entity)
+
+        eventPublisher.publishEvent(
+            VersionNodeSaveEvent(
+                versionId = version.id,
+                articleId = version.articleId,
+                isBase = version.isBaseVersion,
+                previousNodeId = version.previousVersionId
+            )
+        )
+
+        return saved.toDomain()
     }
 
     override suspend fun findByIdOrNull(id: Long): Version? {

@@ -9,7 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient
 class OAuth2WebClientConfig {
 
     @Bean
-    fun githubWebClient() : WebClient {
+    fun githubWebClient(): WebClient {
         return WebClient.builder()
             .baseUrl("https://api.github.com")
             .defaultHeader(HttpHeaders.ACCEPT, "application/vnd.github+json")

@@ -3,7 +3,7 @@ package dev.codeswamp.auth.infrastructure.persistence.redis.dto
 import dev.codeswamp.auth.domain.model.AuthUser
 import dev.codeswamp.auth.domain.model.Role
 
-data class RedisAuthUser (
+data class RedisAuthUser(
     val id: Long,
     val email: String,
     val roles: List<Role>

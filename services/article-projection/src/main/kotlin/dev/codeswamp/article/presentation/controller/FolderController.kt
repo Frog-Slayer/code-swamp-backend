@@ -28,9 +28,9 @@ class FolderController(
 
     @PostMapping
     fun create(
-        @AuthenticationPrincipal user : CustomUserDetails,
+        @AuthenticationPrincipal user: CustomUserDetails,
         @RequestBody request: CreateFolderRequest
-    ) : ResponseEntity<CreateFolderResponse> {
+    ): ResponseEntity<CreateFolderResponse> {
         val createResult = folderCommandUseCaseFacade.create(
             CreateFolderCommand(
                 userId = requireNotNull(user.getId()),
@@ -44,14 +44,13 @@ class FolderController(
             .body(CreateFolderResponse.Companion.from(createResult))
     }
 
-    @PatchMapping( "/{folderId}/rename")
+    @PatchMapping("/{folderId}/rename")
     fun rename(
-        @AuthenticationPrincipal user : CustomUserDetails,
+        @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable folderId: Long,
         @RequestBody request: RenameFolderRequest
     )
-    : ResponseEntity<SimpleResponse>
-    {
+            : ResponseEntity<SimpleResponse> {
         folderCommandUseCaseFacade.rename(
             RenameFolderCommand(
                 userId = requireNotNull(user.getId()),
@@ -66,11 +65,11 @@ class FolderController(
 
     @PatchMapping("/{folderId}/move")
     fun move(
-        @AuthenticationPrincipal user : CustomUserDetails,
+        @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable folderId: Long,
         @RequestBody request: MoveFolderRequest
     )
-    : ResponseEntity<SimpleResponse>{
+            : ResponseEntity<SimpleResponse> {
         folderCommandUseCaseFacade.move(
             MoveFolderCommand(
                 userId = requireNotNull(user.getId()),
@@ -85,9 +84,10 @@ class FolderController(
 
     @DeleteMapping("/{folderId}")
     fun delete(
-        @AuthenticationPrincipal user : CustomUserDetails,
-        @PathVariable folderId: Long)
-    : ResponseEntity<SimpleResponse> {
+        @AuthenticationPrincipal user: CustomUserDetails,
+        @PathVariable folderId: Long
+    )
+            : ResponseEntity<SimpleResponse> {
         folderCommandUseCaseFacade.delete(
             DeleteFolderCommand(
                 userId = requireNotNull(user.getId()),
@@ -100,7 +100,7 @@ class FolderController(
     }
 
     @GetMapping("/{userId}")
-    fun getAllFoldersForUser(@PathVariable  userId: Long): ResponseEntity<GetFoldersResponse> {
+    fun getAllFoldersForUser(@PathVariable userId: Long): ResponseEntity<GetFoldersResponse> {
         val result = folderQueryUseCaseFacade.getUserFolders(
             GetAllFoldersForUserQuery(userId)
         )
@@ -110,8 +110,8 @@ class FolderController(
         )
     }
 
-     @GetMapping
-    fun getMyFolders(@AuthenticationPrincipal user : CustomUserDetails): ResponseEntity<GetFoldersResponse> {
+    @GetMapping
+    fun getMyFolders(@AuthenticationPrincipal user: CustomUserDetails): ResponseEntity<GetFoldersResponse> {
         val result = folderQueryUseCaseFacade.getUserFolders(
             GetAllFoldersForUserQuery(requireNotNull(user.getId()))
         )

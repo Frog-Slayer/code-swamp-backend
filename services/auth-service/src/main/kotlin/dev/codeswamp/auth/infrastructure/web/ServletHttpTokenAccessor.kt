@@ -11,7 +11,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.stereotype.Component
 
 @Component
-class ServletHttpTokenAccessor (
+class ServletHttpTokenAccessor(
     private val authApplicationService: AuthApplicationService,
     @Value("\${jwt.access-token-exp}") private val accessTokenExpiration: Long,
     @Value("\${jwt.refresh-token-exp}") private val refreshTokenExpiration: Long,
@@ -33,16 +33,16 @@ class ServletHttpTokenAccessor (
         response: ServerHttpResponse,
         tokenPair: ValidatedTokenPair
     ) {
-        val accessToken = ResponseCookie.from("access_token", tokenPair.accessToken.value )
+        val accessToken = ResponseCookie.from("access_token", tokenPair.accessToken.value)
             .path("/")
-            .httpOnly(true  )
+            .httpOnly(true)
             .secure(true)
             .maxAge(accessTokenExpiration)
             .build()
 
         val refreshToken = ResponseCookie.from("refresh_token", tokenPair.refreshToken.value)
             .path("/")
-            .httpOnly(true )
+            .httpOnly(true)
             .secure(true)
             .maxAge(refreshTokenExpiration)
             .build()
@@ -52,16 +52,16 @@ class ServletHttpTokenAccessor (
     }
 
     override fun invalidateTokenPair(response: ServerHttpResponse) {
-        val accessToken = ResponseCookie.from("access_token", "" )
+        val accessToken = ResponseCookie.from("access_token", "")
             .path("/")
-            .httpOnly(true  )
+            .httpOnly(true)
             .secure(true)
             .maxAge(0)
             .build()
 
-        val refreshToken = ResponseCookie.from("refresh_token",  "")
+        val refreshToken = ResponseCookie.from("refresh_token", "")
             .path("/")
-            .httpOnly(true )
+            .httpOnly(true)
             .secure(true)
             .maxAge(0)
             .build()

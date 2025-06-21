@@ -14,6 +14,6 @@ class SlugUniquenessChecker(
         val slugValue = slug.value
 
         val existingArticleId = articleRepository.findIdByFolderIdAndSlug(folderId, slugValue)
-        if ( existingArticleId != null && article.id != existingArticleId) throw DuplicatedSlugException(slugValue)
+        if (existingArticleId != null && article.id != existingArticleId) throw DuplicatedSlugException(slugValue)
     }
 }

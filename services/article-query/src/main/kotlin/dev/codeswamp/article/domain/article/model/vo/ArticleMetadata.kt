@@ -1,10 +1,11 @@
 package dev.codeswamp.article.domain.article.model.vo
 
-data class ArticleMetadata (//가변 메타데이터
+data class ArticleMetadata(
+//가변 메타데이터
     val folderId: Long,
     val summary: String,
     val thumbnailUrl: String? = null,
-    val isPublic : Boolean,
+    val isPublic: Boolean,
 
 
     /**

@@ -12,7 +12,7 @@ import java.time.temporal.ChronoUnit
 import javax.crypto.SecretKey
 
 @Component
-class JwtParser (
+class JwtParser(
     @Value("\${jwt.secret}") private val secret: String,
     private val accessTokenParser: AccessTokenParser,
 ) : TokenParser {

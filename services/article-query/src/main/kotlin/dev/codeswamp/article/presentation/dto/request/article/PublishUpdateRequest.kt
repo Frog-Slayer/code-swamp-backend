@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import dev.codeswamp.article.application.usecase.command.article.publish.UpdatePublishCommand
 import dev.codeswamp.article.presentation.json.StringToLongDeserializer
 
-data class PublishUpdateRequest (
+data class PublishUpdateRequest(
     val title: String,
 
     @JsonDeserialize(using = StringToLongDeserializer::class)

@@ -9,4 +9,4 @@ enum class AppConflictErrorCode(
 abstract class AppConflictException(
     errorCode: AppConflictErrorCode,
     message: String
-): AppException( errorCode, message )
+) : AppException(errorCode, message)

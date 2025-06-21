@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 @Component
 class KafkaEventPublisherImpl(
     private val kafkaPublisher: KafkaEventPublisher,
-): EventPublisher {
+) : EventPublisher {
 
     override fun publish(event: DomainEvent) {
         val kafkaEvent = DomainEventKafkaMapper.map(event)
@@ -20,7 +20,7 @@ class KafkaEventPublisherImpl(
 
     override fun publish(event: ApplicationEvent) {
         val kafkaEvent = ApplicationEventKafkaMapper.map(event)
-        kafkaPublisher.publish("user-service",kafkaEvent.key, kafkaEvent)
+        kafkaPublisher.publish("user-service", kafkaEvent.key, kafkaEvent)
     }
 
 }

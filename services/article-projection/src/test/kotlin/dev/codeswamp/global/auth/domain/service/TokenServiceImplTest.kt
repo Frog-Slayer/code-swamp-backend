@@ -13,11 +13,11 @@ import kotlin.test.assertNotNull
 @DisplayName("TokenService 단위 테스트")
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class TokenServiceImplTest (
+class TokenServiceImplTest(
     @Autowired private val tokenParser: TokenParser,
     @Autowired private val tokenService: TokenService,
     @Autowired private val authUserService: AuthUserService,
-){
+) {
 
     private lateinit var user: AuthUser
     private lateinit var authUser: AuthUser
@@ -108,7 +108,7 @@ class TokenServiceImplTest (
         val rawOldToken = tokenParser.parseRefreshToken(oldToken.value)
 
         val newToken = tokenService.issueRefreshToken(authUser)
-        tokenService.rotateRefreshToken( newToken )
+        tokenService.rotateRefreshToken(newToken)
 
         assertThatThrownBy { tokenService.validateRefreshToken(rawOldToken) }
             .isInstanceOf(IllegalStateException::class.java)

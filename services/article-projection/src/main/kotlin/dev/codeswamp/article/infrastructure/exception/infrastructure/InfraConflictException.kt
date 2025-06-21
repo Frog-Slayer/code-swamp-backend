@@ -1,6 +1,6 @@
 package dev.codeswamp.article.infrastructure.exception.infrastructure
 
-enum class InfraConflictErrorCode (
+enum class InfraConflictErrorCode(
     override val code: String,
 ) : InfraErrorCode {
     INFRA_CONFLICT("INFRA_CONFLICT"),
@@ -10,4 +10,4 @@ enum class InfraConflictErrorCode (
 abstract class InfraConflictException(
     errorCode: InfraConflictErrorCode,
     message: String
-): InfraException( errorCode, message )
+) : InfraException(errorCode, message)

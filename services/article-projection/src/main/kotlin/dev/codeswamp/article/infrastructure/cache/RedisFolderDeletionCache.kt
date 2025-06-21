@@ -21,12 +21,12 @@ class RedisFolderDeletionCache(
         redisTemplate.executePipelined { connection ->
             val stringSerializer = redisTemplate.stringSerializer
             val stringCommands = connection.stringCommands()
-            val value = stringSerializer.serialize(deletedAtAsString) ?:
-                throw IllegalArgumentException("Could not serialize deleted into Redis!")//TODO
+            val value = stringSerializer.serialize(deletedAtAsString)
+                ?: throw IllegalArgumentException("Could not serialize deleted into Redis!")//TODO
 
             folders.forEach { folderId ->
                 val key = stringSerializer.serialize("$prefix:$folderId") ?: return@forEach//TODO
-                stringCommands.setEx(key,  duration.seconds, value)
+                stringCommands.setEx(key, duration.seconds, value)
             }
 
             null
@@ -39,7 +39,7 @@ class RedisFolderDeletionCache(
     }
 
     override fun removeDeletedMark(folders: List<Long>) {
-        val keys = folders.map {"$prefix:$it"}
+        val keys = folders.map { "$prefix:$it" }
         redisTemplate.delete(keys)
     }
 }

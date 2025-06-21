@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit
 @Repository
 class RedisRefreshTokenStorage(
     private val redisTemplate: RedisTemplate<String, RedisValidatedRefreshToken>,
-    @Value("\${jwt.refresh-token-exp}") private val refreshTokenExpiration : Long
+    @Value("\${jwt.refresh-token-exp}") private val refreshTokenExpiration: Long
 ) : TokenRepository {
 
     override suspend fun storeRefreshToken(refreshToken: ValidatedRefreshToken) {
@@ -21,16 +21,18 @@ class RedisRefreshTokenStorage(
         val userIdKey = "token:user:$uid"
         val tokenKey = "token:refresh:$token"
 
-        redisTemplate.opsForValue().set(userIdKey,
-                RedisValidatedRefreshToken.from(refreshToken)
-        )
-
-        redisTemplate.opsForValue().set(tokenKey,
+        redisTemplate.opsForValue().set(
+            userIdKey,
             RedisValidatedRefreshToken.from(refreshToken)
         )
 
-        redisTemplate.expire(userIdKey,refreshTokenExpiration, TimeUnit.SECONDS )
-        redisTemplate.expire(tokenKey,refreshTokenExpiration, TimeUnit.SECONDS )
+        redisTemplate.opsForValue().set(
+            tokenKey,
+            RedisValidatedRefreshToken.from(refreshToken)
+        )
+
+        redisTemplate.expire(userIdKey, refreshTokenExpiration, TimeUnit.SECONDS)
+        redisTemplate.expire(tokenKey, refreshTokenExpiration, TimeUnit.SECONDS)
     }
 
     override suspend fun delete(refreshToken: ValidatedRefreshToken) {

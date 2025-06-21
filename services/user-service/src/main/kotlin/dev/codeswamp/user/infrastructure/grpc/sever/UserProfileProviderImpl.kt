@@ -10,7 +10,7 @@ import net.devh.boot.grpc.server.service.GrpcService
 @GrpcService
 class UserProfileServiceImpl(
     private val userProfileProvider: UserProfileProvider
-): UserServiceGrpcKt.UserServiceCoroutineImplBase() {
+) : UserServiceGrpcKt.UserServiceCoroutineImplBase() {
 
     override suspend fun fetchUserProfile(request: UserProfileRequest): UserProfileResponse {
         try {

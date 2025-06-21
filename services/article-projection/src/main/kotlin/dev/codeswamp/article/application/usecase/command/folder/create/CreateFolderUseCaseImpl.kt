@@ -13,10 +13,10 @@ class CreateFolderUseCaseImpl(
     private val folderRepository: FolderRepository,
     private val duplicatedFolderNameChecker: DuplicatedFolderNameChecker,
     private val idGenerator: IdGenerator
-): CreateFolderUseCase {
+) : CreateFolderUseCase {
 
     @Transactional
-    override fun create(command: CreateFolderCommand) : CreateFolderResult {
+    override fun create(command: CreateFolderCommand): CreateFolderResult {
         val parent = folderRepository.findById(command.parentId) ?: throw FolderNotFoundException.Companion.byId(command.parentId)
         parent.checkOwnership(command.userId)
 

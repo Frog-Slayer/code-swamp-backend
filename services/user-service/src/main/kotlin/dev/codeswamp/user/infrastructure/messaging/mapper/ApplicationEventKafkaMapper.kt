@@ -13,6 +13,7 @@ object ApplicationEventKafkaMapper {
             occurredAt = Instant.now(),
             failedUserEmail = event.email,
         )
-        else ->  throw IllegalArgumentException("Unsupported event: $event")
+
+        else -> throw IllegalArgumentException("Unsupported event: $event")
     }
 }

@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 @Service
 class GetAllFoldersForUserUseCaseImpl(
     private val folderRepository: FolderRepository
-): GetAllFoldersForUserUseCase {
+) : GetAllFoldersForUserUseCase {
     override fun handle(query: GetAllFoldersForUserQuery): GetAllFoldersForUserResult {
         val folders = folderRepository.findAllByOwnerId(query.userId)
 

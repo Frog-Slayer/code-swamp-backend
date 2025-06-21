@@ -5,8 +5,8 @@ import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 
-class CustomUserDetails (
-    private val user : AuthUser?
+class CustomUserDetails(
+    private val user: AuthUser?
 ) : UserDetails {
     override fun getAuthorities(): Collection<GrantedAuthority?>? {
         return user?.roles?.let { listOf(SimpleGrantedAuthority(it.toString())) }

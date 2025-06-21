@@ -17,7 +17,7 @@ data class Version private constructor(
 
     val isBaseVersion: Boolean = false,
     val fullContent: String? = null,
-){
+) {
     companion object {
         fun of(
             id: Long,
@@ -25,9 +25,9 @@ data class Version private constructor(
             articleId: Long,
             previousVersionId: Long?,
             title: String?,
-            diff : String,
+            diff: String,
             createdAt: Instant,
-        ) = Version (
+        ) = Version(
             id = id,
             state = state,
             articleId = articleId,
@@ -37,17 +37,17 @@ data class Version private constructor(
             createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
         )
 
-        fun from (
+        fun from(
             id: Long,
             state: VersionState,
             articleId: Long,
             previousVersionId: Long?,
             title: String?,
-            diff : String,
+            diff: String,
             createdAt: Instant,
             isBaseVersion: Boolean,
             fullContent: String?,
-        ) = Version (
+        ) = Version(
             id = id,
             state = state,
             articleId = articleId,
@@ -60,7 +60,7 @@ data class Version private constructor(
         )
     }
 
-    fun asBaseVersion(fullContent: String) : Version {
+    fun asBaseVersion(fullContent: String): Version {
         return this.copy(isBaseVersion = true, fullContent = fullContent)
     }
 

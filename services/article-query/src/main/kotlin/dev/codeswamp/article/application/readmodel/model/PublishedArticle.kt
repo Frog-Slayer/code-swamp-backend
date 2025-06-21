@@ -4,7 +4,7 @@ import dev.codeswamp.article.domain.article.model.VersionedArticle
 import org.springframework.security.access.AccessDeniedException
 import java.time.Instant
 
-data class PublishedArticle private constructor (
+data class PublishedArticle private constructor(
     val id: Long,//versionedArticle에서 사용하는 id와 동일
     val authorId: Long,
     val folderId: Long,
@@ -14,14 +14,14 @@ data class PublishedArticle private constructor (
 
     val summary: String,
     val thumbnailUrl: String? = null,
-    val isPublic : Boolean,
+    val isPublic: Boolean,
 
     val slug: String,
     val title: String,
     val content: String,
-){
+) {
     companion object {
-        fun of(versionedArticle: VersionedArticle, fullContent: String) = PublishedArticle (
+        fun of(versionedArticle: VersionedArticle, fullContent: String) = PublishedArticle(
             id = versionedArticle.id,
             authorId = versionedArticle.authorId,
             folderId = versionedArticle.metadata.folderId,
@@ -47,11 +47,11 @@ data class PublishedArticle private constructor (
             updateAt: Instant,
             summary: String,
             thumbnailUrl: String?,
-            isPublic : Boolean,
+            isPublic: Boolean,
             slug: String,
             title: String,
             content: String,
-        ) = PublishedArticle (
+        ) = PublishedArticle(
             id = id,
             authorId = authorId,
             folderId = folderId,

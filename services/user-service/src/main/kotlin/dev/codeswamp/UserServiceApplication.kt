@@ -12,5 +12,5 @@ import org.springframework.context.annotation.Import
 class UserServiceApplication
 
 fun main(args: Array<String>) {
-	runApplication<UserServiceApplication>(*args)
+    runApplication<UserServiceApplication>(*args)
 }

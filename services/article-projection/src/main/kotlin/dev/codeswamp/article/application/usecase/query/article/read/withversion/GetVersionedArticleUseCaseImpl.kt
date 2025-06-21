@@ -14,12 +14,12 @@ class GetVersionedArticleUseCaseImpl(
     private val articleRepository: ArticleRepository,
     private val contentReconstructor: ArticleContentReconstructor,
     private val deletionCache: FolderDeletionCache
-): GetVersionedArticleUseCase {
+) : GetVersionedArticleUseCase {
 
     @Transactional(readOnly = true)
     override fun handle(query: GetVersionedArticleQuery): ReadArticleResult {
         val article = articleRepository.findByIdAndVersionId(query.articleId, query.versionId)
-                        ?: throw ArticleNotFoundException("해당 버전의 글을 찾을 수 없습니다")
+            ?: throw ArticleNotFoundException("해당 버전의 글을 찾을 수 없습니다")
 
         checkFolderDeletionCache(article.metadata.folderId)
 

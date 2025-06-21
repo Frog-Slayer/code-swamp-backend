@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 class GetPublishedArticleBySlugUseCaseImpl(
     private val folderRepository: FolderRepository,
     private val publishedArticleRepository: PublishedArticleRepository,
-): GetPublishedArticleBySlugUseCase {
+) : GetPublishedArticleBySlugUseCase {
     override fun handle(query: GetPublishedArticleBySlugQuery): ReadArticleResult {
         val fullPath = query.path.split("/")
         val folderPath = fullPath.dropLast(1).joinToString("/")

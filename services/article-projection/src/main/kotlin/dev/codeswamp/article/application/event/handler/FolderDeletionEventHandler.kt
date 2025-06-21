@@ -11,7 +11,7 @@ import org.springframework.transaction.event.TransactionPhase
 import org.springframework.transaction.event.TransactionalEventListener
 
 @Component
-class FolderDeletionEventHandler (
+class FolderDeletionEventHandler(
     private val articleRepository: ArticleRepository,
     private val deletionCache: FolderDeletionCache
 ) {
@@ -22,7 +22,7 @@ class FolderDeletionEventHandler (
     @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)//TODO: Race Condition 있음
     fun handle(event: FolderDeletionEvent) {
         val foldersToDelete = event.descendantsIds + event.rootId
-        articleRepository.deleteAllByFolderIdIn( foldersToDelete)
+        articleRepository.deleteAllByFolderIdIn(foldersToDelete)
         deletionCache.removeDeletedMark(foldersToDelete)
     }
 }

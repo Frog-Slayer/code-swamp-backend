@@ -4,6 +4,9 @@ import dev.codeswamp.articlecommand.domain.article.model.Version
 import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
 
 interface ArticleRepository {
+
+    suspend fun create(versionedArticle: VersionedArticle) : VersionedArticle
+
     suspend fun save(versionedArticle: VersionedArticle): VersionedArticle
     suspend fun findIdByFolderIdAndSlug(folderId: Long, slug: String): Long?
     suspend fun findByIdAndVersionId(articleId: Long, versionId: Long): VersionedArticle?

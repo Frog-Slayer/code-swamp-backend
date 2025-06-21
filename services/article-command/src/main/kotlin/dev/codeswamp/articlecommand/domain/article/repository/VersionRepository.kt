@@ -3,6 +3,8 @@ package dev.codeswamp.articlecommand.domain.article.repository
 import dev.codeswamp.articlecommand.domain.article.model.Version
 
 interface VersionRepository {
+    suspend fun create(version: Version): Version
+
     suspend fun save(version: Version): Version
 
     suspend fun findByIdOrNull(id: Long): Version?

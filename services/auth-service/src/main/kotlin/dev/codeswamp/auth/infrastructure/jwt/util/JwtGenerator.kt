@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import java.util.Date
+import java.util.*
 import javax.crypto.SecretKey
 
 @Component
@@ -18,7 +18,7 @@ class JwtGenerator(
     @Value("\${jwt.secret}") private val secret: String,
     @Value("\${jwt.access-token-exp}") private val accessTokenExpiration: Long,
     @Value("\${jwt.access-token-exp}") private val refreshTokenExpiration: Long,
-): TokenGenerator {
+) : TokenGenerator {
 
     private val secretKey: SecretKey = Keys.hmacShaKeyFor(secret.toByteArray())
 

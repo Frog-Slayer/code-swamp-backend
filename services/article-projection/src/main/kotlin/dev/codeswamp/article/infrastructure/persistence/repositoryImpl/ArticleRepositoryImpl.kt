@@ -14,7 +14,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Repository
 
 @Repository
-class ArticleRepositoryImpl (
+class ArticleRepositoryImpl(
     private val articleMetadataJpaRepository: ArticleMetadataJpaRepository,
     private val versionJpaRepository: VersionJpaRepository,
     private val versionRepository: VersionRepository
@@ -28,10 +28,10 @@ class ArticleRepositoryImpl (
     }
 
     override fun findIdByFolderIdAndSlug(folderId: Long, slug: String): Long? {
-       return articleMetadataJpaRepository.findIdByFolderIdAndSlug(folderId, slug)
+        return articleMetadataJpaRepository.findIdByFolderIdAndSlug(folderId, slug)
     }
 
-    override fun findByIdAndVersionId( articleId: Long, versionId: Long): VersionedArticle? {
+    override fun findByIdAndVersionId(articleId: Long, versionId: Long): VersionedArticle? {
         val savedMetadataEntity = articleMetadataJpaRepository.findByIdOrNull(articleId)
         val savedVersion = versionRepository.findByIdOrNull(versionId)
 
@@ -57,7 +57,7 @@ class ArticleRepositoryImpl (
         return versionJpaRepository.countByArticleId(articleId)
     }
 
-    override fun saveVersion( version: Version): Version {
+    override fun saveVersion(version: Version): Version {
         return versionRepository.save(version)
     }
 
@@ -67,7 +67,7 @@ class ArticleRepositoryImpl (
         versionRepository.deleteAllByArticleIdIn(articleIds)
     }
 
-    private fun saveMetadata(article: VersionedArticle) : ArticleMetadataEntity {
+    private fun saveMetadata(article: VersionedArticle): ArticleMetadataEntity {
         val entity = ArticleMetadataEntity.Companion.from(article)
         return articleMetadataJpaRepository.findByIdOrNull(entity.id)
             ?.apply { updateTo(entity) }

@@ -11,38 +11,41 @@ data class User private constructor(
     val profileImage: String? = null,
 ) : AggregateRoot() {
     companion object {
-        fun of (
+        fun of(
             id: Long,
             username: String,
             nickname: String,
-            profileImage: String? = null) = User(
-                id = id,
-                username = Username.of(username),
-                nickname = Nickname.of(nickname),
-                profileImage = profileImage
+            profileImage: String? = null
+        ) = User(
+            id = id,
+            username = Username.of(username),
+            nickname = Nickname.of(nickname),
+            profileImage = profileImage
         )
     }
 
-    fun modifyNickname(nickname: String) : User {
+    fun modifyNickname(nickname: String): User {
         return this.copy(
             nickname = Nickname.of(nickname)
         )
     }
 
-    fun modifyProfileImage(profileImage: String?) : User {
+    fun modifyProfileImage(profileImage: String?): User {
         return this.copy(
             profileImage = profileImage
         )
     }
 
     fun registered(): User {
-        return this.withEvent(UserRegisteredEvent(
-            userId = id,
-            username = username.value
-        ))
+        return this.withEvent(
+            UserRegisteredEvent(
+                userId = id,
+                username = username.value
+            )
+        )
     }
 
-    fun withEvent(event: DomainEvent) : User {
+    fun withEvent(event: DomainEvent): User {
         val copy = this.copy()
         copy.addEvent(event)
         return copy

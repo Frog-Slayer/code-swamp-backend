@@ -12,7 +12,7 @@ import java.time.Instant
 class JwtAuthenticationFilter(
     private val tokenParser: AccessTokenParser,
     private val tokenExtractor: HttpAccessTokenExtractor
-) : WebFilter{
+) : WebFilter {
 
     override fun filter(
         exchange: ServerWebExchange,
@@ -22,8 +22,8 @@ class JwtAuthenticationFilter(
 
         val token = tokenExtractor.extractAccessTokenFromHeader(httpRequest)
         val userId = token
-            ?.let { tokenParser.parse(it)}
-            ?.takeIf { !Instant.now().isAfter(it.expiration)}
+            ?.let { tokenParser.parse(it) }
+            ?.takeIf { !Instant.now().isAfter(it.expiration) }
             ?.userId
 
         if (userId != null) httpRequest.attributes["userId"] = userId

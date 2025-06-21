@@ -1,12 +1,7 @@
 package dev.codeswamp.article.infrastructure.persistence.jpa.entity
 
 import dev.codeswamp.article.domain.folder.model.Folder
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToOne
+import jakarta.persistence.*
 
 @Entity
 data class FolderEntity(

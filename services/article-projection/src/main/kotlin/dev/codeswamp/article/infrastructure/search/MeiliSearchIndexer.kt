@@ -12,7 +12,7 @@ import reactor.core.publisher.Mono
 
 @Component
 class MeiliSearchIndexer(
-    @Qualifier("meiliWebClient") private val meiliClient : WebClient,
+    @Qualifier("meiliWebClient") private val meiliClient: WebClient,
 ) : ArticleSearchIndexer {
 
     @PostConstruct
@@ -21,7 +21,7 @@ class MeiliSearchIndexer(
             .subscribe()
     }
 
-    fun createIndexIfNotExist(indexName: String) : Mono<String> {
+    fun createIndexIfNotExist(indexName: String): Mono<String> {
         return meiliClient.get()
             .uri("/indexes/$indexName")
             .retrieve()
@@ -29,20 +29,22 @@ class MeiliSearchIndexer(
             .onErrorResume(WebClientResponseException.NotFound::class.java) { _ ->
                 createIndex(indexName).thenReturn("index $indexName newly created")
             }
-            .onErrorResume { error->
+            .onErrorResume { error ->
                 Mono.error(IllegalStateException("Unexpected error occurred while creating index: ${error.message}"))
             }
     }
 
     fun createIndex(indexName: String): Mono<String> {
-         return meiliClient.post()
-             .uri("/indexes")
-             .bodyValue(mapOf(
-                 "uid" to indexName,
-                 "primaryKey" to "articleId"
-             ))
-             .retrieve()
-             .bodyToMono(String::class.java)
+        return meiliClient.post()
+            .uri("/indexes")
+            .bodyValue(
+                mapOf(
+                    "uid" to indexName,
+                    "primaryKey" to "articleId"
+                )
+            )
+            .retrieve()
+            .bodyToMono(String::class.java)
     }
 
     // TODO 나중에 리액티브하게 변경
@@ -57,7 +59,7 @@ class MeiliSearchIndexer(
     }
 
     override fun remove(articleId: Long) {
-         meiliClient.delete()
+        meiliClient.delete()
             .uri("/indexes/articles/documents/$articleId")
             .retrieve()
             .bodyToMono(String::class.java)

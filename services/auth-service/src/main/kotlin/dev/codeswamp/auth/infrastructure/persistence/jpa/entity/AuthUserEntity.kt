@@ -2,11 +2,7 @@ package dev.codeswamp.auth.infrastructure.persistence.jpa.entity
 
 import dev.codeswamp.auth.domain.model.AuthUser
 import dev.codeswamp.auth.domain.model.Role
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.Id
+import jakarta.persistence.*
 
 @Entity
 data class AuthUserEntity(
@@ -19,7 +15,7 @@ data class AuthUserEntity(
     //TODO: 권한 생각해보고 -> 리스트로 관리할 필요가 있는 경우 별도로 분리할 것
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 16)
-    val role : Role
+    val role: Role
 ) {
     fun toDomain(): AuthUser {
         return AuthUser.of(

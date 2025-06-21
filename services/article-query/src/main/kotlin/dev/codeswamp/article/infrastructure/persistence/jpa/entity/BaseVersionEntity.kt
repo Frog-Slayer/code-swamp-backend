@@ -5,7 +5,7 @@ import jakarta.persistence.Entity
 import jakarta.persistence.Id
 
 @Entity
-data class BaseVersionEntity (
+data class BaseVersionEntity(
     @Id
     val versionId: Long,
 

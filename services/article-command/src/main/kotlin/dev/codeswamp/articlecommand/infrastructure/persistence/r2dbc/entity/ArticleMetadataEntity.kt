@@ -11,8 +11,6 @@ data class ArticleMetadataEntity(
     @Id
     val id: Long,
 
-    var title: String?,
-
     @Column("folder_id")
     var folderId: Long,
     var slug: String?,
@@ -39,7 +37,6 @@ data class ArticleMetadataEntity(
             authorId = versionedArticle.authorId,
             createdAt = versionedArticle.createdAt,
             isPublished = versionedArticle.isPublished,
-            title = versionedArticle.currentVersion.title?.value,
             isPublic = versionedArticle.metadata.isPublic,
             folderId = versionedArticle.metadata.folderId,
             summary = versionedArticle.metadata.summary,
@@ -49,7 +46,6 @@ data class ArticleMetadataEntity(
     }
 
     fun updateTo(newMetadata: ArticleMetadataEntity) {
-        title = newMetadata.title
         folderId = newMetadata.folderId
         slug = newMetadata.slug
         isPublic = newMetadata.isPublic

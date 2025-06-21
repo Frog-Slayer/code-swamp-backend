@@ -7,9 +7,9 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-class TokenParserConfig (
+class TokenParserConfig(
     @Value("\${jwt.secret}") private val secret: String,
 ) {
     @Bean
-    fun accessTokenParser() : AccessTokenParser = JwtAccessTokenParser.fromSecret(secret)
+    fun accessTokenParser(): AccessTokenParser = JwtAccessTokenParser.fromSecret(secret)
 }

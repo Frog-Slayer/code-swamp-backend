@@ -15,14 +15,14 @@ class AuthenticationToken private constructor(
     private val credentials: Any?,
     authorities: Collection<GrantedAuthority?>? = null,
     isAuthenticated: Boolean
-): AbstractAuthenticationToken(authorities) {
+) : AbstractAuthenticationToken(authorities) {
 
     init {
         this.isAuthenticated = isAuthenticated
     }
 
     override fun getCredentials(): Any? {
-        return  credentials
+        return credentials
     }
 
     override fun getPrincipal(): Any? {
@@ -33,19 +33,21 @@ class AuthenticationToken private constructor(
     }
 
     companion object {
-        fun authenticated (
+        fun authenticated(
             principal: CustomUserDetails,
             credentials: Any?,
             authorities: Collection<GrantedAuthority?>?
-        ) : AuthenticationToken {
-            return AuthenticationToken(Principal.AuthenticatedUser(principal),
-                credentials, authorities, true)
+        ): AuthenticationToken {
+            return AuthenticationToken(
+                Principal.AuthenticatedUser(principal),
+                credentials, authorities, true
+            )
         }
 
-        fun unauthenticated (
+        fun unauthenticated(
             principal: RawAccessToken,
             credentials: Any?,
-        ) : AuthenticationToken {
+        ): AuthenticationToken {
             return AuthenticationToken(Principal.AccessToken(principal), credentials, null, false)
         }
     }

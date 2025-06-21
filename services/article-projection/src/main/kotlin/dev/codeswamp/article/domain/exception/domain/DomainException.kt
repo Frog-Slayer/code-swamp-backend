@@ -7,5 +7,5 @@ interface DomainErrorCode {
 abstract class DomainException(
     val errorCode: DomainErrorCode,
     message: String
-): RuntimeException(message)
+) : RuntimeException(message)
 

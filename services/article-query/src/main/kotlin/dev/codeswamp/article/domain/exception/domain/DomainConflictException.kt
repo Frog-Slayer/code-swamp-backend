@@ -10,4 +10,4 @@ enum class DomainConflictErrorCode(
 abstract class DomainConflictException(
     errorCode: DomainConflictErrorCode,
     message: String
-): DomainException( errorCode, message )
+) : DomainException(errorCode, message)

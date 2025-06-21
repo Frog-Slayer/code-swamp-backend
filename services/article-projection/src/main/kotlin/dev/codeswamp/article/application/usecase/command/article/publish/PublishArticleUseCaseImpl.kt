@@ -56,7 +56,7 @@ class PublishArticleUseCaseImpl(
     }
 
     @Transactional
-    override fun update(command: UpdatePublishCommand) : PublishArticleResult {
+    override fun update(command: UpdatePublishCommand): PublishArticleResult {
         val createdAt = Instant.now()
 
         val article = articleRepository.findByIdAndVersionId(command.articleId, command.versionId)
@@ -70,12 +70,14 @@ class PublishArticleUseCaseImpl(
                     slug = Slug.Companion.of(command.slug)
                 )
             )
-            ?.updateVersionIfChanged(command.title,
+            ?.updateVersionIfChanged(
+                command.title,
                 command.diff,
                 idGenerator::generateId,
                 createdAt,
                 rebasePolicy::shouldStoreAsBase,
-                contentReconstructor::reconstructFullContent)
+                contentReconstructor::reconstructFullContent
+            )
             ?.publish(slugUniquenessChecker::checkSlugUniqueness)
             ?: throw ArticleNotFoundException.Companion.byId(command.articleId)
 

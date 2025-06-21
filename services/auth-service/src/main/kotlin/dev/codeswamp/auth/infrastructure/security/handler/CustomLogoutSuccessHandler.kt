@@ -12,14 +12,14 @@ import reactor.core.publisher.Mono
 @Component
 class CustomLogoutSuccessHandler(
     private val objectMapper: ObjectMapper,
-): ServerLogoutSuccessHandler {
+) : ServerLogoutSuccessHandler {
 
     override fun onLogoutSuccess(
         exchange: WebFilterExchange,
         authentication: Authentication?
     ): Mono<Void> {
         val response = exchange.exchange.response
-        response.statusCode= HttpStatus.OK
+        response.statusCode = HttpStatus.OK
         response.headers.contentType = APPLICATION_JSON
 
         val message = mapOf("message" to "logout success")

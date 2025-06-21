@@ -10,7 +10,7 @@ data class ReadArticleResult(
     val folderId: Long,
     val summary: String,
     val thumbnailUrl: String? = null,
-    val isPublic : Boolean,
+    val isPublic: Boolean,
     val title: String,
     val content: String,
 )

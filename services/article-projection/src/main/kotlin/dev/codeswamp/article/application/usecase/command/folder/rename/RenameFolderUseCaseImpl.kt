@@ -12,14 +12,14 @@ class RenameFolderUseCaseImpl(
     private val folderRepository: FolderRepository,
     private val duplicatedFolderNameChecker: DuplicatedFolderNameChecker,
     private val eventPublisher: ApplicationEventPublisher,
-): RenameFolderUseCase {
+) : RenameFolderUseCase {
 
     @Transactional
     override fun rename(command: RenameFolderCommand) {
         val folder = folderRepository.findById(command.folderId) ?: throw FolderNotFoundException.Companion.byId(command.folderId)
         folder.checkOwnership(command.userId)
 
-        val renamed = folder.rename(command.newName,  duplicatedFolderNameChecker::checkDuplicatedFolderNameInSameLevel)
+        val renamed = folder.rename(command.newName, duplicatedFolderNameChecker::checkDuplicatedFolderNameInSameLevel)
 
         folderRepository.save(renamed)
 

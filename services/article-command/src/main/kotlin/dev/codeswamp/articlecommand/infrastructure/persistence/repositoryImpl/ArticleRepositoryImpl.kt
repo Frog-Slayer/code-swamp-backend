@@ -19,6 +19,13 @@ class ArticleRepositoryImpl(
     private val versionRepository: VersionRepository
 ) : ArticleRepository {
 
+    override suspend fun create(versionedArticle: VersionedArticle): VersionedArticle {
+        val savedMetadataEntity = saveMetadata(versionedArticle)
+        val savedVersion = createVersion(versionedArticle.currentVersion)
+
+        return toDomain(savedMetadataEntity, savedVersion)
+    }
+
     override suspend fun save(versionedArticle: VersionedArticle): VersionedArticle {
         val savedMetadataEntity = saveMetadata(versionedArticle)
         val savedVersion = saveVersion(versionedArticle.currentVersion)
@@ -64,6 +71,25 @@ class ArticleRepositoryImpl(
         val articleIds = articleMetadataR2dbcRepository.findAllIdsByFolderIdIn(folderIds)
         articleMetadataR2dbcRepository.deleteAllByIdIn(articleIds)
         versionRepository.deleteAllByArticleIdIn(articleIds)
+    }
+
+    private suspend fun createVersion(version: Version): Version {
+        return versionRepository.create(version)
+    }
+
+    private suspend fun createMetadata(article: VersionedArticle) : ArticleMetadataEntity {
+        val entity = ArticleMetadataEntity.Companion.from(article)
+        return articleMetadataR2dbcRepository.insert(
+            id = entity.id,
+            folderId = entity.folderId,
+            slug = entity.slug,
+            authorId = entity.authorId,
+            isPublic = entity.isPublic,
+            isPublished = entity.isPublished,
+            createdAt = entity.createdAt,
+            summary = entity.summary,
+            thumbnail = entity.thumbnail,
+        )
     }
 
     private suspend fun saveMetadata(article: VersionedArticle): ArticleMetadataEntity {

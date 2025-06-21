@@ -3,7 +3,7 @@ package dev.codeswamp.article.domain.folder.exception
 import dev.codeswamp.article.domain.exception.domain.DomainForbiddenErrorCode
 import dev.codeswamp.article.domain.exception.domain.DomainForbiddenException
 
-class ForbiddenFolderAccessException (
+class ForbiddenFolderAccessException(
     folderId: Long
 ) : DomainForbiddenException(
     DomainForbiddenErrorCode.FORBIDDEN_FOLDER_ACCESS,

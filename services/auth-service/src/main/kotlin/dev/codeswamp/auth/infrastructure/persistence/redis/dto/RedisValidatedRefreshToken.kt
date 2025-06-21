@@ -1,14 +1,13 @@
 package dev.codeswamp.auth.infrastructure.persistence.redis.dto
 
-import dev.codeswamp.auth.domain.model.AuthUser
 import dev.codeswamp.auth.domain.model.token.ValidatedRefreshToken
 import java.time.Instant
 
-data class RedisValidatedRefreshToken (
+data class RedisValidatedRefreshToken(
     val value: String,
     val authUser: RedisAuthUser,
     val expiration: Instant,
-){
+) {
     companion object {
         fun from(validatedRefreshToken: ValidatedRefreshToken) = RedisValidatedRefreshToken(
             value = validatedRefreshToken.value,

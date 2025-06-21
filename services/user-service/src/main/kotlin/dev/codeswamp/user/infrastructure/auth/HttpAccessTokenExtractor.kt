@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component
 
 @Component
 class HttpAccessTokenExtractor(
-    private val tokenParser : AccessTokenParser,
+    private val tokenParser: AccessTokenParser,
 ) {
 
     fun extractAccessTokenFromHeader(request: ServerHttpRequest): String? {

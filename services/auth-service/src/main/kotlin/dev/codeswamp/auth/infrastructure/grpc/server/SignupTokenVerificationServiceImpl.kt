@@ -1,7 +1,6 @@
 package dev.codeswamp.auth.infrastructure.grpc.server
 
 import dev.codeswamp.auth.application.service.AuthApplicationService
-import dev.codeswamp.auth.application.signup.TemporaryTokenService
 import dev.codeswamp.grpc.AuthServiceGrpcKt
 import dev.codeswamp.grpc.TokenAuthenticationRequest
 import dev.codeswamp.grpc.UserIdResponse
@@ -9,9 +8,9 @@ import io.grpc.Status
 import net.devh.boot.grpc.server.service.GrpcService
 
 @GrpcService
-class SignupTokenVerificationServiceImpl (
+class SignupTokenVerificationServiceImpl(
     private val authApplicationService: AuthApplicationService
-): AuthServiceGrpcKt.AuthServiceCoroutineImplBase() {
+) : AuthServiceGrpcKt.AuthServiceCoroutineImplBase() {
 
     override suspend fun verifyTokenAndCreateUser(request: TokenAuthenticationRequest): UserIdResponse {
         try {
@@ -22,8 +21,8 @@ class SignupTokenVerificationServiceImpl (
                 .build()
         } catch (e: IllegalStateException) {
             throw Status.UNAUTHENTICATED.withDescription(e.message).asRuntimeException()
-        } catch (e : Exception) {
-             throw Status.INTERNAL
+        } catch (e: Exception) {
+            throw Status.INTERNAL
                 .withDescription(e.message)
                 .asRuntimeException()
         }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 @Component
 class KafkaInfraEventPublisherImpl(
     private val kafkaPublisher: KafkaEventPublisher,
-): InfraEventPublisher {
+) : InfraEventPublisher {
 
     override fun publish(event: InfraEvent) {
         val kafkaEvent = InfraEventKafkaMapper.map(event)

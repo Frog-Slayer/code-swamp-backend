@@ -8,7 +8,7 @@ import jakarta.persistence.Table
 
 @Entity
 @Table(name = "users")
-data class UserEntity (
+data class UserEntity(
     @Id
     val id: Long,
 

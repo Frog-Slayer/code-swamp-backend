@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import dev.codeswamp.article.application.usecase.command.article.draft.CreateDraftCommand
 import dev.codeswamp.article.presentation.json.StringToLongDeserializer
 
-data class DraftRequest (
+data class DraftRequest(
     val title: String,
     val diff: String,
 

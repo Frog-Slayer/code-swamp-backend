@@ -13,14 +13,16 @@ interface VersionNodeRepository : Neo4jRepository<VersionNode, Long> {
 
     fun deleteAllByArticleIdIn(articleIds: List<Long>)
 
-    @Query("MATCH p= (base: VersionNode)-[:NEXT*0..]->(target: VersionNode{versionId: \$versionId})" +
-            """WHERE base.isBase = TRUE
+    @Query(
+        "MATCH p= (base: VersionNode)-[:NEXT*0..]->(target: VersionNode{versionId: \$versionId})" +
+                """WHERE base.isBase = TRUE
             RETURN base
             ORDER BY length(p) ASC
             LIMIT 1 
-        """)
-    fun findBaseNodeNearestTo(versionId : Long) : VersionNode?
+        """
+    )
+    fun findBaseNodeNearestTo(versionId: Long): VersionNode?
 
     @Query("MATCH p = shortestPath((n1: VersionNode{versionId: \$versionId1})-[:NEXT*0..]->(n2: VersionNode{versionId: \$versionId2})) RETURN p")
-    fun findShortestPathBetween(versionId1: Long, versionId2: Long) : List<VersionNode>
+    fun findShortestPathBetween(versionId1: Long, versionId2: Long): List<VersionNode>
 }

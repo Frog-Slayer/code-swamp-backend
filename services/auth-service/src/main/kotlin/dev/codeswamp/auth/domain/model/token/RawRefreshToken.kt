@@ -2,7 +2,7 @@ package dev.codeswamp.auth.domain.model.token
 
 import java.time.Instant
 
-data class RawRefreshToken (
+data class RawRefreshToken(
     val value: String,
     val sub: String,
     val expiration: Instant,

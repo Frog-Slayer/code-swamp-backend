@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service
 class TokenValidator(
     private val tokenRepository: TokenRepository,
     private val authUserRepository: AuthUserRepository
-){
-    fun validateAccessToken(accessToken: RawAccessToken) : ValidatedAccessToken {
-        require( !accessToken.expired()) {"Token expired!"}
+) {
+    fun validateAccessToken(accessToken: RawAccessToken): ValidatedAccessToken {
+        require(!accessToken.expired()) { "Token expired!" }
 
         val authUser = AuthUser.of(
             id = accessToken.userId,
@@ -33,8 +33,8 @@ class TokenValidator(
         )
     }
 
-    suspend fun validateRefreshToken(refreshToken: RawRefreshToken) : ValidatedRefreshToken {
-        require( !refreshToken.expired()) {"Token expired!"}
+    suspend fun validateRefreshToken(refreshToken: RawRefreshToken): ValidatedRefreshToken {
+        require(!refreshToken.expired()) { "Token expired!" }
 
         val savedRefreshToken = tokenRepository.findRefreshTokenByToken(refreshToken.value)
             ?: throw IllegalStateException("No user found for token ${refreshToken.value}")//TODO

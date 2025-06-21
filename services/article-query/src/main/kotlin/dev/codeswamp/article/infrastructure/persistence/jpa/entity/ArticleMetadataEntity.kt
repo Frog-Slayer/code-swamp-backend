@@ -1,18 +1,16 @@
 package dev.codeswamp.article.infrastructure.persistence.jpa.entity
 
 import dev.codeswamp.article.domain.article.model.VersionedArticle
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
-import jakarta.persistence.UniqueConstraint
+import jakarta.persistence.*
 import java.time.Instant
 
 @Entity
-@Table(name = "article",
+@Table(
+    name = "article",
     uniqueConstraints = [UniqueConstraint(columnNames = ["folder_id", "slug"])]
 )
-data class ArticleMetadataEntity (//ArticleMetadata
+data class ArticleMetadataEntity(
+//ArticleMetadata
     @Id//도메인에서 생성
     val id: Long,
 
@@ -34,7 +32,7 @@ data class ArticleMetadataEntity (//ArticleMetadata
 
     var summary: String = "",
 
-    var thumbnailUrl : String? = null,
+    var thumbnailUrl: String? = null,
 ) {
     companion object {
         fun from(versionedArticle: VersionedArticle) = ArticleMetadataEntity(
@@ -52,11 +50,11 @@ data class ArticleMetadataEntity (//ArticleMetadata
     }
 
     fun updateTo(newMetadata: ArticleMetadataEntity) {
-        title =  newMetadata.title
-        folderId =  newMetadata.folderId
-        slug =  newMetadata.slug
-        isPublic =  newMetadata.isPublic
-        isPublished =  newMetadata.isPublished
+        title = newMetadata.title
+        folderId = newMetadata.folderId
+        slug = newMetadata.slug
+        isPublic = newMetadata.isPublic
+        isPublished = newMetadata.isPublished
         summary = newMetadata.summary
         thumbnailUrl = newMetadata.thumbnailUrl
     }

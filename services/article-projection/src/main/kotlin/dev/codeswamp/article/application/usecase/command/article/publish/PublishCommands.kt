@@ -1,6 +1,6 @@
 package dev.codeswamp.article.application.usecase.command.article.publish
 
-data class UpdatePublishCommand (
+data class UpdatePublishCommand(
     val userId: Long,
     val articleId: Long,
     val versionId: Long,
@@ -12,9 +12,9 @@ data class UpdatePublishCommand (
     val slug: String,
     val summary: String,
 
-)
+    )
 
-data class CreatePublishCommand (
+data class CreatePublishCommand(
     val userId: Long,
     val title: String,
     val diff: String,

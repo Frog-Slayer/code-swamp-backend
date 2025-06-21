@@ -10,7 +10,8 @@ import org.springframework.stereotype.Component
 @Component
 class GrpcUserProfileFetcherImpl : UserProfileFetcher {
 
-    @GrpcClient("user-service") lateinit var stub: UserServiceGrpcKt.UserServiceCoroutineStub
+    @GrpcClient("user-service")
+    lateinit var stub: UserServiceGrpcKt.UserServiceCoroutineStub
 
     override suspend fun fetchUserProfile(userId: Long): UserProfile {
         try {

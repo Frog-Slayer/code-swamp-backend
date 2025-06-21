@@ -1,7 +1,7 @@
 package dev.codeswamp.article.domain.exception.domain
 
-enum class DomainNotFoundErrorCode (
-    override  val code: String,
+enum class DomainNotFoundErrorCode(
+    override val code: String,
 ) : DomainErrorCode {
     DOMAIN_NOT_FOUND_ERROR("DOMAIN_NOT_FOUND_ERROR"),
     ARTICLE_NOT_FOUND("ARTICLE_NOT_FOUND_ERROR"),
@@ -11,4 +11,4 @@ enum class DomainNotFoundErrorCode (
 abstract class DomainNotFoundException(
     errorCode: DomainNotFoundErrorCode,
     message: String
-): DomainException( errorCode, message)
+) : DomainException(errorCode, message)

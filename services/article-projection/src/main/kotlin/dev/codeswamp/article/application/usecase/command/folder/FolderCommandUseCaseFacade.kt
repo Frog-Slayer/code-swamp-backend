@@ -13,14 +13,14 @@ import dev.codeswamp.article.application.usecase.command.folder.rename.RenameFol
 import org.springframework.stereotype.Service
 
 @Service
-class FolderCommandUseCaseFacade (
+class FolderCommandUseCaseFacade(
     private val createFolderUseCase: CreateFolderUseCase,
     private val moveFolderUseCase: MoveFolderUseCase,
     private val renameFolderUseCase: RenameFolderUseCase,
     private val deleteFolderUseCase: DeleteFolderUseCase,
 ) {
 
-    fun create(command: CreateFolderCommand) : CreateFolderResult {
+    fun create(command: CreateFolderCommand): CreateFolderResult {
         return createFolderUseCase.create(command)
     }
 

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
 import dev.codeswamp.article.application.usecase.query.article.read.ReadArticleResult
 import java.time.Instant
 
-data class ArticleReadResponse (
+data class ArticleReadResponse(
     @JsonSerialize(using = ToStringSerializer::class)
     val id: Long,
 
@@ -19,7 +19,7 @@ data class ArticleReadResponse (
 
     val summary: String,
     val thumbnailUrl: String? = null,
-    val isPublic : Boolean,
+    val isPublic: Boolean,
     val title: String,
     val content: String,
 ) {

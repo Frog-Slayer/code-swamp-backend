@@ -6,7 +6,7 @@ import dev.codeswamp.article.domain.exception.domain.DomainBadRequestException
 //TODO 분리
 class InvalidFormatException(
     message: String
-): DomainBadRequestException(
+) : DomainBadRequestException(
     DomainBadRequestErrorCode.INVALID_FORMAT,
     "Invalid format: $message"
 )

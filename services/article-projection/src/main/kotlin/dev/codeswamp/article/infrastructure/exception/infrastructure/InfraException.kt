@@ -7,5 +7,5 @@ interface InfraErrorCode {
 abstract class InfraException(
     val errorCode: InfraErrorCode,
     message: String
-): RuntimeException(message)
+) : RuntimeException(message)
 

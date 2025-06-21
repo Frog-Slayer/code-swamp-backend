@@ -25,7 +25,7 @@ import reactor.core.publisher.Mono
 
 @Configuration
 @EnableWebFluxSecurity
-class SecurityConfig (
+class SecurityConfig(
     private val objectMapper: ObjectMapper,
     private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler,
     private val oAuth2LoginFailureHandler: OAuth2LoginFailureHandler,
@@ -53,7 +53,7 @@ class SecurityConfig (
         tokenAuthenticationManager: ReactiveAuthenticationManager,
     ): SecurityWebFilterChain {
         return http
-            .csrf{ it.disable() }
+            .csrf { it.disable() }
             .cors {
                 it.configurationSource { exchange ->
                     CorsConfiguration().apply {
@@ -70,25 +70,28 @@ class SecurityConfig (
             }
             .formLogin { it.disable() }
             .httpBasic { it.disable() }
-            .logout { it
-                .logoutUrl("/logout")
-                .logoutHandler(customLogoutHandler)
-                .logoutSuccessHandler(customLogoutSuccessHandler)
+            .logout {
+                it
+                    .logoutUrl("/logout")
+                    .logoutHandler(customLogoutHandler)
+                    .logoutSuccessHandler(customLogoutSuccessHandler)
             }
-            .authorizeExchange { it
-                .pathMatchers(*skipPathList.toTypedArray()).permitAll()
-                .anyExchange().authenticated()
+            .authorizeExchange {
+                it
+                    .pathMatchers(*skipPathList.toTypedArray()).permitAll()
+                    .anyExchange().authenticated()
             }
-            .oauth2Login { it
-                .authenticationSuccessHandler( oAuth2LoginSuccessHandler)
-                .authenticationFailureHandler(oAuth2LoginFailureHandler)
+            .oauth2Login {
+                it
+                    .authenticationSuccessHandler(oAuth2LoginSuccessHandler)
+                    .authenticationFailureHandler(oAuth2LoginFailureHandler)
             }
             .exceptionHandling {
                 it.authenticationEntryPoint { exchange, authException ->
                     val response = exchange.response
                     response.statusCode = HttpStatus.UNAUTHORIZED
                     response.writeWith(
-                    Mono.fromSupplier {
+                        Mono.fromSupplier {
                             val errorResponseAsJson = objectMapper.writeValueAsBytes("Unauthorized")
                             response.bufferFactory().wrap(errorResponseAsJson)
                         }

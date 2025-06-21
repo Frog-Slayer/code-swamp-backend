@@ -31,8 +31,7 @@ class VersionRepositoryImpl(
         val ret = if (existingEntity != null) {
             existingEntity.updateTo(entity)
             existingEntity.toDomain()
-        }
-        else versionJpaRepository.save(entity).toDomain()
+        } else versionJpaRepository.save(entity).toDomain()
 
         eventPublisher.publishEvent(
             VersionNodeSaveEvent(
@@ -61,24 +60,25 @@ class VersionRepositoryImpl(
     }
 
     override suspend fun findPreviousPublishedVersion(articleId: Long, versionId: Long): Version? {
-        return versionJpaRepository.findTopByArticleIdAndIdLessThanAndStateOrderByIdDesc(articleId, versionId, VersionStateJpa.PUBLISHED)?.toDomain()
+        return versionJpaRepository.findTopByArticleIdAndIdLessThanAndStateOrderByIdDesc(articleId, versionId, VersionStateJpa.PUBLISHED)
+            ?.toDomain()
     }
 
     override suspend fun findNearestBaseTo(versionId: Long): Version? {
-       return versionNodeRepository.findBaseNodeNearestTo(versionId)
-                        ?.let { versionJpaRepository.findByIdOrNull(it.versionId) }
-                        ?.toDomain()
+        return versionNodeRepository.findBaseNodeNearestTo(versionId)
+            ?.let { versionJpaRepository.findByIdOrNull(it.versionId) }
+            ?.toDomain()
     }
 
     override suspend fun findDiffChainBetween(baseId: Long, targetId: Long): List<String> {
         return versionNodeRepository.findShortestPathBetween(baseId, targetId)
-                .map { it.versionId }
-                .let { versionJpaRepository.findAllByIdIsIn(it)}
-                .sortedBy { it.createdAt }
-                .map { it.diff }
+            .map { it.versionId }
+            .let { versionJpaRepository.findAllByIdIsIn(it) }
+            .sortedBy { it.createdAt }
+            .map { it.diff }
     }
 
-    fun VersionEntity.toDomain() : Version {
+    fun VersionEntity.toDomain(): Version {
         val fullContent = if (this.isBaseVersion) baseVersionJpaRepository.findByIdOrNull(id)?.content else null
         return this.toDomain(fullContent)
     }

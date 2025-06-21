@@ -29,7 +29,7 @@ class DiffProcessorImpl : DiffProcessor {
 
         var fullContent = base.lines()
 
-        for (diff in  diffChain.drop(1)) {
+        for (diff in diffChain.drop(1)) {
             val patch = UnifiedDiffUtils.parseUnifiedDiff(diff.lines())
             if (!patch.hasValidDelta()) continue;
 
@@ -46,7 +46,7 @@ class DiffProcessorImpl : DiffProcessor {
         return DiffUtils.patch(content.lines(), patch).joinToString("\n")
     }
 
-    private fun Patch<String>.hasValidDelta() : Boolean {
+    private fun Patch<String>.hasValidDelta(): Boolean {
         return this.deltas.any { delta ->
             delta.source.position >= 0 && delta.target.position >= 0
         }

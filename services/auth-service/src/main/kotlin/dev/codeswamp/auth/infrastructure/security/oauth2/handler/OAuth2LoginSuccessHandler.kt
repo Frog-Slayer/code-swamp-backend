@@ -72,7 +72,7 @@ class OAuth2LoginSuccessHandler(
             .queryParam("signupToken", signupToken)
             .queryParam("email", userInfo.email)
             .queryParam("name", userInfo.name)
-            .queryParam("profileImage",userInfo.profileImage)
+            .queryParam("profileImage", userInfo.profileImage)
             .build().encode().toUriString()
 
         response.statusCode = HttpStatus.FOUND
@@ -86,7 +86,7 @@ class OAuth2LoginSuccessHandler(
 
         tokenAccessor.injectTokenPair(response, ValidatedTokenPair(accessToken, refreshToken))
 
-        if (user.id == null) throw Exception( " No User ID") // TODO -> 세분화
+        if (user.id == null) throw Exception(" No User ID") // TODO -> 세분화
         val userProfile = userProfileFetcher.fetchUserProfile(user.id)
 
         val redirectUrl = UriComponentsBuilder
@@ -94,9 +94,9 @@ class OAuth2LoginSuccessHandler(
             .queryParam("isNewUser", false)
             .queryParam("accessToken", accessToken.value)
             .queryParam("email", user.email)
-            .queryParam("name",userProfile.nickname)//여기
+            .queryParam("name", userProfile.nickname)//여기
             .queryParam("profileImage", userProfile.profileImage)//여기
-        .build().encode().toUriString()
+            .build().encode().toUriString()
 
         response.statusCode = HttpStatus.FOUND
         response.headers.location = URI.create(redirectUrl)

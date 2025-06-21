@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component
 @Primary
 class SnapshotEvery5thPolicy(
     private val articleRepository: ArticleRepository
-): RebasePolicy {
+) : RebasePolicy {
     override fun shouldStoreAsBase(version: Version): Boolean {
         return articleRepository.countVersionsOfArticle(version.articleId) % 5 == 0L
     }

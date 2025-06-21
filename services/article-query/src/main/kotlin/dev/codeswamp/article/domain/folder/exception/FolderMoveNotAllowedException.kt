@@ -6,7 +6,7 @@ import dev.codeswamp.article.domain.exception.domain.DomainBadRequestException
 class FolderMoveNotAllowedException(
     path: String,
     targetPath: String
-): DomainBadRequestException(
+) : DomainBadRequestException(
     DomainBadRequestErrorCode.INVALID_FOLDER_MOVE,
     "Cannot move folder $path to its descendant $targetPath"
 )

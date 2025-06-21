@@ -1,7 +1,6 @@
 package dev.codeswamp.infrakafka.config
 
 import dev.codeswamp.infrakafka.event.KafkaEvent
-import jakarta.annotation.PostConstruct
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean
@@ -21,15 +20,10 @@ class KafkaConfig(
     private val kafkaProperties: KafkaProperties,
 ) {
     val logger = LoggerFactory.getLogger(javaClass)
-    @PostConstruct
-    fun init() {
-        logger.warn("Kafka configuration: {}", kafkaProperties.producer.valueSerializer)
-    }
 
     @Bean
     fun producerFactory(): ProducerFactory<String, KafkaEvent> {
         val configs = kafkaProperties.buildProducerProperties()
-        configs["spring.json.add.type.headers"] = false
         return DefaultKafkaProducerFactory(configs)
     }
 

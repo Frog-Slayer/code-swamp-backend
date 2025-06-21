@@ -9,15 +9,16 @@ import org.springframework.web.reactive.function.client.WebClient
 import reactor.core.publisher.Mono
 
 @Component
-class GithubClient (
+class GithubClient(
     @Qualifier("githubWebClient") private val webClient: WebClient,
 ) {
-    data class GithubEmailResponse (
+    data class GithubEmailResponse(
         val email: String,
         val verified: Boolean,
         val primary: Boolean,
         val visibility: String?
     )
+
     companion object {
         val emailResponseTypeRef = object : ParameterizedTypeReference<List<GithubEmailResponse>>() {}
     }
@@ -27,13 +28,13 @@ class GithubClient (
             .uri("/user/emails")
             .header(HttpHeaders.AUTHORIZATION, "Bearer $accessToken")
             .retrieve()
-            .onStatus({ it.is4xxClientError || it.is5xxServerError} ) { response ->
+            .onStatus({ it.is4xxClientError || it.is5xxServerError }) { response ->
                 response.bodyToMono(String::class.java).flatMap {
                     Mono.error(RuntimeException("Cannot fetch primary email from github. Error Code: $it"))
                 }
             }
-            .bodyToMono(emailResponseTypeRef )
+            .bodyToMono(emailResponseTypeRef)
             .awaitSingle()
-            .firstOrNull { it.primary && it.verified}?.email
+            .firstOrNull { it.primary && it.verified }?.email
     }
 }

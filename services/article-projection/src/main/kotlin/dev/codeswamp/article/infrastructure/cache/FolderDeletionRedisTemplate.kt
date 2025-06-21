@@ -9,7 +9,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer
 @Configuration
 class FolderDeletionRedisTemplate(
     private val redisConnectionFactory: RedisConnectionFactory,
-){
+) {
     @Bean(name = ["folderDeletionCache"])
     fun temporaryTokenTemplate(): RedisTemplate<String, String> {
         val template = RedisTemplate<String, String>()

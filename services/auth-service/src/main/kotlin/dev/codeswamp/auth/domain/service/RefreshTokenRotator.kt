@@ -7,12 +7,12 @@ import org.springframework.stereotype.Service
 @Service
 class RefreshTokenRotator(
     private val tokenRepository: TokenRepository
-){
+) {
 
-    suspend fun rotate(newToken: ValidatedRefreshToken)
-    {
+    suspend fun rotate(newToken: ValidatedRefreshToken) {
         tokenRepository.findRefreshTokenByUserId(
-            newToken.authUser.id ?: throw IllegalStateException("not a valid token"))
+            newToken.authUser.id ?: throw IllegalStateException("not a valid token")
+        )
             ?.let { tokenRepository.delete(it) }
 
         tokenRepository.storeRefreshToken(newToken)

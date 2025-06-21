@@ -16,7 +16,7 @@ class FolderRepositoryImpl(
 ) : FolderRepository {
 
     override fun save(folder: Folder): Folder {
-        val parent = folder.parentId?.let{folderJpaRepository.findByIdOrNull(folder.parentId)}
+        val parent = folder.parentId?.let { folderJpaRepository.findByIdOrNull(folder.parentId) }
         val saved = folderJpaRepository.save(FolderEntity.Companion.from(folder, parent)).toDomain()
         return saved
     }
@@ -52,7 +52,7 @@ class FolderRepositoryImpl(
     }
 
     override fun existsByParentIdAndName(parentId: Long, name: String): Boolean {
-       return folderJpaRepository.existsByParentIdAndName(parentId, name)
+        return folderJpaRepository.existsByParentIdAndName(parentId, name)
     }
 
     override fun findAllByOwnerId(userId: Long): List<Folder> {

@@ -13,7 +13,7 @@ object DomainEventKafkaMapper {
     }
 }
 
-fun UserRegisteredEvent.toKafkaEvent() =  KafkaUserRegisteredEvent(
+fun UserRegisteredEvent.toKafkaEvent() = KafkaUserRegisteredEvent(
     occurredAt = Instant.now(),
     key = userId.toString(),
     userId = userId,

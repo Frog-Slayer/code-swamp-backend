@@ -1,6 +1,6 @@
 package dev.codeswamp.article.application.usecase.command.article.draft
 
-data class UpdateDraftCommand (
+data class UpdateDraftCommand(
     val userId: Long,
     val articleId: Long,
     val versionId: Long,
@@ -9,7 +9,7 @@ data class UpdateDraftCommand (
     val folderId: Long,
 )
 
-data class CreateDraftCommand (
+data class CreateDraftCommand(
     val userId: Long,
     val title: String,
     val diff: String,

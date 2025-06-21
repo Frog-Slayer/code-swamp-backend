@@ -16,4 +16,4 @@ enum class DomainBadRequestErrorCode(
 abstract class DomainBadRequestException(
     errorCode: DomainBadRequestErrorCode,
     message: String
-): DomainException(errorCode, message)
+) : DomainException(errorCode, message)

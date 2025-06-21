@@ -24,20 +24,23 @@ import java.net.URLDecoder
 class ArticleController(
     private val commandFacade: ArticleCommandUseCaseFacade,
     private val queryFacade: ArticleQueryUseCaseFacade
-){
+) {
     private val logger = LoggerFactory.getLogger(ArticleController::class.java)
 
     @GetMapping("/{articleId}")
     fun getArticleWithId(
         @AuthenticationPrincipal user: CustomUserDetails,
-        @PathVariable articleId:Long)
-    : ArticleReadResponse {
-       return ArticleReadResponse.Companion.from( queryFacade.getPublishedArticleById(query = GetPublishedArticleByIdQuery(
-           userId = user.getId(),
-           articleId = articleId
-       )
-       )
-       )
+        @PathVariable articleId: Long
+    )
+            : ArticleReadResponse {
+        return ArticleReadResponse.Companion.from(
+            queryFacade.getPublishedArticleById(
+                query = GetPublishedArticleByIdQuery(
+                    userId = user.getId(),
+                    articleId = articleId
+                )
+            )
+        )
     }
 
     @GetMapping("/@{username}/**")
@@ -45,50 +48,55 @@ class ArticleController(
         @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable username: String,
         httpServletRequest: HttpServletRequest
-    ) : ArticleReadResponse {
+    ): ArticleReadResponse {
         val rawPath = httpServletRequest.requestURI.removePrefix("/api/articles/")
         val fullPath = URLDecoder.decode(rawPath, "UTF-8")
 
         logger.info("full path: {}", fullPath)
 
-        return ArticleReadResponse.Companion.from( queryFacade.getPublishedArticleBySlug(
-            GetPublishedArticleBySlugQuery(
-                userId = user.getId(),
-                path = fullPath
+        return ArticleReadResponse.Companion.from(
+            queryFacade.getPublishedArticleBySlug(
+                GetPublishedArticleBySlugQuery(
+                    userId = user.getId(),
+                    path = fullPath
+                )
             )
-        ))
+        )
     }
 
     @GetMapping("/{articleId}/versions/{versionId}")
     fun getVersionedArticle(
         @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable articleId: Long,
-        @PathVariable versionId: Long)
-    : ArticleReadResponse {
+        @PathVariable versionId: Long
+    )
+            : ArticleReadResponse {
         val userId = requireNotNull(user.getId())
-        return ArticleReadResponse.Companion.from( queryFacade.getVersionedArticle(
-            GetVersionedArticleQuery(
-                userId = userId,
-                articleId = articleId,
-                versionId = versionId
+        return ArticleReadResponse.Companion.from(
+            queryFacade.getVersionedArticle(
+                GetVersionedArticleQuery(
+                    userId = userId,
+                    articleId = articleId,
+                    versionId = versionId
+                )
             )
-        ))
+        )
     }
 
-    @PostMapping( "/publish")
+    @PostMapping("/publish")
     fun publishNew(
         @AuthenticationPrincipal user: CustomUserDetails,
         @RequestBody publishRequest: PublishRequest,
-    ) : PublishResponse {
+    ): PublishResponse {
         return PublishResponse.Companion.from(commandFacade.createPublish(publishRequest.toCommand(user.getId())))
     }
 
     @PostMapping("/{articleId}/publish")
-    fun  publish(
+    fun publish(
         @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable articleId: Long,
         @RequestBody publishRequest: PublishUpdateRequest
-    ) : PublishResponse {
+    ): PublishResponse {
         return PublishResponse.Companion.from(commandFacade.updatePublish(publishRequest.toCommand(user.getId(), articleId)))
     }
 
@@ -96,8 +104,8 @@ class ArticleController(
     fun draftNew(
         @AuthenticationPrincipal user: CustomUserDetails,
         @RequestBody draftArticleRequest: DraftRequest
-    ) : DraftResponse {
-        return DraftResponse.Companion.from( commandFacade.createDraft(draftArticleRequest.toCommand(user.getId())))
+    ): DraftResponse {
+        return DraftResponse.Companion.from(commandFacade.createDraft(draftArticleRequest.toCommand(user.getId())))
     }
 
     @PatchMapping("/{articleId}/versions/{versionId}/draft")

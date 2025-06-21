@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 @Repository
 class AuthUserRepositoryImpl(
     private val authUserJpaRepository: AuthUserJpaRepository
-): AuthUserRepository {
+) : AuthUserRepository {
     override suspend fun save(authUser: AuthUser): AuthUser {
         return authUserJpaRepository.save(AuthUserEntity.Companion.from(authUser)).toDomain()
     }

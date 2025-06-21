@@ -5,7 +5,6 @@ import dev.codeswamp.auth.application.dto.ValidatedTokenPair
 import dev.codeswamp.auth.application.port.outgoing.UserProfileFetcher
 import dev.codeswamp.auth.application.signup.TemporaryTokenService
 import dev.codeswamp.auth.domain.model.AuthUser
-import dev.codeswamp.auth.domain.model.Role
 import dev.codeswamp.auth.domain.model.token.RawAccessToken
 import dev.codeswamp.auth.domain.model.token.RawRefreshToken
 import dev.codeswamp.auth.domain.model.token.ValidatedAccessToken
@@ -26,7 +25,7 @@ data class SignUpResult(
 )
 
 @Service
-class AuthApplicationService (
+class AuthApplicationService(
     private val temporaryTokenService: TemporaryTokenService,
     private val userProfileFetcher: UserProfileFetcher,
     private val authUserRepository: AuthUserRepository,
@@ -39,25 +38,26 @@ class AuthApplicationService (
     private val tokenParser: TokenParser,
 ) {
 
-    suspend fun signup(email: String, signupToken: String) :  SignUpResult{
+    suspend fun signup(email: String, signupToken: String): SignUpResult {
         if (!temporaryTokenService.authenticate(signupToken, email))
             throw IllegalStateException("Invalid or expired signup token")
 
         return SignUpResult(
             authUserRepository.save(
-            AuthUser.createUser(
-                generateId = { idGenerator.generateId() },
-                email = email,
-            )).id,
+                AuthUser.createUser(
+                    generateId = { idGenerator.generateId() },
+                    email = email,
+                )
+            ).id,
             temporaryTokenService.generateOtp(email)
         )
     }
 
-    suspend fun  findByUsername(username: String): AuthUser? {
+    suspend fun findByUsername(username: String): AuthUser? {
         return authUserRepository.findByUsername(username)
     }
 
-    suspend fun refresh(rawRefreshToken: RawRefreshToken) : ValidatedTokenPair {
+    suspend fun refresh(rawRefreshToken: RawRefreshToken): ValidatedTokenPair {
         val oldRefreshToken = tokenValidator.validateRefreshToken(rawRefreshToken)
         val authUser = oldRefreshToken.authUser
 
@@ -70,11 +70,11 @@ class AuthApplicationService (
         )
     }
 
-    fun issueAccessToken(authUser: AuthUser) : ValidatedAccessToken{
+    fun issueAccessToken(authUser: AuthUser): ValidatedAccessToken {
         return tokenGenerator.generateAccessToken(authUser)
     }
 
-    suspend fun issueAndStoreRefreshToken(authUser: AuthUser) : ValidatedRefreshToken {
+    suspend fun issueAndStoreRefreshToken(authUser: AuthUser): ValidatedRefreshToken {
         val refreshToken = tokenGenerator.generateRefreshToken(authUser)
         tokenRotator.rotate(refreshToken)
 
@@ -113,7 +113,7 @@ class AuthApplicationService (
         return tokenParser.parseAccessToken(accessToken)
     }
 
-    fun parseRefreshToken(refreshToken: String) : RawRefreshToken {
+    fun parseRefreshToken(refreshToken: String): RawRefreshToken {
         return tokenParser.parseRefreshToken(refreshToken)
     }
 }

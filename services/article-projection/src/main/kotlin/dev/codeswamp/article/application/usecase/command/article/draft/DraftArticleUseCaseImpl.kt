@@ -55,17 +55,19 @@ class DraftArticleUseCaseImpl(
     }
 
     @Transactional
-    override fun update(command: UpdateDraftCommand) : DraftArticleResult {
+    override fun update(command: UpdateDraftCommand): DraftArticleResult {
         val createdAt = Instant.now()
 
-        val article = articleRepository.findByIdAndVersionId(command.articleId, command.versionId )
+        val article = articleRepository.findByIdAndVersionId(command.articleId, command.versionId)
             ?.apply { VersionedArticle.checkOwnership(command.userId) }
-            ?.updateVersionIfChanged(command.title,
+            ?.updateVersionIfChanged(
+                command.title,
                 command.diff,
                 idGenerator::generateId,
                 createdAt,
                 rebasePolicy::shouldStoreAsBase,
-                contentReconstructor::reconstructFullContent)
+                contentReconstructor::reconstructFullContent
+            )
             ?.draft(slugUniquenessChecker::checkSlugUniqueness)
             ?: throw ArticleNotFoundException.Companion.byId(command.articleId)
 

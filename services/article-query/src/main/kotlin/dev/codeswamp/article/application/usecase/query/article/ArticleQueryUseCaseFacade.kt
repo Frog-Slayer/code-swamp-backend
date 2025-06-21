@@ -15,7 +15,7 @@ class ArticleQueryUseCaseFacade(
     private val getPublishedArticleByIdUseCase: GetPublishedArticleByIdUseCase,
     private val getPublishedArticleBySlugUseCase: GetPublishedArticleBySlugUseCase,
 ) {
-    fun getVersionedArticle (query: GetVersionedArticleQuery): ReadArticleResult {
+    fun getVersionedArticle(query: GetVersionedArticleQuery): ReadArticleResult {
         return getVersionedArticleUseCase.handle(query)
     }
 

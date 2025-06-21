@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 object FlexMarkdownPreprocessor : MarkdownPreprocessor {
     override fun preprocess(rawMarkdown: String): String {
         val parser = Parser.builder().build()
-        val document : Node = parser.parse(rawMarkdown)
+        val document: Node = parser.parse(rawMarkdown)
 
         return TextCollectingVisitor().collectAndGetText(document)//pure text
     }

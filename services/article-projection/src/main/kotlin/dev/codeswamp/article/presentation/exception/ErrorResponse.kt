@@ -9,12 +9,12 @@ data class ErrorResponse private constructor(
     val message: String
 ) {
     companion object {
-        fun from(exception: DomainException) =  ErrorResponse(
+        fun from(exception: DomainException) = ErrorResponse(
             code = exception.errorCode.code,
             message = exception.message.toString()
         )
 
-        fun from(exception: AppException) =  ErrorResponse(
+        fun from(exception: AppException) = ErrorResponse(
             code = exception.errorCode.code,
             message = exception.message.toString()
         )

@@ -2,7 +2,7 @@ package dev.codeswamp.article.presentation.dto.response.article
 
 import java.time.Instant
 
-data class ArticleEditResponseDto (
+data class ArticleEditResponseDto(
     val id: Long,
     val title: String,
     val createdAt: Instant,

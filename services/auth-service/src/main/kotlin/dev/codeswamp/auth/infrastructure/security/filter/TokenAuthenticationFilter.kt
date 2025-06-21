@@ -7,7 +7,7 @@ import org.springframework.security.core.context.ReactiveSecurityContextHolder
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter
 import reactor.core.publisher.Mono
 
-class TokenAuthenticationFilter (
+class TokenAuthenticationFilter(
     authenticationManager: ReactiveAuthenticationManager,
     httpTokenAccessor: HttpTokenAccessor
 ) : AuthenticationWebFilter(authenticationManager) {

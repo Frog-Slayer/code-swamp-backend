@@ -1,6 +1,6 @@
 package dev.codeswamp.article.application.exception.application
 
-enum class AppForbiddenErrorCode (
+enum class AppForbiddenErrorCode(
     override val code: String,
 ) : AppErrorCode {
     APP_FORBIDDEN("APP_FORBIDDEN"),
@@ -9,4 +9,4 @@ enum class AppForbiddenErrorCode (
 open class AppForbiddenException(
     errorCode: AppForbiddenErrorCode,
     message: String
-): AppException( errorCode, message )
+) : AppException(errorCode, message)

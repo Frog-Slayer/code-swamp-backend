@@ -1,18 +1,12 @@
 package dev.codeswamp.article.infrastructure.persistence.jpa.entity
 
 import dev.codeswamp.article.domain.article.model.Version
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.EnumType
-import jakarta.persistence.Enumerated
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.Table
+import jakarta.persistence.*
 import java.time.Instant
 
 @Entity
 @Table(name = "versions")
-data class VersionEntity (
+data class VersionEntity(
     @Id//도메인에서 생성
     val id: Long,
 
@@ -41,7 +35,7 @@ data class VersionEntity (
             id = version.id,
             articleId = version.articleId,
             previousVersionId = version.previousVersionId,
-            diff =  version.diff,
+            diff = version.diff,
             createdAt = version.createdAt,
             state = VersionStateJpa.fromDomain(version.state),
             isBaseVersion = version.isBaseVersion,
@@ -50,14 +44,14 @@ data class VersionEntity (
     }
 
     fun toDomain(fullContent: String?): Version {
-        return  Version.Companion.from(
+        return Version.Companion.from(
             id = id,
             articleId = articleId,
             previousVersionId = previousVersionId,
             diff = diff,
             createdAt = createdAt,
             state = state.toDomain(),
-            isBaseVersion =  isBaseVersion,
+            isBaseVersion = isBaseVersion,
             fullContent = fullContent,
             title = title
         )

@@ -22,12 +22,14 @@ class ArticleIndexingEventHandler(
         val articleToIndex = requireNotNull(publishedArticleRepository.findByArticleId(event.articleId))
         val preprocessedText = markdownPreprocessor.preprocess(articleToIndex.content)
 
-        articleSearchIndexer.index(ArticleIndexDTO(
-            articleId = articleToIndex.id,
-            authorId = articleToIndex.authorId,
-            title = articleToIndex.title,
-            preprocessedText = preprocessedText,
-            isPublic = articleToIndex.isPublic,
-        ))
+        articleSearchIndexer.index(
+            ArticleIndexDTO(
+                articleId = articleToIndex.id,
+                authorId = articleToIndex.authorId,
+                title = articleToIndex.title,
+                preprocessedText = preprocessedText,
+                isPublic = articleToIndex.isPublic,
+            )
+        )
     }
 }

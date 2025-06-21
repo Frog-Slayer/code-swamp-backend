@@ -11,5 +11,5 @@ class AuthConfig(
     @Value("\${jwt.secret}") private val secret: String,
 ) {
     @Bean
-    fun accessTokenParser() : AccessTokenParser = JwtAccessTokenParser.fromSecret(secret)
+    fun accessTokenParser(): AccessTokenParser = JwtAccessTokenParser.fromSecret(secret)
 }

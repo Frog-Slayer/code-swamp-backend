@@ -1,15 +1,7 @@
 package dev.codeswamp.article.presentation.exception
 
-import dev.codeswamp.article.application.exception.application.AppBadRequestException
-import dev.codeswamp.article.application.exception.application.AppConflictException
-import dev.codeswamp.article.application.exception.application.AppException
-import dev.codeswamp.article.application.exception.application.AppForbiddenException
-import dev.codeswamp.article.application.exception.application.AppNotFoundException
-import dev.codeswamp.article.domain.exception.domain.DomainBadRequestException
-import dev.codeswamp.article.domain.exception.domain.DomainConflictException
-import dev.codeswamp.article.domain.exception.domain.DomainException
-import dev.codeswamp.article.domain.exception.domain.DomainForbiddenException
-import dev.codeswamp.article.domain.exception.domain.DomainNotFoundException
+import dev.codeswamp.article.application.exception.application.*
+import dev.codeswamp.article.domain.exception.domain.*
 import dev.codeswamp.article.infrastructure.exception.infrastructure.InfraConflictException
 import dev.codeswamp.article.infrastructure.exception.infrastructure.InfraException
 import org.slf4j.Logger

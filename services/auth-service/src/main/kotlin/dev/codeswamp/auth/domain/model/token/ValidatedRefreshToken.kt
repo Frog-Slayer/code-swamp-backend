@@ -3,7 +3,7 @@ package dev.codeswamp.auth.domain.model.token
 import dev.codeswamp.auth.domain.model.AuthUser
 import java.time.Instant
 
-data class ValidatedRefreshToken (
+data class ValidatedRefreshToken(
     val value: String,
     val authUser: AuthUser,
     val expiration: Instant,

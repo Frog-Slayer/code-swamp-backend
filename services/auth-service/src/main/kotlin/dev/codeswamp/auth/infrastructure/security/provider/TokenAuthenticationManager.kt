@@ -11,12 +11,12 @@ import org.springframework.security.core.Authentication
 import reactor.core.publisher.Mono
 
 class TokenAuthenticationManager(
-    private val authApplication : AuthApplicationService,
-): ReactiveAuthenticationManager {
+    private val authApplication: AuthApplicationService,
+) : ReactiveAuthenticationManager {
 
     override fun authenticate(authentication: Authentication?): Mono<Authentication> {
         val accessToken = authentication?.principal as? RawAccessToken
-            ?: return Mono.error( AuthenticationServiceException("Invalid principal"))
+            ?: return Mono.error(AuthenticationServiceException("Invalid principal"))
 
         return mono {
             val validatedAccessToken = authApplication.validateAccessToken(accessToken)//비동기

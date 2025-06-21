@@ -7,7 +7,7 @@ import jakarta.persistence.Id
 import java.time.Instant
 
 @Entity
-data class PublishedArticleEntity (
+data class PublishedArticleEntity(
     @Id
     val id: Long,
     val authorId: Long,
@@ -18,16 +18,16 @@ data class PublishedArticleEntity (
 
     val summary: String,
     val thumbnailUrl: String? = null,
-    val isPublic : Boolean,
+    val isPublic: Boolean,
 
     val slug: String,
     val title: String,
 
     @Column(nullable = false, columnDefinition = "TEXT")
     val content: String,
-){
+) {
     companion object {
-        fun from(publishedArticle: PublishedArticle) =  PublishedArticleEntity(
+        fun from(publishedArticle: PublishedArticle) = PublishedArticleEntity(
             id = publishedArticle.id,
             authorId = publishedArticle.authorId,
             folderId = publishedArticle.folderId,
@@ -43,16 +43,16 @@ data class PublishedArticleEntity (
     }
 
     fun toDomain() = PublishedArticle.Companion.from(
-            id = id,
-            authorId = authorId,
-            folderId = folderId,
-            createdAt = createdAt,
-            updateAt = updateAt,
-            summary = summary,
-            thumbnailUrl = thumbnailUrl,
-            isPublic = isPublic,
-            slug = slug,
-            title = title,
-            content = content
-        )
+        id = id,
+        authorId = authorId,
+        folderId = folderId,
+        createdAt = createdAt,
+        updateAt = updateAt,
+        summary = summary,
+        thumbnailUrl = thumbnailUrl,
+        isPublic = isPublic,
+        slug = slug,
+        title = title,
+        content = content
+    )
 }

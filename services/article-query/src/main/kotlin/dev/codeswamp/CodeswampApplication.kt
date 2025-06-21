@@ -9,5 +9,5 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy
 class CodeswampApplication
 
 fun main(args: Array<String>) {
-	runApplication<CodeswampApplication>(*args)
+    runApplication<CodeswampApplication>(*args)
 }

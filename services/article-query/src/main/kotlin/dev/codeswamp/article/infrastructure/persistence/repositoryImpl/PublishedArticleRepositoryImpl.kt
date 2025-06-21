@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository
 @Repository
 class PublishedArticleRepositoryImpl(
     private val publishedArticleJpaRepository: PublishedArticleJpaRepository
-): PublishedArticleRepository {
+) : PublishedArticleRepository {
     override fun save(publishedArticle: PublishedArticle): PublishedArticle {
         return publishedArticleJpaRepository.save(PublishedArticleEntity.Companion.from(publishedArticle)).toDomain()
     }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 import reactor.core.publisher.Mono
 
 @Service
-class CustomOAuth2Service: ReactiveOAuth2UserService<OAuth2UserRequest, OAuth2User> {
+class CustomOAuth2Service : ReactiveOAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     private val oAuth2Delegate = DefaultOAuth2UserService()
     private val oidcDelegate = OidcUserService()

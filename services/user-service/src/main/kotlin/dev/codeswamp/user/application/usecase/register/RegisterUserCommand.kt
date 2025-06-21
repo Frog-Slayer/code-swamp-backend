@@ -1,6 +1,6 @@
 package dev.codeswamp.user.application.usecase.register
 
-data class RegisterUserCommand (
+data class RegisterUserCommand(
     val token: String,
     val email: String,
     val username: String,

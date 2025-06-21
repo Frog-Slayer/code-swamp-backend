@@ -1,15 +1,15 @@
 package dev.codeswamp.core.article.infrastructure.persistence.repositoryImpl
 
+import dev.codeswamp.article.domain.article.model.vo.ArticleMetadata
+import dev.codeswamp.article.domain.article.service.SlugUniquenessChecker
+import dev.codeswamp.article.domain.support.DiffProcessor
+import dev.codeswamp.article.infrastructure.persistence.graph.repository.VersionNodeRepository
 import dev.codeswamp.core.article.application.rebase.RebasePolicy
 import dev.codeswamp.core.article.domain.article.model.VersionedArticle
-import dev.codeswamp.article.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.core.article.domain.article.model.vo.Slug
 import dev.codeswamp.core.article.domain.article.repository.ArticleRepository
 import dev.codeswamp.core.article.domain.article.service.ArticleContentReconstructor
-import dev.codeswamp.article.domain.article.service.SlugUniquenessChecker
-import dev.codeswamp.article.domain.support.DiffProcessor
 import dev.codeswamp.core.article.domain.support.IdGenerator
-import dev.codeswamp.article.infrastructure.persistence.graph.repository.VersionNodeRepository
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
@@ -31,7 +31,7 @@ class ArticleRepositoryImplTest(
     @Autowired private val versionNodeRepository: VersionNodeRepository,
     @Autowired private val diffProcessor: DiffProcessor,
     @Autowired private val rebasePolicy: RebasePolicy
-){
+) {
 
     private val authorId = 100L
     private val createdAt = Instant.now()
@@ -44,15 +44,15 @@ class ArticleRepositoryImplTest(
         isPublic = true,
     )
 
-    private fun baseArticle() = VersionedArticle.create (
-            id = idGenerator.generateId(),
-            authorId = authorId,
-            createdAt = createdAt,
-            metadata = metadata,
-            diff = "",
-            fullContent = "",
-            versionId = idGenerator.generateId(),
-            title= "title"
+    private fun baseArticle() = VersionedArticle.create(
+        id = idGenerator.generateId(),
+        authorId = authorId,
+        createdAt = createdAt,
+        metadata = metadata,
+        diff = "",
+        fullContent = "",
+        versionId = idGenerator.generateId(),
+        title = "title"
     )
 
     @Test
@@ -94,10 +94,10 @@ class ArticleRepositoryImplTest(
 
     @Test
     fun `Rebase 테스트`() {
-        val article = baseArticle().draft( slugChecker::checkSlugUniqueness )
+        val article = baseArticle().draft(slugChecker::checkSlugUniqueness)
         articleRepository.save(article)
 
-        var updated : VersionedArticle = article
+        var updated: VersionedArticle = article
         val fullContent = """
             훌쩍거리는 날도 아닌데
             훌쩍 네 향기가 날 듯 말 듯 해
@@ -116,15 +116,17 @@ class ArticleRepositoryImplTest(
             val cur = fullContent.take(i).joinToString("\n")
             val diff = diffProcessor.calculateDiff(prev, cur)
 
-            updated = articleRepository.save( updated.updateVersionIfChanged(
-                title = "title$i",
-                diff = diff ?: "",
-                generateId = idGenerator::generateId,
-                createdAt = Instant.now(),
-                shouldRebase = rebasePolicy::shouldStoreAsBase,
-                reconstructFullContent = contentReconstructor::reconstructFullContent
+            updated = articleRepository.save(
+                updated.updateVersionIfChanged(
+                    title = "title$i",
+                    diff = diff ?: "",
+                    generateId = idGenerator::generateId,
+                    createdAt = Instant.now(),
+                    shouldRebase = rebasePolicy::shouldStoreAsBase,
+                    reconstructFullContent = contentReconstructor::reconstructFullContent
+                )
+                    .draft(slugUniquenessChecker = slugChecker::checkSlugUniqueness)
             )
-            .draft(slugUniquenessChecker = slugChecker::checkSlugUniqueness))
         }
 
         val content = contentReconstructor.reconstructFullContent(updated.currentVersion)
@@ -136,7 +138,9 @@ class ArticleRepositoryImplTest(
     fun `neo4j query test`() {
         val base = versionNodeRepository.findBaseNodeNearestTo(7329755400482324480L)
 
-        assertEquals(base?.versionId,
-            7329755393112932353)
+        assertEquals(
+            base?.versionId,
+            7329755393112932353
+        )
     }
 }

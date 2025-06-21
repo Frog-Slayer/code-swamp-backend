@@ -6,7 +6,7 @@ enum class AppBadRequestErrorCode(
     APP_BAD_REQUEST("APP_BAD_REQUEST"),
 }
 
-abstract class AppBadRequestException (
+abstract class AppBadRequestException(
     errorCode: AppBadRequestErrorCode,
     message: String
-): AppException( errorCode, message )
+) : AppException(errorCode, message)

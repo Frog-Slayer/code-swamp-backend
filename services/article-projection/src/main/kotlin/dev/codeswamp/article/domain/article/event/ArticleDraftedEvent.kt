@@ -8,10 +8,10 @@ import dev.codeswamp.article.domain.ArticleDomainEvent
  * - 이전 버전이 PUBLISHED가 아니라면 ARCHIVED 상태로 전이
  */
 
-data class ArticleDraftedEvent (
+data class ArticleDraftedEvent(
     val articleId: Long,
     val versionId: Long,
-): ArticleDomainEvent
+) : ArticleDomainEvent
 
 
 
