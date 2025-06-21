@@ -1,7 +1,5 @@
 package dev.codeswamp.articlecommand.domain.article.model
 
-import dev.codeswamp.articlecommand.domain.AggregateRoot
-import dev.codeswamp.articlecommand.domain.DomainEvent
 import dev.codeswamp.articlecommand.domain.article.event.DraftedEvent
 import dev.codeswamp.articlecommand.domain.article.event.PublishedEvent
 import dev.codeswamp.articlecommand.domain.article.event.VersionCreatedEvent
@@ -9,6 +7,8 @@ import dev.codeswamp.articlecommand.domain.article.exception.InvalidArticleState
 import dev.codeswamp.articlecommand.domain.article.exception.PrivateArticleForbiddenException
 import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.articlecommand.domain.article.model.vo.Slug
+import dev.codeswamp.core.domain.AggregateRoot
+import dev.codeswamp.core.domain.DomainEvent
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 

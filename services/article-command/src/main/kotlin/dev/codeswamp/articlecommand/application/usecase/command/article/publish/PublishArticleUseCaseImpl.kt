@@ -1,7 +1,7 @@
 package dev.codeswamp.articlecommand.application.usecase.command.article.publish
 
 import dev.codeswamp.articlecommand.application.exception.article.ArticleNotFoundException
-import dev.codeswamp.articlecommand.application.port.outgoing.EventPublisher
+import dev.codeswamp.articlecommand.application.port.outgoing.InternalEventPublisher
 import dev.codeswamp.articlecommand.application.rebase.RebasePolicy
 import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
 import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
@@ -9,7 +9,7 @@ import dev.codeswamp.articlecommand.domain.article.model.vo.Slug
 import dev.codeswamp.articlecommand.domain.article.repository.ArticleRepository
 import dev.codeswamp.articlecommand.domain.article.service.ArticleContentReconstructor
 import dev.codeswamp.articlecommand.domain.article.service.SlugUniquenessChecker
-import dev.codeswamp.articlecommand.domain.support.IdGenerator
+import dev.codeswamp.core.domain.IdGenerator
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -21,7 +21,7 @@ class PublishArticleUseCaseImpl(
     private val slugUniquenessChecker: SlugUniquenessChecker,
     private val contentReconstructor: ArticleContentReconstructor,
     private val rebasePolicy: RebasePolicy,
-    private val eventPublisher: EventPublisher,
+    private val internalEventPublisher: InternalEventPublisher,
 ) : PublishArticleUseCase {
 
     @Transactional
@@ -47,7 +47,7 @@ class PublishArticleUseCaseImpl(
 
         val saved = articleRepository.save(article)
 
-        article.pullEvents().forEach(eventPublisher::publish)
+        article.pullEvents().forEach(internalEventPublisher::publish)
 
         return PublishArticleResult(
             saved.id,
@@ -82,7 +82,7 @@ class PublishArticleUseCaseImpl(
             ?: throw ArticleNotFoundException.Companion.byId(command.articleId)
 
         val saved = articleRepository.save(article)
-        article.pullEvents().forEach(eventPublisher::publish)
+        article.pullEvents().forEach(internalEventPublisher::publish)
 
         return PublishArticleResult(
             saved.id,

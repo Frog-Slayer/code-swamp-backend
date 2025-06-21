@@ -4,7 +4,7 @@ import dev.codeswamp.articlecommand.application.exception.folder.FolderNotFoundE
 import dev.codeswamp.articlecommand.domain.folder.model.Folder
 import dev.codeswamp.articlecommand.domain.folder.repository.FolderRepository
 import dev.codeswamp.articlecommand.domain.folder.service.DuplicatedFolderNameChecker
-import dev.codeswamp.articlecommand.domain.support.IdGenerator
+import dev.codeswamp.core.domain.IdGenerator
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

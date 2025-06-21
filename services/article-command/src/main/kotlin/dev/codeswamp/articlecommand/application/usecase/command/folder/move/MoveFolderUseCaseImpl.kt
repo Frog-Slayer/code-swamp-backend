@@ -1,7 +1,7 @@
 package dev.codeswamp.articlecommand.application.usecase.command.folder.move
 
 import dev.codeswamp.articlecommand.application.exception.folder.FolderNotFoundException
-import dev.codeswamp.articlecommand.application.port.outgoing.EventPublisher
+import dev.codeswamp.articlecommand.application.port.outgoing.InternalEventPublisher
 import dev.codeswamp.articlecommand.domain.folder.repository.FolderRepository
 import dev.codeswamp.articlecommand.domain.folder.service.DuplicatedFolderNameChecker
 import org.springframework.stereotype.Service
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 class MoveFolderUseCaseImpl(
     private val folderRepository: FolderRepository,
     private val duplicatedFolderNameChecker: DuplicatedFolderNameChecker,
-    private val eventPublisher: EventPublisher,
+    private val internalEventPublisher: InternalEventPublisher,
 ) : MoveFolderUseCase {
 
     @Transactional
@@ -26,6 +26,6 @@ class MoveFolderUseCaseImpl(
 
         folderRepository.save(moved)
 
-        moved.pullEvents().forEach(eventPublisher::publish)
+        moved.pullEvents().forEach(internalEventPublisher::publish)
     }
 }

@@ -1,10 +1,11 @@
 package dev.codeswamp.articlecommand.infrastructure.messaging.mapper
 
-import dev.codeswamp.articlecommand.infrastructure.event.event.InfraEvent
+import dev.codeswamp.core.infrastructure.event.InfraEvent
+import dev.codeswamp.core.infrastructure.messaging.EventTranslator
 import dev.codeswamp.infrakafka.event.KafkaEvent
 
-object InfraEventKafkaMapper {
-    fun map(event: InfraEvent): KafkaEvent {
+object InfraEventKafkaMapper : EventTranslator<InfraEvent, KafkaEvent> {
+    override fun translate(event: InfraEvent): KafkaEvent {
         TODO("Not yet implemented")
     }
 }

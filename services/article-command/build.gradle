@@ -1,4 +1,5 @@
 dependencies {
+    implementation project(":shared:ddd-core")
     implementation project(":shared:infra-kafka")
     implementation project(":shared:id-generator")
 

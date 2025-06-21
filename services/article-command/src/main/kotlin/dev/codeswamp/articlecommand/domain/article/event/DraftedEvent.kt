@@ -1,6 +1,6 @@
 package dev.codeswamp.articlecommand.domain.article.event
 
-import dev.codeswamp.articlecommand.domain.DomainEvent
+import dev.codeswamp.core.domain.DomainEvent
 
 /**
  * Domain Event: ArticleDraftedEvent

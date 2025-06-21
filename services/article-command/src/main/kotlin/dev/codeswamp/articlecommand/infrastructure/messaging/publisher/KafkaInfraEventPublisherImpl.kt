@@ -1,7 +1,7 @@
 package dev.codeswamp.articlecommand.infrastructure.messaging.publisher
 
-import dev.codeswamp.articlecommand.infrastructure.event.event.InfraEvent
 import dev.codeswamp.articlecommand.infrastructure.messaging.mapper.InfraEventKafkaMapper
+import dev.codeswamp.core.infrastructure.event.InfraEvent
 import dev.codeswamp.infrakafka.publisher.KafkaEventPublisher
 import org.springframework.stereotype.Component
 
@@ -11,7 +11,7 @@ class KafkaInfraEventPublisherImpl(
 ) : InfraEventPublisher {
 
     override fun publish(event: InfraEvent) {
-        val kafkaEvent = InfraEventKafkaMapper.map(event)
+        val kafkaEvent = InfraEventKafkaMapper.translate(event)
         kafkaPublisher.publish("user-service", kafkaEvent.key, kafkaEvent)
     }
 }

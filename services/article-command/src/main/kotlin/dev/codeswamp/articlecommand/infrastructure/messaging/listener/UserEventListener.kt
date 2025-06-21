@@ -19,7 +19,7 @@ class UserEventListener(
         groupId = "article-command-group",
         containerFactory = "kafkaListenerContainerFactory"
     )
-    fun listen(
+    suspend fun listen(
         @Payload event: KafkaEvent,
         ack: Acknowledgment
     ){

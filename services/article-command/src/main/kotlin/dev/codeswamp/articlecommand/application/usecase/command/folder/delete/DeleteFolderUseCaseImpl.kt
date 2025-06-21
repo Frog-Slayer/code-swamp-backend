@@ -1,7 +1,7 @@
 package dev.codeswamp.articlecommand.application.usecase.command.folder.delete
 
 import dev.codeswamp.articlecommand.application.exception.folder.FolderNotFoundException
-import dev.codeswamp.articlecommand.application.port.outgoing.EventPublisher
+import dev.codeswamp.articlecommand.application.port.outgoing.InternalEventPublisher
 import dev.codeswamp.articlecommand.domain.folder.repository.FolderRepository
 import dev.codeswamp.articlecommand.domain.folder.service.FolderDeletionPreparator
 import org.slf4j.LoggerFactory
@@ -13,7 +13,7 @@ import java.time.Instant
 class DeleteFolderUseCaseImpl(
     private val folderRepository: FolderRepository,
     private val folderDeletionPreparator: FolderDeletionPreparator,
-    private val eventPublisher: EventPublisher,
+    private val internalEventPublisher: InternalEventPublisher,
 ) : DeleteFolderUseCase {
     private val logger = LoggerFactory.getLogger(DeleteFolderUseCaseImpl::class.java)
 
@@ -29,6 +29,6 @@ class DeleteFolderUseCaseImpl(
 
         folderRepository.deleteAllById(foldersToDelete)
 
-        markedAsDelete.pullEvents().forEach(eventPublisher::publish)
+        markedAsDelete.pullEvents().forEach(internalEventPublisher::publish)
     }
 }

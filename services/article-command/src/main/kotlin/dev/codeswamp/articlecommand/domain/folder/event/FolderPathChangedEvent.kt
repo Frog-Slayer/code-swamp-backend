@@ -1,6 +1,6 @@
 package dev.codeswamp.articlecommand.domain.folder.event
 
-import dev.codeswamp.articlecommand.domain.DomainEvent
+import dev.codeswamp.core.domain.DomainEvent
 
 data class FolderPathChangedEvent(
     val folderId: Long,

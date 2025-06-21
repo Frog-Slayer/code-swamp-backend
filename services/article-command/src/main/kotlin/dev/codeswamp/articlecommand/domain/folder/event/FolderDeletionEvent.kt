@@ -1,6 +1,6 @@
 package dev.codeswamp.articlecommand.domain.folder.event
 
-import dev.codeswamp.articlecommand.domain.DomainEvent
+import dev.codeswamp.core.domain.DomainEvent
 import java.time.Instant
 
 data class FolderDeletionEvent(

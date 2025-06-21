@@ -1,7 +1,7 @@
 package dev.codeswamp.articlecommand.application.usecase.command.folder.rename
 
 import dev.codeswamp.articlecommand.application.exception.folder.FolderNotFoundException
-import dev.codeswamp.articlecommand.application.port.outgoing.EventPublisher
+import dev.codeswamp.articlecommand.application.port.outgoing.InternalEventPublisher
 import dev.codeswamp.articlecommand.domain.folder.repository.FolderRepository
 import dev.codeswamp.articlecommand.domain.folder.service.DuplicatedFolderNameChecker
 import org.springframework.stereotype.Service
@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 class RenameFolderUseCaseImpl(
     private val folderRepository: FolderRepository,
     private val duplicatedFolderNameChecker: DuplicatedFolderNameChecker,
-    private val eventPublisher: EventPublisher,
+    private val internalEventPublisher: InternalEventPublisher,
 ) : RenameFolderUseCase {
 
     @Transactional
@@ -23,6 +23,6 @@ class RenameFolderUseCaseImpl(
 
         folderRepository.save(renamed)
 
-        renamed.pullEvents().forEach(eventPublisher::publish)
+        renamed.pullEvents().forEach(internalEventPublisher::publish)
     }
 }
