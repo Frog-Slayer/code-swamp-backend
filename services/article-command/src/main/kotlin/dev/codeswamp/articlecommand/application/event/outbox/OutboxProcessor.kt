@@ -1,5 +1,6 @@
 package dev.codeswamp.articlecommand.application.event.outbox
 
+import dev.codeswamp.articlecommand.application.port.outgoing.InternalEventPublisher
 import dev.codeswamp.articlecommand.infrastructure.exception.infrastructure.EventTransientException
 import dev.codeswamp.core.common.event.Event
 import dev.codeswamp.core.common.event.EventPublisher
@@ -24,12 +25,13 @@ import org.springframework.transaction.reactive.executeAndAwait
 @Component
 class OutboxProcessor (
     private val outboxEventRepository : OutboxEventRepository,
-    private val eventPublisher: EventPublisher<Event>,
+    private val internalEventPublisher: InternalEventPublisher,
     private val transactionalOperator : TransactionalOperator,
 ) {
+    private val MAX_RETRY_ATTEMPTS = 5
+
     private val logger = LoggerFactory.getLogger(javaClass)
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
-    private val MAX_RETRY_ATTEMPTS = 5
 
     @PostConstruct
     fun afterPropertiesSet() {
@@ -58,7 +60,7 @@ class OutboxProcessor (
         events.map {  outboxEvent ->
             async {
                  try {
-                     eventPublisher.publish(outboxEvent.payload)
+                     internalEventPublisher.publish(outboxEvent.payload)
                      transactionalOperator.executeAndAwait {
                          outboxEventRepository.markAsSent(outboxEvent.id)
                      }
