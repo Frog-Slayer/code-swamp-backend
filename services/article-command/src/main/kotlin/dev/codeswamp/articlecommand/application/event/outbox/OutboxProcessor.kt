@@ -1,6 +1,6 @@
 package dev.codeswamp.articlecommand.application.event.outbox
 
-import dev.codeswamp.articlecommand.application.exception.event.EventTransientException
+import dev.codeswamp.articlecommand.infrastructure.exception.infrastructure.EventTransientException
 import dev.codeswamp.core.common.event.Event
 import dev.codeswamp.core.common.event.EventPublisher
 import jakarta.annotation.PostConstruct

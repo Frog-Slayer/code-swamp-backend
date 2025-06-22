@@ -1,17 +1,20 @@
 package dev.codeswamp.infrakafka.publisher
 
 import dev.codeswamp.infrakafka.event.KafkaEvent
+import kotlinx.coroutines.future.await
 import org.springframework.kafka.core.KafkaTemplate
 import org.springframework.kafka.support.KafkaHeaders
+import org.springframework.kafka.support.SendResult
 import org.springframework.messaging.Message
 import org.springframework.messaging.support.MessageBuilder
 import org.springframework.stereotype.Component
+import java.util.concurrent.CompletableFuture
 
 @Component
 class KafkaEventPublisher(
     private val kafkaTemplate: KafkaTemplate<String, KafkaEvent>
 ) {
-    fun publish(
+    suspend fun publish(
         topic: String,
         key: String,
         event: KafkaEvent,
@@ -23,6 +26,6 @@ class KafkaEventPublisher(
             .setHeader("eventType", event.eventType)
             .build()
 
-        kafkaTemplate.send(message)
+        kafkaTemplate.send(message).await()
     }
 }

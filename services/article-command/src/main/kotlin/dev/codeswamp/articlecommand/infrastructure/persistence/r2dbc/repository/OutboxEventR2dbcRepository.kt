@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 @Repository
+
 interface OutboxEventR2dbcRepository : CoroutineCrudRepository<OutboxEventEntity, String> {
 
     @Query( """
@@ -32,7 +33,6 @@ interface OutboxEventR2dbcRepository : CoroutineCrudRepository<OutboxEventEntity
         @Param("id") id: Long,
         @Param("status") status: String
     )
-
 
     @Modifying
     @Query( """

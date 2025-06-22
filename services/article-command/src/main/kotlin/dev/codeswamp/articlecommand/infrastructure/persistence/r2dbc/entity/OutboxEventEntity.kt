@@ -22,6 +22,8 @@ data class OutboxEventEntity (
     val payloadJson: String,
 
     val status: String,
+
+    @Column("created_at")
     val createdAt: Instant,
 
     @Column("retry_count")

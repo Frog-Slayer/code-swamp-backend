@@ -1,5 +1,7 @@
 package dev.codeswamp.articlecommand.application.usecase.command.article.publish
 
+import dev.codeswamp.articlecommand.application.event.outbox.OutboxEvent
+import dev.codeswamp.articlecommand.application.event.outbox.OutboxEventRepository
 import dev.codeswamp.articlecommand.application.exception.article.ArticleNotFoundException
 import dev.codeswamp.articlecommand.application.port.outgoing.InternalEventPublisher
 import dev.codeswamp.articlecommand.application.rebase.RebasePolicy
@@ -18,12 +20,12 @@ import java.time.Instant
 @Service
 class PublishArticleUseCaseImpl(
     private val articleRepository: ArticleRepository,
+    private val outboxRepository: OutboxEventRepository,
     private val idGenerator: IdGenerator,
     private val slugUniquenessChecker: SlugUniquenessChecker,
     private val diffProcessor: DiffProcessor,
     private val contentReconstructor: ArticleContentReconstructor,
     private val rebasePolicy: RebasePolicy,
-    private val internalEventPublisher: InternalEventPublisher,
 ) : PublishArticleUseCase {
 
     @Transactional
@@ -48,7 +50,7 @@ class PublishArticleUseCaseImpl(
         ).publish(slugUniquenessChecker::checkSlugUniqueness)
         .also { articleRepository.create(it) }
 
-        article.pullEvents().forEach(internalEventPublisher::publish)
+        outboxRepository.saveAll(article.pullEvents().map{ OutboxEvent.registerAndCreate(it)})
 
         return PublishArticleResult(
             article.id,
@@ -91,7 +93,7 @@ class PublishArticleUseCaseImpl(
                 articleRepository.update(it)
             }
 
-        updatedArticle.pullEvents().forEach(internalEventPublisher::publish)
+        outboxRepository.saveAll(updatedArticle.pullEvents().map{ OutboxEvent.registerAndCreate(it)})
 
         return PublishArticleResult(
             updatedArticle.id,

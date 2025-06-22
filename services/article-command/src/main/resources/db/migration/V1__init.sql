@@ -49,5 +49,6 @@ CREATE TABLE article_outbox (
     event_type TEXT NOT NULL ,
     payload_json JSONB NOT NULL,
     status VARCHAR(50) NOT NULL,
-    created_at TIMESTAMP(3) NOT NULL
+    created_at TIMESTAMP(3) NOT NULL,
+    retry_count SMALLINT
 )

@@ -1,5 +1,7 @@
 package dev.codeswamp.articlecommand.application.usecase.command.article.draft
 
+import dev.codeswamp.articlecommand.application.event.outbox.OutboxEvent
+import dev.codeswamp.articlecommand.application.event.outbox.OutboxEventRepository
 import dev.codeswamp.articlecommand.application.exception.article.ArticleNotFoundException
 import dev.codeswamp.articlecommand.application.port.outgoing.InternalEventPublisher
 import dev.codeswamp.articlecommand.application.rebase.RebasePolicy
@@ -17,6 +19,7 @@ import java.time.Instant
 @Service
 class DraftArticleUseCaseImpl(
     private val articleRepository: ArticleRepository,
+    private val outboxRepository: OutboxEventRepository,
     private val idGenerator: IdGenerator,
     private val slugUniquenessChecker: SlugUniquenessChecker,
     private val contentReconstructor: ArticleContentReconstructor,
@@ -47,7 +50,7 @@ class DraftArticleUseCaseImpl(
         ).draft(slugUniquenessChecker::checkSlugUniqueness)
         .also { articleRepository.create(it) }
 
-        article.pullEvents().forEach(eventPublisher::publish)
+        outboxRepository.saveAll(article.pullEvents().map{ OutboxEvent.registerAndCreate(it)})
 
         return DraftArticleResult(
             article.id,
@@ -77,10 +80,10 @@ class DraftArticleUseCaseImpl(
             )
             .draft(slugUniquenessChecker::checkSlugUniqueness)
             .also {
-                articleRepository.save(it)
+                articleRepository.update(it)
             }
 
-        updatedArticle.pullEvents().forEach(eventPublisher::publish)
+        outboxRepository.saveAll(updatedArticle.pullEvents().map{ OutboxEvent.registerAndCreate(it)})
 
         return DraftArticleResult(
             updatedArticle.id,
