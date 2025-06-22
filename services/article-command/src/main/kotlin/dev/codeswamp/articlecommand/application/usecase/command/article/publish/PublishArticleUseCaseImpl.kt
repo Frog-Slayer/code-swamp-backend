@@ -9,6 +9,7 @@ import dev.codeswamp.articlecommand.domain.article.model.vo.Slug
 import dev.codeswamp.articlecommand.domain.article.repository.ArticleRepository
 import dev.codeswamp.articlecommand.domain.article.service.ArticleContentReconstructor
 import dev.codeswamp.articlecommand.domain.article.service.SlugUniquenessChecker
+import dev.codeswamp.articlecommand.domain.support.DiffProcessor
 import dev.codeswamp.core.domain.IdGenerator
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -19,6 +20,7 @@ class PublishArticleUseCaseImpl(
     private val articleRepository: ArticleRepository,
     private val idGenerator: IdGenerator,
     private val slugUniquenessChecker: SlugUniquenessChecker,
+    private val diffProcessor: DiffProcessor,
     private val contentReconstructor: ArticleContentReconstructor,
     private val rebasePolicy: RebasePolicy,
     private val internalEventPublisher: InternalEventPublisher,
@@ -44,14 +46,13 @@ class PublishArticleUseCaseImpl(
             fullContent = contentReconstructor.contentFromInitialDiff(command.diff),
             versionId = idGenerator.generateId()
         ).publish(slugUniquenessChecker::checkSlugUniqueness)
-
-        val saved = articleRepository.save(article)
+        .also { articleRepository.create(it) }
 
         article.pullEvents().forEach(internalEventPublisher::publish)
 
         return PublishArticleResult(
-            saved.id,
-            saved.currentVersion.id
+            article.id,
+            article.currentVersion.id
         )
     }
 
@@ -59,9 +60,15 @@ class PublishArticleUseCaseImpl(
     override suspend fun update(command: UpdatePublishCommand): PublishArticleResult {
         val createdAt = Instant.now()
 
-        val article = articleRepository.findByIdAndVersionId(command.articleId, command.versionId)
-            ?.apply { checkOwnership(command.userId) }
-            ?.updateMetadata(
+        val hasMeaningfulDiff = diffProcessor.hasValidDelta(command.diff)
+
+        val existingArticle = articleRepository.findByIdAndVersionId(command.articleId, command.versionId)
+            ?: throw ArticleNotFoundException.Companion.byId(command.articleId)
+
+
+        val updatedArticle = existingArticle
+            .apply { checkOwnership(command.userId) }
+            .updateMetadata(
                 ArticleMetadata(
                     folderId = command.folderId,
                     summary = command.summary,
@@ -70,23 +77,25 @@ class PublishArticleUseCaseImpl(
                     slug = Slug.Companion.of(command.slug)
                 )
             )
-            ?.updateVersionIfChanged(
-                command.title,
-                command.diff,
-                idGenerator::generateId,
-                createdAt,
-                rebasePolicy::shouldStoreAsBase,
-                contentReconstructor::reconstructFullContent
+            .updateVersionIfChanged(
+                title = command.title,
+                hasMeaningfulDiff = hasMeaningfulDiff,
+                diff = command.diff,
+                generateId = idGenerator::generateId,
+                createdAt = createdAt,
+                shouldRebase =  rebasePolicy::shouldStoreAsBase,
+                reconstructFullContent = contentReconstructor::reconstructFullContent
             )
-            ?.publish(slugUniquenessChecker::checkSlugUniqueness)
-            ?: throw ArticleNotFoundException.Companion.byId(command.articleId)
+            .publish(slugUniquenessChecker::checkSlugUniqueness)
+            .also {
+                articleRepository.update(it)
+            }
 
-        val saved = articleRepository.save(article)
-        article.pullEvents().forEach(internalEventPublisher::publish)
+        updatedArticle.pullEvents().forEach(internalEventPublisher::publish)
 
         return PublishArticleResult(
-            saved.id,
-            saved.currentVersion.id
+            updatedArticle.id,
+            updatedArticle.currentVersion.id
         )
     }
 }

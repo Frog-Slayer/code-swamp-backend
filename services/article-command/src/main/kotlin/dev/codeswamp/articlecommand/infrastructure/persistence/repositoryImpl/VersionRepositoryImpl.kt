@@ -1,14 +1,13 @@
 package dev.codeswamp.articlecommand.infrastructure.persistence.repositoryImpl
 
+import dev.codeswamp.articlecommand.domain.article.exception.InvalidArticleStateException
 import dev.codeswamp.articlecommand.domain.article.model.Version
 import dev.codeswamp.articlecommand.domain.article.repository.VersionRepository
-import dev.codeswamp.articlecommand.infrastructure.event.event.VersionNodeSaveEvent
 import dev.codeswamp.articlecommand.infrastructure.persistence.graph.repository.VersionNodeRepository
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity.VersionEntity
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity.VersionStateJpa
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.BaseVersionR2dbcRepository
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.VersionR2dbcRepository
-import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Repository
 
 @Repository
@@ -16,10 +15,14 @@ class VersionRepositoryImpl(
     private val versionR2dbcRepository: VersionR2dbcRepository,
     private val versionNodeRepository: VersionNodeRepository,
     private val baseVersionR2dbcRepository: BaseVersionR2dbcRepository,
-    private val eventPublisher: ApplicationEventPublisher//TODO: InfraEvent
 ) : VersionRepository {
-    override suspend fun create(version: Version): Version {
+    override suspend fun save(version: Version): Version {
+        return if (version.isNew) create(version)
+        else update(version)
+    }
+    private suspend fun create(version: Version): Version {
         val entity = VersionEntity.Companion.from(version)
+
         val saved = versionR2dbcRepository.insert(
             id = entity.id,
             articleId = entity.articleId,
@@ -31,37 +34,29 @@ class VersionRepositoryImpl(
             isBaseVersion = entity.isBaseVersion,
         )
 
-        eventPublisher.publishEvent(
-            VersionNodeSaveEvent(
-                versionId = version.id,
-                articleId = version.articleId,
-                isBase = version.isBaseVersion,
-                previousNodeId = version.previousVersionId
-            )
-        )
+        val fullContent = if (saved.isBaseVersion) {
+            version.fullContent?.also {
+                baseVersionR2dbcRepository.insert(saved.id, it)
+            } ?: throw InvalidArticleStateException(
+                    "Cannot create version",
+                    "It is base version, but has no full content"
+                )
+        } else null
 
-        return saved.toDomain()
+        return saved.toDomain(fullContent)
     }
 
-    override suspend fun save(version: Version): Version {
+    private suspend fun update(version: Version): Version {
         val entity = VersionEntity.Companion.from(version)
-
         val saved = versionR2dbcRepository.save(entity)
 
-        eventPublisher.publishEvent(
-            VersionNodeSaveEvent(
-                versionId = version.id,
-                articleId = version.articleId,
-                isBase = version.isBaseVersion,
-                previousNodeId = version.previousVersionId
-            )
-        )
-
-        return saved.toDomain()
+        return saved.restoreDomain()
     }
 
+
     override suspend fun findByIdOrNull(id: Long): Version? {
-        return versionR2dbcRepository.findById(id)?.toDomain()
+        val saved = versionR2dbcRepository.findById(id) ?: return null
+        return saved.restoreDomain()
     }
 
     override suspend fun deleteAllByArticleIdIn(articleIds: List<Long>) {
@@ -76,13 +71,13 @@ class VersionRepositoryImpl(
 
     override suspend fun findPreviousPublishedVersion(articleId: Long, versionId: Long): Version? {
         return versionR2dbcRepository.findTopByArticleIdAndIdLessThanAndStateOrderByIdDesc(articleId, versionId, VersionStateJpa.PUBLISHED)
-            ?.toDomain()
+            ?.restoreDomain()
     }
 
     override suspend fun findNearestBaseTo(versionId: Long): Version? {
         return versionNodeRepository.findBaseNodeNearestTo(versionId)
             ?.let { versionR2dbcRepository.findById(it.versionId) }
-            ?.toDomain()
+            ?.restoreDomain()
     }
 
     override suspend fun findDiffChainBetween(baseId: Long, targetId: Long): List<String> {
@@ -93,8 +88,15 @@ class VersionRepositoryImpl(
             .map { it.diff }
     }
 
-    suspend fun VersionEntity.toDomain(): Version {
-        val fullContent = if (this.isBaseVersion) baseVersionR2dbcRepository.findById(id)?.content else null
+    private suspend fun VersionEntity.restoreDomain(): Version {
+        val fullContent = if (this.isBaseVersion) {
+            baseVersionR2dbcRepository.findById(this.id)?.content
+                ?: throw InvalidArticleStateException(
+                    "Cannot restore version",
+                    "It is base version, but has no full content"
+                )
+        } else null
+
         return this.toDomain(fullContent)
     }
 }

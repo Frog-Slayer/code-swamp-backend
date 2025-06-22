@@ -45,6 +45,10 @@ class DiffProcessorImpl : DiffProcessor {
 
         return DiffUtils.patch(content.lines(), patch).joinToString("\n")
     }
+    override fun hasValidDelta(diff: String) : Boolean{
+        val patch = UnifiedDiffUtils.parseUnifiedDiff(diff.lines())
+        return patch.hasValidDelta()
+    }
 
     private fun Patch<String>.hasValidDelta(): Boolean {
         return this.deltas.any { delta ->

@@ -53,7 +53,7 @@ data class VersionedArticle private constructor(
                 authorId = authorId,
                 createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
                 metadata = metadata,
-                currentVersion = Version.of(
+                currentVersion = Version.create(
                     id = versionId,
                     articleId = id,
                     state = VersionState.NEW,
@@ -89,18 +89,19 @@ data class VersionedArticle private constructor(
 
     suspend fun updateVersionIfChanged(
         title: String,
+        hasMeaningfulDiff: Boolean,
         diff: String,
         generateId: suspend () -> Long,
         createdAt: Instant,
         shouldRebase: suspend (Version) -> Boolean,
         reconstructFullContent: suspend (Version) -> String,
     ): VersionedArticle {
-        return if (diff.isBlank() && title == this.currentVersion.title?.value) this
+        return if (!hasMeaningfulDiff && title == this.currentVersion.title?.value) this
         else {
             val newVersionId = generateId()
 
             this.copy(
-                currentVersion = Version.of(
+                currentVersion = Version.create(
                     id = newVersionId,
                     articleId = id,
                     state = VersionState.NEW,

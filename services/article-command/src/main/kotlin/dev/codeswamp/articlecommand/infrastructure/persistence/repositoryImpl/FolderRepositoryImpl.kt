@@ -15,6 +15,7 @@ class FolderRepositoryImpl(
 
     override suspend fun create(folder: Folder): Folder {
         logger.info("create folder: $folder")
+
         try {
             return folderR2dbcRepository.insertFolder(
                 id = folder.id,

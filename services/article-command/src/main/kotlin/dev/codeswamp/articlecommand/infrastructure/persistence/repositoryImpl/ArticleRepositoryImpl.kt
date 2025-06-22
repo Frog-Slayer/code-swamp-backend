@@ -20,17 +20,38 @@ class ArticleRepositoryImpl(
 ) : ArticleRepository {
 
     override suspend fun create(versionedArticle: VersionedArticle): VersionedArticle {
-        val savedMetadataEntity = saveMetadata(versionedArticle)
-        val savedVersion = createVersion(versionedArticle.currentVersion)
+        val savedMetadataEntity = createMetadata(versionedArticle)
+        val savedVersion = versionRepository.save(versionedArticle.currentVersion)
 
         return toDomain(savedMetadataEntity, savedVersion)
     }
 
-    override suspend fun save(versionedArticle: VersionedArticle): VersionedArticle {
-        val savedMetadataEntity = saveMetadata(versionedArticle)
-        val savedVersion = saveVersion(versionedArticle.currentVersion)
+    private suspend fun createMetadata(article: VersionedArticle) : ArticleMetadataEntity {
+        val entity = ArticleMetadataEntity.Companion.from(article)
+        return articleMetadataR2dbcRepository.insert(
+            id = entity.id,
+            folderId = entity.folderId,
+            slug = entity.slug,
+            authorId = entity.authorId,
+            isPublic = entity.isPublic,
+            isPublished = entity.isPublished,
+            createdAt = entity.createdAt,
+            summary = entity.summary,
+            thumbnail = entity.thumbnail,
+        )
+    }
 
-        return toDomain(savedMetadataEntity, savedVersion)
+    override suspend fun update (versionedArticle: VersionedArticle): VersionedArticle {
+        updateMetadata(versionedArticle)
+        versionRepository.save(versionedArticle.currentVersion)
+
+        return versionedArticle
+    }
+
+    private suspend fun updateMetadata(versionedArticle: VersionedArticle): VersionedArticle {
+        val metadataEntity = ArticleMetadataEntity.Companion.from( versionedArticle)
+        articleMetadataR2dbcRepository.save(metadataEntity)
+        return toDomain(metadataEntity, versionedArticle.currentVersion )
     }
 
     override suspend fun findIdByFolderIdAndSlug(folderId: Long, slug: String): Long? {
@@ -63,9 +84,6 @@ class ArticleRepositoryImpl(
         return versionR2dbcRepository.countByArticleId(articleId)
     }
 
-    override suspend fun saveVersion(version: Version): Version {
-        return versionRepository.save(version)
-    }
 
     override suspend fun deleteAllByFolderIdIn(folderIds: List<Long>) {
         val articleIds = articleMetadataR2dbcRepository.findAllIdsByFolderIdIn(folderIds)
@@ -73,31 +91,6 @@ class ArticleRepositoryImpl(
         versionRepository.deleteAllByArticleIdIn(articleIds)
     }
 
-    private suspend fun createVersion(version: Version): Version {
-        return versionRepository.create(version)
-    }
-
-    private suspend fun createMetadata(article: VersionedArticle) : ArticleMetadataEntity {
-        val entity = ArticleMetadataEntity.Companion.from(article)
-        return articleMetadataR2dbcRepository.insert(
-            id = entity.id,
-            folderId = entity.folderId,
-            slug = entity.slug,
-            authorId = entity.authorId,
-            isPublic = entity.isPublic,
-            isPublished = entity.isPublished,
-            createdAt = entity.createdAt,
-            summary = entity.summary,
-            thumbnail = entity.thumbnail,
-        )
-    }
-
-    private suspend fun saveMetadata(article: VersionedArticle): ArticleMetadataEntity {
-        val entity = ArticleMetadataEntity.Companion.from(article)
-        return articleMetadataR2dbcRepository.findById(entity.id)
-            ?.apply { updateTo(entity) }
-            ?: articleMetadataR2dbcRepository.save(entity)
-    }
 
     override suspend fun deleteById(id: Long) {
         articleMetadataR2dbcRepository.deleteById(id)

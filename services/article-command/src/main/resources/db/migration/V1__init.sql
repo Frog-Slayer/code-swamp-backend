@@ -12,7 +12,6 @@ CREATE TABLE folder (
 
 CREATE TABLE article_metadata (
      id BIGINT PRIMARY KEY,
-     title TEXT,
      folder_id BIGINT NOT NULL,
      slug TEXT,
      author_id BIGINT NOT NULL,
