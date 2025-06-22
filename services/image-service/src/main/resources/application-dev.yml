@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/mydb
+    driver-class-name: org.postgresql.Driver
+    username: spring
+    password: boot
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: ""
+  neo4j:
+    uri: bolt://localhost:7687
+    authentication:
+      username: neo4j
+      password: codeswamp
+
+meilisearch:
+  url: http://localhost:7700
+  api-key: Uyflv5mWWF3Apyp23PhvAPyFpVnJB6CC_coToMPFcrk
+
+logging:
+  level:
+    org.springframework.context: DEBUG
+    org.springframework.data.neo4j: DEBUG
+    org.springframework.security: DEBUG
+
+server:
+  servlet:
+    context-path: /api
+
+frontend:
+  url: "http://localhost:3000"

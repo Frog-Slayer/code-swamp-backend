@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+option java_package = "dev.codeswamp.grpc";
+option java_multiple_files = true;
+
+service AuthService {
+  rpc VerifyTokenAndCreateUser(TokenAuthenticationRequest) returns (UserIdResponse);
+}
+
+message TokenAuthenticationRequest{
+  string signupToken = 1;
+  string email = 2;
+}
+
+message UserIdResponse{
+  int64 userId = 1;
+  string otp = 2;
+}

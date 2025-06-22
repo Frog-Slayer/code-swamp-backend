@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: codeswamp
+  profiles:
+    active: dev
+  config:
+    import: application-secret.yml
+  jpa:
+    show-sql: false
+
+server:
+  port: 8080

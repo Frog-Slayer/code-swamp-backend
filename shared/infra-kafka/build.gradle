@@ -1,0 +1,9 @@
+bootJar { enabled = false }
+jar { enabled =  true }
+
+dependencies {
+	api 'org.springframework.kafka:spring-kafka'
+
+	testImplementation 'org.springframework.kafka:spring-kafka-test'
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"
+}
