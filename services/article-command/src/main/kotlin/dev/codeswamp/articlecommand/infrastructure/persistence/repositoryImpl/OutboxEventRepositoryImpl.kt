@@ -5,7 +5,6 @@ import dev.codeswamp.articlecommand.application.event.outbox.OutboxEventReposito
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity.OutboxEventEntity
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.OutboxEventR2dbcRepository
 import org.springframework.stereotype.Repository
-import java.util.UUID
 
 @Repository
 class OutboxEventRepositoryImpl(
@@ -22,11 +21,15 @@ class OutboxEventRepositoryImpl(
             .map { it.toOutboxEvent() }
     }
 
-    override suspend fun markAsProcessed(id: Long) {
-        outboxEventRepository.updateStatus(id,  OutboxEvent.EventStatus.PROCESSED.toString())
+    override suspend fun markAsSent(id: Long) {
+        outboxEventRepository.updateStatus(id,  OutboxEvent.EventStatus.SENT.toString())
     }
 
     override suspend fun markAsFailed(id: Long) {
         outboxEventRepository.updateStatus(id,  OutboxEvent.EventStatus.FAILED.toString())
+    }
+
+    override suspend fun incrementRetryCount(id: Long): Int {
+        return outboxEventRepository.incrementRetryCount(id)
     }
 }

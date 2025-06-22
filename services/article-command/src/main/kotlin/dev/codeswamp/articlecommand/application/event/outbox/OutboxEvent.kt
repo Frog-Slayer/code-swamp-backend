@@ -11,11 +11,11 @@ data class OutboxEvent (
     val payload: Event,
     val status: EventStatus = EventStatus.PENDING,
     val createdAt : Instant,
+    val retryCount: Int = 0,
 ) {
     enum class EventStatus {
         PENDING,
-        PROCESSING,
-        PROCESSED,
+        SENT,
         FAILED
     }
 
@@ -26,7 +26,7 @@ data class OutboxEvent (
             return OutboxEvent(
                 eventType = className,
                 payload = event,
-                createdAt = Instant.now()
+                createdAt = Instant.now(),
             )
         }
     }

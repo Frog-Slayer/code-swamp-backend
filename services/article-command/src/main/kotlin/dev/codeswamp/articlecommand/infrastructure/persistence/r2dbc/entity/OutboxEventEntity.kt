@@ -22,7 +22,10 @@ data class OutboxEventEntity (
     val payloadJson: String,
 
     val status: String,
-    val createdAt: Instant
+    val createdAt: Instant,
+
+    @Column("retry_count")
+    val retryCount: Int,
 ) {
     companion object {
         fun from(outboxEvent: OutboxEvent) = OutboxEventEntity(
@@ -30,7 +33,8 @@ data class OutboxEventEntity (
             eventType = outboxEvent.eventType,
             payloadJson = jacksonObjectMapper().writeValueAsString(outboxEvent.payload),
             status = outboxEvent.status.toString(),
-            createdAt = outboxEvent.createdAt
+            createdAt = outboxEvent.createdAt,
+            retryCount = outboxEvent.retryCount
         )
     }
 
@@ -42,7 +46,8 @@ data class OutboxEventEntity (
             eventType = eventType,
             payload = jacksonObjectMapper().readValue(payloadJson, clazz) as Event,
             status = OutboxEvent.EventStatus.valueOf(status),
-            createdAt = createdAt
+            createdAt = createdAt,
+            retryCount = retryCount
         )
     }
 }

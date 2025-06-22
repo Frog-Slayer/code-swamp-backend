@@ -33,4 +33,13 @@ interface OutboxEventR2dbcRepository : CoroutineCrudRepository<OutboxEventEntity
         @Param("status") status: String
     )
 
+
+    @Modifying
+    @Query( """
+        UPDATE outbox_event
+        SET retry_count=:retry_count + 1
+        WHERE id = :id
+        RETURNING retry_count
+    """)
+    suspend fun incrementRetryCount(id: Long) : Int
 }
