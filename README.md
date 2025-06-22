@@ -1,7 +1,7 @@
 # code-swamp
 마땅히 마음에 드는 곳이 없어서 내 맘대로 만드는 블로그 프로젝트
 
-> 세부 사항은 (Wiki)[https://github.com/Frog-Slayer/code-swamp-backend/wiki]에서 확인할 수 있습니다.
+> 세부 사항은 [Wiki](https://github.com/Frog-Slayer/code-swamp-backend/wiki)에서 확인할 수 있습니다.
 
 ## 1. 기술 스택
 
