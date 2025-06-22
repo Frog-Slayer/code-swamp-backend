@@ -17,7 +17,7 @@ CREATE TABLE article_metadata (
      author_id BIGINT NOT NULL,
      is_public BOOLEAN NOT NULL ,
      is_published BOOLEAN NOT NULL,
-     created_at TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP,
+     created_at TIMESTAMP(3) NOT NULL ,
      summary TEXT NOT NULL DEFAULT '',
      thumbnail TEXT,
 
@@ -43,3 +43,11 @@ CREATE TABLE base_version (
       version_id BIGINT PRIMARY KEY REFERENCES version(id),
       content TEXT NOT NULL
 );
+
+CREATE TABLE article_outbox (
+    id BIGINT PRIMARY KEY,
+    event_type TEXT NOT NULL ,
+    payload_json JSONB NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    created_at TIMESTAMP(3) NOT NULL
+)
