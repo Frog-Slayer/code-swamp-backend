@@ -1,9 +1,6 @@
 package dev.codeswamp.articlecommand.application.usecase.command.article.publish
 
-import dev.codeswamp.articlecommand.application.event.outbox.OutboxEvent
-import dev.codeswamp.articlecommand.application.event.outbox.OutboxEventRepository
 import dev.codeswamp.articlecommand.application.exception.article.ArticleNotFoundException
-import dev.codeswamp.articlecommand.application.port.outgoing.InternalEventPublisher
 import dev.codeswamp.articlecommand.application.rebase.RebasePolicy
 import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
 import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
@@ -12,6 +9,8 @@ import dev.codeswamp.articlecommand.domain.article.repository.ArticleRepository
 import dev.codeswamp.articlecommand.domain.article.service.ArticleContentReconstructor
 import dev.codeswamp.articlecommand.domain.article.service.SlugUniquenessChecker
 import dev.codeswamp.articlecommand.domain.support.DiffProcessor
+import dev.codeswamp.core.application.event.EventRecorder
+import dev.codeswamp.core.application.event.outbox.OutboxEventRepository
 import dev.codeswamp.core.domain.IdGenerator
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,12 +19,12 @@ import java.time.Instant
 @Service
 class PublishArticleUseCaseImpl(
     private val articleRepository: ArticleRepository,
-    private val outboxRepository: OutboxEventRepository,
     private val idGenerator: IdGenerator,
     private val slugUniquenessChecker: SlugUniquenessChecker,
     private val diffProcessor: DiffProcessor,
     private val contentReconstructor: ArticleContentReconstructor,
     private val rebasePolicy: RebasePolicy,
+    private val eventRecorder: EventRecorder,
 ) : PublishArticleUseCase {
 
     @Transactional
@@ -50,7 +49,7 @@ class PublishArticleUseCaseImpl(
         ).publish(slugUniquenessChecker::checkSlugUniqueness)
         .also { articleRepository.create(it) }
 
-        outboxRepository.saveAll(article.pullEvents().map{ OutboxEvent.registerAndCreate(it)})
+        eventRecorder.recordAll(article.pullEvents())
 
         return PublishArticleResult(
             article.id,
@@ -93,7 +92,7 @@ class PublishArticleUseCaseImpl(
                 articleRepository.update(it)
             }
 
-        outboxRepository.saveAll(updatedArticle.pullEvents().map{ OutboxEvent.registerAndCreate(it)})
+        eventRecorder.recordAll(updatedArticle.pullEvents())
 
         return PublishArticleResult(
             updatedArticle.id,

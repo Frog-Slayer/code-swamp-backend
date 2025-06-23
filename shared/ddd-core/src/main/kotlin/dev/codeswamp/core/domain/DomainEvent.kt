@@ -1,5 +1,5 @@
 package dev.codeswamp.core.domain
 
-import dev.codeswamp.core.common.event.Event
+import dev.codeswamp.core.common.event.BusinessEvent
 
-interface DomainEvent : Event
+interface DomainEvent : BusinessEvent

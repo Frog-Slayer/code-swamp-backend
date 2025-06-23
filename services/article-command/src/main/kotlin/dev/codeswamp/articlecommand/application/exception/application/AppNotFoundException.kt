@@ -1,8 +1,11 @@
 package dev.codeswamp.articlecommand.application.exception.application
 
+import dev.codeswamp.core.common.exception.NotFoundErrorCode
+import dev.codeswamp.core.common.exception.NotFoundException
+
 enum class AppNotFoundErrorCode(
     override val code: String,
-) : AppErrorCode {
+) : NotFoundErrorCode {
     APP_NOT_FOUND("APP_NOT_FOUND"),
     ARTICLE_NOT_FOUND("ARTICLE_NOT_FOUND"),
     FOLDER_NOT_FOUND("FOLDER_NOT_FOUND"),
@@ -11,4 +14,4 @@ enum class AppNotFoundErrorCode(
 open class AppNotFoundException(
     errorCode: AppNotFoundErrorCode,
     message: String
-) : AppException(errorCode, message)
+) : NotFoundException (errorCode, message)

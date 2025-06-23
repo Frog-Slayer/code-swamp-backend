@@ -1,9 +1,10 @@
 package dev.codeswamp.articlecommand.presentation.exception
 
-import dev.codeswamp.articlecommand.application.exception.application.*
-import dev.codeswamp.articlecommand.domain.exception.domain.*
-import dev.codeswamp.articlecommand.infrastructure.exception.infrastructure.InfraConflictException
-import dev.codeswamp.articlecommand.infrastructure.exception.infrastructure.InfraException
+import dev.codeswamp.core.common.exception.BadRequestException
+import dev.codeswamp.core.common.exception.BaseException
+import dev.codeswamp.core.common.exception.ConflictException
+import dev.codeswamp.core.common.exception.ForbiddenException
+import dev.codeswamp.core.common.exception.NotFoundException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
@@ -15,42 +16,15 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 class ExceptionHandler {
     private val logger: Logger = LoggerFactory.getLogger(ExceptionHandler::class.java)
 
-    @ExceptionHandler(DomainException::class)
-    fun handleDomainException(exception: DomainException): ResponseEntity<ErrorResponse> {
+    @ExceptionHandler(BaseException::class)
+    fun handleDomainException(exception: BaseException): ResponseEntity<ErrorResponse> {
         logger.error(exception.message)
 
         val httpStatus = when (exception) {
-            is DomainNotFoundException -> HttpStatus.NOT_FOUND
-            is DomainBadRequestException -> HttpStatus.BAD_REQUEST
-            is DomainConflictException -> HttpStatus.CONFLICT
-            is DomainForbiddenException -> HttpStatus.FORBIDDEN
-            else -> HttpStatus.INTERNAL_SERVER_ERROR
-        }
-
-        return ResponseEntity.status(httpStatus).body(ErrorResponse.from(exception))
-    }
-
-    @ExceptionHandler(AppException::class)
-    fun handleAppException(exception: AppException): ResponseEntity<ErrorResponse> {
-        logger.error(exception.message)
-
-        val httpStatus = when (exception) {
-            is AppNotFoundException -> HttpStatus.NOT_FOUND
-            is AppBadRequestException -> HttpStatus.BAD_REQUEST
-            is AppConflictException -> HttpStatus.CONFLICT
-            is AppForbiddenException -> HttpStatus.FORBIDDEN
-            else -> HttpStatus.INTERNAL_SERVER_ERROR
-        }
-
-        return ResponseEntity.status(httpStatus).body(ErrorResponse.from(exception))
-    }
-
-    @ExceptionHandler(InfraException::class)
-    fun handleInfraException(exception: InfraException): ResponseEntity<ErrorResponse> {
-        logger.error(exception.message)
-
-        val httpStatus = when (exception) {
-            is InfraConflictException -> HttpStatus.CONFLICT
+            is NotFoundException   -> HttpStatus.NOT_FOUND
+            is BadRequestException -> HttpStatus.BAD_REQUEST
+            is ConflictException   -> HttpStatus.CONFLICT
+            is ForbiddenException  -> HttpStatus.FORBIDDEN
             else -> HttpStatus.INTERNAL_SERVER_ERROR
         }
 

@@ -1,19 +1,21 @@
 package dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import dev.codeswamp.articlecommand.application.event.outbox.EventTypeRegistry
-import dev.codeswamp.articlecommand.application.event.outbox.OutboxEvent
-import dev.codeswamp.core.common.event.Event
+import dev.codeswamp.core.application.event.outbox.EventTypeRegistry
+import dev.codeswamp.core.application.event.outbox.OutboxEvent
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import java.time.Instant
-import java.util.UUID
 
-@Table("article_outbox")
+
+@Table("outbox_event")
 data class OutboxEventEntity (
     @Id
     val id: Long,
+
+    @Column("event_key")
+    val key : String,
 
     @Column("event_type")
     val eventType: String,
@@ -28,6 +30,10 @@ data class OutboxEventEntity (
 
     @Column("retry_count")
     val retryCount: Int,
+
+    @Column("service_name")
+    val serviceName: String,
+
 ) {
     companion object {
         fun from(outboxEvent: OutboxEvent) = OutboxEventEntity(
@@ -36,7 +42,9 @@ data class OutboxEventEntity (
             payloadJson = jacksonObjectMapper().writeValueAsString(outboxEvent.payload),
             status = outboxEvent.status.toString(),
             createdAt = outboxEvent.createdAt,
-            retryCount = outboxEvent.retryCount
+            retryCount = outboxEvent.retryCount,
+            serviceName = outboxEvent.serviceName,
+            key = outboxEvent.key
         )
     }
 
@@ -46,10 +54,12 @@ data class OutboxEventEntity (
         return OutboxEvent(
             id = id,
             eventType = eventType,
-            payload = jacksonObjectMapper().readValue(payloadJson, clazz) as Event,
+            payload = jacksonObjectMapper().readValue(payloadJson, clazz) as dev.codeswamp.core.common.event.BusinessEvent,
             status = OutboxEvent.EventStatus.valueOf(status),
             createdAt = createdAt,
-            retryCount = retryCount
+            retryCount = retryCount,
+            serviceName = serviceName,
+            key = key
         )
     }
 }

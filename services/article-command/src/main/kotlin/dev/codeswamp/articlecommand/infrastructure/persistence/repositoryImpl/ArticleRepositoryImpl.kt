@@ -6,7 +6,7 @@ import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.articlecommand.domain.article.model.vo.Slug
 import dev.codeswamp.articlecommand.domain.article.repository.ArticleRepository
 import dev.codeswamp.articlecommand.domain.article.repository.VersionRepository
-import dev.codeswamp.articlecommand.infrastructure.exception.article.ArticleVersionMismatchException
+import dev.codeswamp.articlecommand.application.exception.article.ArticleVersionMismatchException
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity.ArticleMetadataEntity
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.ArticleMetadataR2dbcRepository
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.VersionR2dbcRepository

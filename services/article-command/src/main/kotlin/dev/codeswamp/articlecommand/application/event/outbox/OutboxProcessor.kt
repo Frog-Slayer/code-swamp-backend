@@ -1,9 +1,10 @@
 package dev.codeswamp.articlecommand.application.event.outbox
 
-import dev.codeswamp.articlecommand.application.port.outgoing.InternalEventPublisher
-import dev.codeswamp.articlecommand.infrastructure.exception.infrastructure.EventTransientException
-import dev.codeswamp.core.common.event.Event
-import dev.codeswamp.core.common.event.EventPublisher
+import dev.codeswamp.articlecommand.application.port.outgoing.OutboxEventPublisher
+import dev.codeswamp.articlecommand.application.exception.infra.TransientEventException
+import dev.codeswamp.core.application.event.outbox.OutboxEventRepository
+import dev.codeswamp.core.application.event.outbox.OutboxProcessor
+import dev.codeswamp.core.application.event.outbox.ProcessResult
 import jakarta.annotation.PostConstruct
 import jakarta.annotation.PreDestroy
 import kotlinx.coroutines.CancellationException
@@ -23,18 +24,18 @@ import org.springframework.transaction.reactive.TransactionalOperator
 import org.springframework.transaction.reactive.executeAndAwait
 
 @Component
-class OutboxProcessor (
+class OutboxProcessorImpl (
     private val outboxEventRepository : OutboxEventRepository,
-    private val internalEventPublisher: InternalEventPublisher,
+    private val outboxEventPublisher: OutboxEventPublisher,
     private val transactionalOperator : TransactionalOperator,
-) {
+) : OutboxProcessor {
     private val MAX_RETRY_ATTEMPTS = 5
 
     private val logger = LoggerFactory.getLogger(javaClass)
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
 
     @PostConstruct
-    fun afterPropertiesSet() {
+    override fun startProcessing() {
         scope.launch {
             try {
                 while (isActive) {
@@ -50,22 +51,23 @@ class OutboxProcessor (
     }
 
     @PreDestroy
-     fun destroy() {
+    override fun stopProcessing() {
         scope.cancel("Application shutting down")
     }
 
-    suspend fun processOutbox() = coroutineScope {
+    override suspend fun processOutbox() = coroutineScope {
         val events = outboxEventRepository.findPending(100)
 
         events.map {  outboxEvent ->
             async {
                  try {
-                     internalEventPublisher.publish(outboxEvent.payload)
+                     outboxEventPublisher.publish(outboxEvent)
                      transactionalOperator.executeAndAwait {
                          outboxEventRepository.markAsSent(outboxEvent.id)
                      }
-                     logger.info("Event ${outboxEvent.id} sent")
-                 } catch (e : EventTransientException) {//maybe retriable
+
+                     ProcessResult.Success(outboxEvent.id)
+                 } catch (e : TransientEventException) {//maybe retriable
                       transactionalOperator.executeAndAwait {
                           val updatedCount = outboxEventRepository.incrementRetryCount(outboxEvent.id)
                           if (updatedCount >= MAX_RETRY_ATTEMPTS) {
@@ -75,12 +77,16 @@ class OutboxProcessor (
                               logger.warn("Event ${outboxEvent.id} failed. Retry", e)
                           }
                      }
+
+                     ProcessResult.Retry(outboxEvent.id, outboxEvent.retryCount)
                  }
                  catch (e : Exception) {//else
                     logger.warn("Exception in OutboxProcessor", e)
                     transactionalOperator.executeAndAwait {
                         outboxEventRepository.markAsFailed(outboxEvent.id)
                     }
+
+                     ProcessResult.Failed(outboxEvent.id, e)
                 }
             }
        }.awaitAll()

@@ -1,8 +1,8 @@
 package dev.codeswamp.articlecommand.domain.article.model
 
-import dev.codeswamp.articlecommand.domain.article.event.DraftedEvent
-import dev.codeswamp.articlecommand.domain.article.event.PublishedEvent
-import dev.codeswamp.articlecommand.domain.article.event.VersionCreatedEvent
+import dev.codeswamp.articlecommand.domain.article.event.ArticleDraftedEvent
+import dev.codeswamp.articlecommand.domain.article.event.ArticlePublishedEvent
+import dev.codeswamp.articlecommand.domain.article.event.ArticleVersionCreatedEvent
 import dev.codeswamp.articlecommand.domain.article.exception.InvalidArticleStateException
 import dev.codeswamp.articlecommand.domain.article.exception.PrivateArticleForbiddenException
 import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
@@ -116,7 +116,7 @@ data class VersionedArticle private constructor(
                         } else it
                     }
             ).withEvent(
-                VersionCreatedEvent(
+                ArticleVersionCreatedEvent(
                     articleId = id,
                     versionId = newVersionId
                 )
@@ -133,7 +133,7 @@ data class VersionedArticle private constructor(
             isPublished = true,
             currentVersion = currentVersion.publish()
         ).withEvent(
-            PublishedEvent(
+            ArticlePublishedEvent(
                 articleId = id,
                 versionId = currentVersion.id,
                 previousVersionId = currentVersion.previousVersionId,
@@ -149,7 +149,7 @@ data class VersionedArticle private constructor(
         }
 
         return this.copy(currentVersion = currentVersion.draft()).withEvent(
-            DraftedEvent(
+            ArticleDraftedEvent(
                 articleId = id,
                 versionId = currentVersion.id,
             )
