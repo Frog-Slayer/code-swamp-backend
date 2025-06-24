@@ -1,7 +1,7 @@
-package dev.codeswamp.articlecommand.application.rebase.snapshot
+package dev.codeswamp.articlecommand.application.rebase
 
-import dev.codeswamp.articlecommand.application.rebase.RebasePolicy
 import dev.codeswamp.articlecommand.domain.article.model.Version
+import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
 import dev.codeswamp.articlecommand.domain.article.repository.ArticleRepository
 import org.springframework.context.annotation.Primary
 import org.springframework.stereotype.Component
@@ -13,8 +13,9 @@ import org.springframework.stereotype.Component
 @Primary
 class SnapshotEvery5thPolicy(
     private val articleRepository: ArticleRepository
-) : RebasePolicy {
-    override suspend fun shouldStoreAsBase(version: Version): Boolean {
-        return articleRepository.countVersionsOfArticle(version.articleId) % 5 == 0L
+) : SnapshotPolicy {
+
+    override suspend fun shouldSaveSnapshot(article: VersionedArticle): Boolean {
+        return articleRepository.countVersionsOfArticle(article.id) % 5 == 0L
     }
 }

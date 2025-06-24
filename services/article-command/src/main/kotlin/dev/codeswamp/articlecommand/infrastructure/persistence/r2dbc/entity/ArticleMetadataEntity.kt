@@ -36,7 +36,7 @@ data class ArticleMetadataEntity(
             id = versionedArticle.id,
             authorId = versionedArticle.authorId,
             createdAt = versionedArticle.createdAt,
-            isPublished = versionedArticle.isPublished,
+            isPublished = versionedArticle.hasBeenPublished,
             isPublic = versionedArticle.metadata.isPublic,
             folderId = versionedArticle.metadata.folderId,
             summary = versionedArticle.metadata.summary,

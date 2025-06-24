@@ -1,6 +1,6 @@
 package dev.codeswamp.core.article.infrastructure.persistence.repositoryImpl
 
-import dev.codeswamp.articlecommand.application.rebase.RebasePolicy
+import dev.codeswamp.articlecommand.application.rebase.SnapshotPolicy
 import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
 import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.articlecommand.domain.article.model.vo.Slug
@@ -30,7 +30,7 @@ class ArticleRepositoryImplTest(
     @Autowired private val contentReconstructor: ArticleContentReconstructor,
     @Autowired private val versionNodeRepository: VersionNodeRepository,
     @Autowired private val diffProcessor: DiffProcessor,
-    @Autowired private val rebasePolicy: RebasePolicy
+    @Autowired private val snapshotPolicy: SnapshotPolicy
 ) {
 
     private val authorId = 100L
@@ -122,7 +122,7 @@ class ArticleRepositoryImplTest(
                     diff = diff ?: "",
                     generateId = idGenerator::generateId,
                     createdAt = Instant.now(),
-                    shouldRebase = rebasePolicy::shouldStoreAsBase,
+                    shouldRebase = snapshotPolicy::shouldSaveSnapshot,
                     reconstructFullContent = contentReconstructor::reconstructFullContent
                 )
                     .draft(slugUniquenessChecker = slugChecker::checkSlugUniqueness)

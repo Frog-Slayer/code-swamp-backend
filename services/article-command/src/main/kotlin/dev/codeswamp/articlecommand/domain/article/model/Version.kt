@@ -1,5 +1,7 @@
 package dev.codeswamp.articlecommand.domain.article.model
 
+import dev.codeswamp.articlecommand.domain.article.exception.OverwritingSnapshotException
+import dev.codeswamp.articlecommand.domain.article.model.vo.Snapshot
 import dev.codeswamp.articlecommand.domain.article.model.vo.Title
 import java.time.Instant
 import java.time.temporal.ChronoUnit
@@ -15,15 +17,11 @@ data class Version private constructor(
     val diff: String,
     val createdAt: Instant,
 
-    val isBaseVersion: Boolean = false,
-    val fullContent: String? = null,
-
-    val isNew : Boolean = false,
+    val snapshot: Snapshot? = null,
 ) {
     companion object {
         fun create(
             id: Long,
-            state: VersionState,
             articleId: Long,
             previousVersionId: Long?,
             title: String?,
@@ -31,13 +29,12 @@ data class Version private constructor(
             createdAt: Instant,
         ) = Version(
             id = id,
-            state = state,
+            state = VersionState.NEW,
             articleId = articleId,
             previousVersionId = previousVersionId,
             title = Title.Companion.of(title),
             diff = diff,
             createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
-            isNew = true
         )
 
         fun from(
@@ -48,7 +45,6 @@ data class Version private constructor(
             title: String?,
             diff: String,
             createdAt: Instant,
-            isBaseVersion: Boolean,
             fullContent: String?,
         ) = Version(
             id = id,
@@ -58,14 +54,13 @@ data class Version private constructor(
             title = Title.Companion.of(title),
             diff = diff,
             createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
-            isBaseVersion = isBaseVersion,
-            fullContent = fullContent,
-            isNew = false,
+            snapshot = fullContent?.let { Snapshot(fullContent)}
         )
     }
 
-    fun asBaseVersion(fullContent: String): Version {
-        return this.copy(isBaseVersion = true, fullContent = fullContent)
+    fun withSnapshot(fullContent: String): Version {
+        if (snapshot != null) throw OverwritingSnapshotException("Snapshot already exists")
+        return this.copy(snapshot = Snapshot(fullContent))
     }
 
     fun publish() = this.copy(state = VersionState.PUBLISHED)

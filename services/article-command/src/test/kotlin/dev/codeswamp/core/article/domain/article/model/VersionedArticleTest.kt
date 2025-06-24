@@ -109,7 +109,7 @@ class VersionedArticleTest {
 
         val published = article.publish(checker)
 
-        assertThat(published.isPublished).isTrue()
+        assertThat(published.hasBeenPublished).isTrue()
         assertThat(published.currentVersion.state).isEqualTo(VersionState.PUBLISHED)
 
         assertThat(published.pullEvents().first()).isInstanceOf(ArticlePublishedEvent::class.java)

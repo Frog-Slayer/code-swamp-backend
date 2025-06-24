@@ -1,16 +1,16 @@
 package dev.codeswamp.articlecommand.application.usecase.command.article.publish
 
 import dev.codeswamp.articlecommand.application.exception.article.ArticleNotFoundException
-import dev.codeswamp.articlecommand.application.rebase.RebasePolicy
+import dev.codeswamp.articlecommand.application.rebase.SnapshotPolicy
 import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
+import dev.codeswamp.articlecommand.domain.article.model.command.ArticleVersionUpdateCommand
+import dev.codeswamp.articlecommand.domain.article.model.command.CreateArticleCommand
 import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.articlecommand.domain.article.model.vo.Slug
 import dev.codeswamp.articlecommand.domain.article.repository.ArticleRepository
 import dev.codeswamp.articlecommand.domain.article.service.ArticleContentReconstructor
-import dev.codeswamp.articlecommand.domain.article.service.SlugUniquenessChecker
 import dev.codeswamp.articlecommand.domain.support.DiffProcessor
 import dev.codeswamp.core.application.event.EventRecorder
-import dev.codeswamp.core.application.event.outbox.OutboxEventRepository
 import dev.codeswamp.core.domain.IdGenerator
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -20,83 +20,88 @@ import java.time.Instant
 class PublishArticleUseCaseImpl(
     private val articleRepository: ArticleRepository,
     private val idGenerator: IdGenerator,
-    private val slugUniquenessChecker: SlugUniquenessChecker,
     private val diffProcessor: DiffProcessor,
     private val contentReconstructor: ArticleContentReconstructor,
-    private val rebasePolicy: RebasePolicy,
+    private val snapshotPolicy: SnapshotPolicy,
     private val eventRecorder: EventRecorder,
 ) : PublishArticleUseCase {
 
     @Transactional
     override suspend fun create(command: CreatePublishCommand): PublishArticleResult {
-        val createdAt = Instant.now()
+        val fullContent = contentReconstructor.contentFromInitialDiff(command.diff)
 
-        val article = VersionedArticle.Companion.create(
-            authorId = command.userId,
-            id = idGenerator.generateId(),
-            createdAt = createdAt,
-            metadata = ArticleMetadata(
-                folderId = command.folderId,
-                summary = command.summary,
-                thumbnailUrl = command.thumbnailUrl,
-                isPublic = command.isPublic,
-                slug = Slug.Companion.of(command.slug),
-            ),
-            title = command.title,
-            diff = command.diff,
-            fullContent = contentReconstructor.contentFromInitialDiff(command.diff),
-            versionId = idGenerator.generateId()
-        ).publish(slugUniquenessChecker::checkSlugUniqueness)
-        .also { articleRepository.create(it) }
+        val article = command.toCreateArticleCommand(fullContent)
+            .let(VersionedArticle::create)
+            .publish(fullContent)
+            .also { articleRepository.create(it) }
 
         eventRecorder.recordAll(article.pullEvents())
 
-        return PublishArticleResult(
-            article.id,
-            article.currentVersion.id
-        )
+        return PublishArticleResult( article.id, article.currentVersion.id )
     }
+
+    private fun CreatePublishCommand.toCreateArticleCommand(fullContent: String) = CreateArticleCommand(
+        generateId = idGenerator::generateId,
+        authorId = userId,
+        createdAt = Instant.now(),
+        metadata = extractMetadata(),
+        title = title,
+        diff = diff,
+        fullContent = fullContent,
+    )
+ private fun CreatePublishCommand.extractMetadata() =  ArticleMetadata( folderId = folderId,
+        summary = summary,
+        thumbnailUrl = thumbnailUrl,
+        isPublic = isPublic,
+        slug = Slug.Companion.of(slug)
+    )
+
 
     @Transactional
     override suspend fun update(command: UpdatePublishCommand): PublishArticleResult {
-        val createdAt = Instant.now()
-
         val hasMeaningfulDiff = diffProcessor.hasValidDelta(command.diff)
-
         val existingArticle = articleRepository.findByIdAndVersionId(command.articleId, command.versionId)
             ?: throw ArticleNotFoundException.Companion.byId(command.articleId)
 
+        val fullContent = contentReconstructor.reconstructFullContent(existingArticle.currentVersion)
+                            .let { contentReconstructor.applyDiff(it, command.diff) }
 
-        val updatedArticle = existingArticle
+        val snapshotContent = if ( snapshotPolicy.shouldSaveSnapshot(existingArticle)) fullContent else null
+
+        val articleAfterUpdate = existingArticle
             .apply { checkOwnership(command.userId) }
-            .updateMetadata(
-                ArticleMetadata(
-                    folderId = command.folderId,
-                    summary = command.summary,
-                    thumbnailUrl = command.thumbnailUrl,
-                    isPublic = command.isPublic,
-                    slug = Slug.Companion.of(command.slug)
-                )
-            )
-            .updateVersionIfChanged(
-                title = command.title,
-                hasMeaningfulDiff = hasMeaningfulDiff,
-                diff = command.diff,
-                generateId = idGenerator::generateId,
-                createdAt = createdAt,
-                shouldRebase =  rebasePolicy::shouldStoreAsBase,
-                reconstructFullContent = contentReconstructor::reconstructFullContent
-            )
-            .publish(slugUniquenessChecker::checkSlugUniqueness)
+            .updateMetadata(command.extractMetadata() )
+            .updateVersionIfChanged(command.toArticleVersionUpdateCommand(hasMeaningfulDiff))
+            .withSnapshot(snapshotContent)
+            .publish(fullContent)
             .also {
                 articleRepository.update(it)
             }
 
-        eventRecorder.recordAll(updatedArticle.pullEvents())
+
+        if (existingArticle != articleAfterUpdate) {
+            eventRecorder.recordAll(articleAfterUpdate.pullEvents())
+        }
 
         return PublishArticleResult(
-            updatedArticle.id,
-            updatedArticle.currentVersion.id
+            articleAfterUpdate.id,
+            articleAfterUpdate.currentVersion.id
         )
     }
+
+    private fun UpdatePublishCommand.toArticleVersionUpdateCommand(hasMeaningfulDiff : Boolean) = ArticleVersionUpdateCommand(
+        hasMeaningfulDiff = hasMeaningfulDiff,
+        generateId = idGenerator::generateId,
+        createdAt = Instant.now(),
+        title = title,
+        diff = diff,
+    )
+
+    private fun UpdatePublishCommand.extractMetadata() =  ArticleMetadata(
+        folderId = folderId,
+        summary = summary,
+        thumbnailUrl = thumbnailUrl,
+        isPublic = isPublic,
+        slug = Slug.Companion.of(slug)
+    )
 }

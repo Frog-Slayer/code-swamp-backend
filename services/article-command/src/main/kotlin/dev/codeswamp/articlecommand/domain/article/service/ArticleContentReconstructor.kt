@@ -14,7 +14,7 @@ class ArticleContentReconstructor(
     //TODO diffChain & applyDiff 실패를 대비 try-catch로 예외 처리 필요
     suspend fun reconstructFullContent(version: Version): String {
         return when {
-            version.isBaseVersion -> contentFromBaseVersion(version)
+            version.snapshot != null -> contentFromSnapshot(version)
             version.previousVersionId == null -> contentFromInitialDiff(version.diff)
             else -> contentFromDiffChain(version)
         }
@@ -24,9 +24,8 @@ class ArticleContentReconstructor(
         return applyDiff("", diff)
     }
 
-    private fun contentFromBaseVersion(version: Version): String {
-        return version.fullContent
-            ?: throw ContentReconstructionException("base version ${version.id} has no content")
+    private fun contentFromSnapshot(version: Version): String {
+        return version.snapshot!!.fullContent
     }
 
     private suspend fun contentFromDiffChain(version: Version): String {
@@ -39,7 +38,7 @@ class ArticleContentReconstructor(
         val diffChain = versionRepository.findDiffChainBetween(base.id, version.previousVersionId)
 
         val previousContent = diffProcessor.buildFullContent(
-            base.fullContent
+            base.snapshot?.fullContent
                 ?: throw ContentReconstructionException("base version ${base.id} has no content"),
             diffChain
         )
@@ -48,7 +47,7 @@ class ArticleContentReconstructor(
     }
 
 
-    private fun applyDiff(content: String, diff: String): String {
+    fun applyDiff(content: String, diff: String): String {
         return diffProcessor.applyDiff(content, diff)
     }
 
