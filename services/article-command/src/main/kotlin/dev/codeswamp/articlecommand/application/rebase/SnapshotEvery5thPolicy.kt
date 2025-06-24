@@ -15,7 +15,9 @@ class SnapshotEvery5thPolicy(
     private val articleRepository: ArticleRepository
 ) : SnapshotPolicy {
 
-    override suspend fun shouldSaveSnapshot(article: VersionedArticle): Boolean {
-        return articleRepository.countVersionsOfArticle(article.id) % 5 == 0L
+    override suspend fun shouldSaveAsSnapshot( article: VersionedArticle ) : Boolean {
+        val isEvery5thSave = articleRepository.countVersionsOfArticle(article.id) % 5 == 0L
+
+        return isEvery5thSave
     }
 }

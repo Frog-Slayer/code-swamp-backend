@@ -72,14 +72,6 @@ class ArticleRepositoryImpl(
         return toDomain(savedMetadataEntity, savedVersion)
     }
 
-    override suspend fun findPreviousPublishedVersion(articleId: Long, versionId: Long): Version? {
-        return versionRepository.findPreviousPublishedVersion(articleId, versionId)
-    }
-
-    override suspend fun findVersionByVersionId(versionId: Long): Version? {
-        return versionRepository.findByIdOrNull(versionId)
-    }
-
     override suspend fun countVersionsOfArticle(articleId: Long): Long {
         return versionR2dbcRepository.countByArticleId(articleId)
     }

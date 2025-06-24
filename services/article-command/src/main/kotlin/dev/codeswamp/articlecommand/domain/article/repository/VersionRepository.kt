@@ -10,7 +10,7 @@ interface VersionRepository {
     suspend fun deleteAllByArticleIdIn(articleIds: List<Long>)
     suspend fun deleteByArticleId(articleId: Long)
 
-    suspend fun findPreviousPublishedVersion(articleId: Long, versionId: Long): Version?
+    suspend fun findPublishedVersionByArticleId(articleId: Long): Version?
 
     suspend fun findNearestBaseTo(versionId: Long): Version?
 

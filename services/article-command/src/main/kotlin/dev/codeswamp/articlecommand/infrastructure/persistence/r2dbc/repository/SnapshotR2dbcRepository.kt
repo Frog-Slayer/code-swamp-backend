@@ -7,10 +7,10 @@ import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
 
 @Repository
-interface BaseVersionR2dbcRepository : CoroutineCrudRepository<BaseVersionEntity, Long> {
+interface SnapshotR2dbcRepository : CoroutineCrudRepository<BaseVersionEntity, Long> {
 
     @Query( """
-        INSERT INTO base_version (version_id, content) VALUES (:version_id, :content) RETURNING *
+        INSERT INTO snapshot (version_id, content) VALUES (:version_id, :content) RETURNING *
     """)
     fun insert(
         @Param("versionId") versionId: Long,

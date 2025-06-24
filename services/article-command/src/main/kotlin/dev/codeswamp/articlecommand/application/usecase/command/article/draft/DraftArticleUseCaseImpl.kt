@@ -2,15 +2,13 @@ package dev.codeswamp.articlecommand.application.usecase.command.article.draft
 
 import dev.codeswamp.articlecommand.application.exception.article.ArticleNotFoundException
 import dev.codeswamp.articlecommand.application.rebase.SnapshotPolicy
-import dev.codeswamp.articlecommand.application.usecase.command.article.publish.CreatePublishCommand
-import dev.codeswamp.articlecommand.application.usecase.command.article.publish.PublishArticleResult
 import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
 import dev.codeswamp.articlecommand.domain.article.model.command.ArticleVersionUpdateCommand
 import dev.codeswamp.articlecommand.domain.article.model.command.CreateArticleCommand
 import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
-import dev.codeswamp.articlecommand.domain.article.model.vo.Slug
 import dev.codeswamp.articlecommand.domain.article.repository.ArticleRepository
 import dev.codeswamp.articlecommand.domain.article.service.ArticleContentReconstructor
+import dev.codeswamp.articlecommand.domain.article.service.ArticleVersionTransitionSideEffectHandler
 import dev.codeswamp.articlecommand.domain.article.service.SlugUniquenessChecker
 import dev.codeswamp.articlecommand.domain.support.DiffProcessor
 import dev.codeswamp.core.application.event.EventRecorder
@@ -23,11 +21,11 @@ import java.time.Instant
 class DraftArticleUseCaseImpl(
     private val articleRepository: ArticleRepository,
     private val idGenerator: IdGenerator,
-    private val slugUniquenessChecker: SlugUniquenessChecker,
     private val contentReconstructor: ArticleContentReconstructor,
+    private val versionTransitionSideEffectHandler: ArticleVersionTransitionSideEffectHandler,
     private val diffProcessor: DiffProcessor,
     private val snapshotPolicy: SnapshotPolicy,
-    private val eventRecorder: EventRecorder
+    private val eventRecorder: EventRecorder,
 ) : DraftArticleUseCase {
 
     @Transactional
@@ -68,24 +66,28 @@ class DraftArticleUseCaseImpl(
 
     @Transactional
     override suspend fun update(command: UpdateDraftCommand): DraftArticleResult {
-        val hasMeaningfulDiff = diffProcessor.hasValidDelta(command.diff)
 
         val existingArticle = articleRepository.findByIdAndVersionId(command.articleId, command.versionId)
             ?: throw ArticleNotFoundException.Companion.byId(command.articleId)
 
+        val hasMeaningfulDiff = diffProcessor.hasValidDelta(command.diff)
         val fullContent = contentReconstructor.reconstructFullContent(existingArticle.currentVersion)
                             .let { contentReconstructor.applyDiff(it, command.diff) }
 
-        val snapshotContent = if ( snapshotPolicy.shouldSaveSnapshot(existingArticle)) fullContent else null
+        val shouldSaveAsSnapshot = snapshotPolicy.shouldSaveAsSnapshot( existingArticle )
+        val snapshotContent = if (shouldSaveAsSnapshot) fullContent else null
 
         val articleAfterUpdate = existingArticle
             .apply { checkOwnership(command.userId) }
             .updateVersionIfChanged(command.toArticleVersionUpdateCommand(hasMeaningfulDiff))
             .withSnapshot(snapshotContent)
             .draft()
-            .also { articleRepository.update(it) }
+            .also {
+                versionTransitionSideEffectHandler.handleDraftSideEffect(existingArticle, it)
+            }
 
-        if (existingArticle != articleAfterUpdate) {
+        if (existingArticle != articleAfterUpdate) {// 버전 업데이트, 버전 상태 전이가 있는 경우에만 DB 반영 & 이벤트 발행
+            articleRepository.update(articleAfterUpdate)
             eventRecorder.recordAll(articleAfterUpdate.pullEvents())
         }
 

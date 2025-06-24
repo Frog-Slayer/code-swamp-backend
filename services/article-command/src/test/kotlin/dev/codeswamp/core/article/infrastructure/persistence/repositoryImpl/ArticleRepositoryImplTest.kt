@@ -122,7 +122,7 @@ class ArticleRepositoryImplTest(
                     diff = diff ?: "",
                     generateId = idGenerator::generateId,
                     createdAt = Instant.now(),
-                    shouldRebase = snapshotPolicy::shouldSaveSnapshot,
+                    shouldRebase = snapshotPolicy::shouldSaveAsSnapshot,
                     reconstructFullContent = contentReconstructor::reconstructFullContent
                 )
                     .draft(slugUniquenessChecker = slugChecker::checkSlugUniqueness)

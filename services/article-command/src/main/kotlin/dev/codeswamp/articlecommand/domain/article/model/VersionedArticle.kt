@@ -101,6 +101,7 @@ data class VersionedArticle private constructor(
     }
 
     fun withSnapshot(snapshotContent: String?) : VersionedArticle {
+        if (currentVersion.state != VersionState.NEW ) return this // 새 버전이 생성되지 않은 경우는 스냅샷 저장을 하지 않음
         return snapshotContent?. let {
             this.copy( currentVersion =  currentVersion.withSnapshot(snapshotContent))
         } ?:this

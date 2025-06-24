@@ -40,12 +40,12 @@ data class VersionEntity(
             diff = version.diff,
             createdAt = version.createdAt,
             state = VersionStateJpa.fromDomain(version.state),
-            isBaseVersion = version.isBaseVersion,
+            isBaseVersion = version.snapshot != null,
             title = version.title?.value
         )
     }
 
-    fun toDomain(fullContent: String?): Version {
+    fun toDomain(snapshot: String?): Version {
         return Version.Companion.from(
             id = id,
             articleId = articleId,
@@ -53,8 +53,7 @@ data class VersionEntity(
             diff = diff,
             createdAt = createdAt,
             state = state.toDomain(),
-            isBaseVersion = isBaseVersion,
-            fullContent = fullContent,
+            snapshot = snapshot,
             title = title
         )
     }

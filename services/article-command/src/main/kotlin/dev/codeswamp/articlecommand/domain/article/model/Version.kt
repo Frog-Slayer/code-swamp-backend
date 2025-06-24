@@ -45,7 +45,7 @@ data class Version private constructor(
             title: String?,
             diff: String,
             createdAt: Instant,
-            fullContent: String?,
+            snapshot: String?,
         ) = Version(
             id = id,
             state = state,
@@ -54,7 +54,7 @@ data class Version private constructor(
             title = Title.Companion.of(title),
             diff = diff,
             createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
-            snapshot = fullContent?.let { Snapshot(fullContent)}
+            snapshot = snapshot?.let { Snapshot(snapshot)}
         )
     }
 

@@ -9,6 +9,7 @@ import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.articlecommand.domain.article.model.vo.Slug
 import dev.codeswamp.articlecommand.domain.article.repository.ArticleRepository
 import dev.codeswamp.articlecommand.domain.article.service.ArticleContentReconstructor
+import dev.codeswamp.articlecommand.domain.article.service.ArticleVersionTransitionSideEffectHandler
 import dev.codeswamp.articlecommand.domain.support.DiffProcessor
 import dev.codeswamp.core.application.event.EventRecorder
 import dev.codeswamp.core.domain.IdGenerator
@@ -22,6 +23,7 @@ class PublishArticleUseCaseImpl(
     private val idGenerator: IdGenerator,
     private val diffProcessor: DiffProcessor,
     private val contentReconstructor: ArticleContentReconstructor,
+    private val versionTransitionSideEffectHandler: ArticleVersionTransitionSideEffectHandler,
     private val snapshotPolicy: SnapshotPolicy,
     private val eventRecorder: EventRecorder,
 ) : PublishArticleUseCase {
@@ -59,14 +61,15 @@ class PublishArticleUseCaseImpl(
 
     @Transactional
     override suspend fun update(command: UpdatePublishCommand): PublishArticleResult {
-        val hasMeaningfulDiff = diffProcessor.hasValidDelta(command.diff)
         val existingArticle = articleRepository.findByIdAndVersionId(command.articleId, command.versionId)
             ?: throw ArticleNotFoundException.Companion.byId(command.articleId)
 
+        val hasMeaningfulDiff = diffProcessor.hasValidDelta(command.diff)
         val fullContent = contentReconstructor.reconstructFullContent(existingArticle.currentVersion)
                             .let { contentReconstructor.applyDiff(it, command.diff) }
 
-        val snapshotContent = if ( snapshotPolicy.shouldSaveSnapshot(existingArticle)) fullContent else null
+        val shouldSaveAsSnapshot = snapshotPolicy.shouldSaveAsSnapshot( existingArticle )
+        val snapshotContent = if (shouldSaveAsSnapshot) fullContent else null
 
         val articleAfterUpdate = existingArticle
             .apply { checkOwnership(command.userId) }
@@ -75,11 +78,12 @@ class PublishArticleUseCaseImpl(
             .withSnapshot(snapshotContent)
             .publish(fullContent)
             .also {
-                articleRepository.update(it)
+                versionTransitionSideEffectHandler.handlePublishSideEffect(existingArticle, it)
             }
 
 
-        if (existingArticle != articleAfterUpdate) {
+        if (existingArticle != articleAfterUpdate) {//메타데이터 변화, 버전 업데이트, 버전 상태 전이가 있는 경우에만 DB 반영 & 이벤트 발행
+            articleRepository.update(articleAfterUpdate)
             eventRecorder.recordAll(articleAfterUpdate.pullEvents())
         }
 

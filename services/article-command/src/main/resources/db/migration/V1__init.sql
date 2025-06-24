@@ -35,11 +35,16 @@ CREATE TABLE version (
       state VARCHAR(50) NOT NULL,
       is_base BOOLEAN NOT NULL,
 
-      CONSTRAINT fk_versions_article FOREIGN KEY (article_id) REFERENCES article_metadata(id),
-      CONSTRAINT fk_versions_prev_version FOREIGN KEY (prev_version_id) REFERENCES version(id)
+      CONSTRAINT fk_version_article FOREIGN KEY (article_id) REFERENCES article_metadata(id),
+      CONSTRAINT fk_version_prev_version FOREIGN KEY (prev_version_id) REFERENCES version(id)
 );
 
-CREATE TABLE base_version (
+/** 각 글에는 PUBLISHED 버전이 유일해야 함 **/
+CREATE UNIQUE INDEX unique_published_per_article
+ON article_version(article_id)
+WHERE state = 'PUBLISHED';
+
+CREATE TABLE snapshot (
       version_id BIGINT PRIMARY KEY REFERENCES version(id),
       content TEXT NOT NULL
 );
