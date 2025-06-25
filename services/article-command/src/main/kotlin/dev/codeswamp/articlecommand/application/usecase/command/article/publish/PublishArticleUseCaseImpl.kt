@@ -2,7 +2,7 @@ package dev.codeswamp.articlecommand.application.usecase.command.article.publish
 
 import dev.codeswamp.articlecommand.application.exception.article.ArticleNotFoundException
 import dev.codeswamp.articlecommand.application.rebase.SnapshotPolicy
-import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
+import dev.codeswamp.articlecommand.domain.article.model.Article
 import dev.codeswamp.articlecommand.domain.article.model.command.ArticleVersionUpdateCommand
 import dev.codeswamp.articlecommand.domain.article.model.command.CreateArticleCommand
 import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
@@ -33,7 +33,7 @@ class PublishArticleUseCaseImpl(
         val fullContent = contentReconstructor.contentFromInitialDiff(command.diff)
 
         val article = command.toCreateArticleCommand(fullContent)
-            .let(VersionedArticle::create)
+            .let(Article::create)
             .publish(fullContent)
             .also { articleRepository.create(it) }
 

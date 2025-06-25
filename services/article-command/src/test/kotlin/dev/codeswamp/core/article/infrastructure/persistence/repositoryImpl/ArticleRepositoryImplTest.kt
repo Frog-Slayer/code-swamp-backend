@@ -1,7 +1,7 @@
 package dev.codeswamp.core.article.infrastructure.persistence.repositoryImpl
 
 import dev.codeswamp.articlecommand.application.rebase.SnapshotPolicy
-import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
+import dev.codeswamp.articlecommand.domain.article.model.Article
 import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.articlecommand.domain.article.model.vo.Slug
 import dev.codeswamp.articlecommand.domain.article.repository.ArticleRepository
@@ -44,7 +44,7 @@ class ArticleRepositoryImplTest(
         isPublic = true,
     )
 
-    private fun baseArticle() = VersionedArticle.create(
+    private fun baseArticle() = Article.create(
         id = idGenerator.generateId(),
         authorId = authorId,
         createdAt = createdAt,
@@ -97,7 +97,7 @@ class ArticleRepositoryImplTest(
         val article = baseArticle().draft(slugChecker::checkSlugUniqueness)
         articleRepository.save(article)
 
-        var updated: VersionedArticle = article
+        var updated: Article = article
         val fullContent = """
             훌쩍거리는 날도 아닌데
             훌쩍 네 향기가 날 듯 말 듯 해

@@ -1,14 +1,14 @@
 package dev.codeswamp.articlecommand.domain.article.repository
 
-import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
+import dev.codeswamp.articlecommand.domain.article.model.Article
 
 interface ArticleRepository {
 
-    suspend fun create(versionedArticle: VersionedArticle) : VersionedArticle
-    suspend fun update(versionedArticle: VersionedArticle): VersionedArticle
+    suspend fun create(article: Article) : Article
+    suspend fun update(article: Article): Article
 
     suspend fun findIdByFolderIdAndSlug(folderId: Long, slug: String): Long?
-    suspend fun findByIdAndVersionId(articleId: Long, versionId: Long): VersionedArticle?
+    suspend fun findByIdAndVersionId(articleId: Long, versionId: Long): Article?
 
     suspend fun countVersionsOfArticle(articleId: Long): Long
 

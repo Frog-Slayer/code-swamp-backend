@@ -1,7 +1,7 @@
 package dev.codeswamp.articlecommand.domain.article.service
 
 import dev.codeswamp.articlecommand.domain.article.model.VersionState
-import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
+import dev.codeswamp.articlecommand.domain.article.model.Article
 import dev.codeswamp.articlecommand.domain.article.repository.VersionRepository
 import org.springframework.stereotype.Service
 
@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 class ArticleVersionTransitionSideEffectHandler(
     private val versionRepository: VersionRepository,
 ) {
-    suspend fun handlePublishSideEffect(beforeUpdate: VersionedArticle, afterUpdate: VersionedArticle) {
+    suspend fun handlePublishSideEffect(beforeUpdate: Article, afterUpdate: Article) {
         val beforeVersion = beforeUpdate.currentVersion
         val afterVersion = afterUpdate.currentVersion
 
@@ -22,7 +22,7 @@ class ArticleVersionTransitionSideEffectHandler(
         }
    }
 
-    suspend fun handleDraftSideEffect(beforeUpdate: VersionedArticle, afterUpdate: VersionedArticle) {
+    suspend fun handleDraftSideEffect(beforeUpdate: Article, afterUpdate: Article) {
         val beforeVersion = beforeUpdate.currentVersion
         val afterVersion = afterUpdate.currentVersion
 

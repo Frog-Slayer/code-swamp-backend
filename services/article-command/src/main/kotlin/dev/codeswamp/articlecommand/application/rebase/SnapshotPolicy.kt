@@ -1,7 +1,7 @@
 package dev.codeswamp.articlecommand.application.rebase
 
-import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
+import dev.codeswamp.articlecommand.domain.article.model.Article
 
 interface SnapshotPolicy {
-    suspend fun shouldSaveAsSnapshot( article: VersionedArticle ): Boolean
+    suspend fun shouldSaveAsSnapshot(article: Article ): Boolean
 }

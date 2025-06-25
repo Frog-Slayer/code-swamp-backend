@@ -36,7 +36,7 @@ data class VersionEntity(
         fun from(version: Version) = VersionEntity(
             id = version.id,
             articleId = version.articleId,
-            previousVersionId = version.previousVersionId,
+            previousVersionId = version.parentId,
             diff = version.diff,
             createdAt = version.createdAt,
             state = VersionStateJpa.fromDomain(version.state),
@@ -49,7 +49,7 @@ data class VersionEntity(
         return Version.Companion.from(
             id = id,
             articleId = articleId,
-            previousVersionId = previousVersionId,
+            parentId = previousVersionId,
             diff = diff,
             createdAt = createdAt,
             state = state.toDomain(),

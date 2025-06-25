@@ -1,6 +1,6 @@
 package dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity
 
-import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
+import dev.codeswamp.articlecommand.domain.article.model.Article
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
@@ -32,16 +32,16 @@ data class ArticleMetadataEntity(
     var thumbnail: String? = null,
 ) {
     companion object {
-        fun from(versionedArticle: VersionedArticle) = ArticleMetadataEntity(
-            id = versionedArticle.id,
-            authorId = versionedArticle.authorId,
-            createdAt = versionedArticle.createdAt,
-            isPublished = versionedArticle.hasBeenPublished,
-            isPublic = versionedArticle.metadata.isPublic,
-            folderId = versionedArticle.metadata.folderId,
-            summary = versionedArticle.metadata.summary,
-            slug = versionedArticle.metadata.slug?.value,
-            thumbnail = versionedArticle.metadata.thumbnailUrl,
+        fun from(article: Article) = ArticleMetadataEntity(
+            id = article.id,
+            authorId = article.authorId,
+            createdAt = article.createdAt,
+            isPublished = article.hasBeenPublished,
+            isPublic = article.metadata.isPublic,
+            folderId = article.metadata.folderId,
+            summary = article.metadata.summary,
+            slug = article.metadata.slug?.value,
+            thumbnail = article.metadata.thumbnailUrl,
         )
     }
 

@@ -3,7 +3,7 @@ package dev.codeswamp.core.article.domain.article.model
 import dev.codeswamp.articlecommand.domain.article.event.ArticlePublishedEvent
 import dev.codeswamp.articlecommand.domain.article.event.ArticleVersionCreatedEvent
 import dev.codeswamp.articlecommand.domain.article.model.VersionState
-import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
+import dev.codeswamp.articlecommand.domain.article.model.Article
 import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.articlecommand.domain.article.model.vo.Slug
 import kotlinx.coroutines.runBlocking
@@ -28,7 +28,7 @@ class VersionedArticleTest {
 
     @Test
     fun `문서 생성 테스트`() {
-        val article = VersionedArticle.create(
+        val article = Article.create(
             id = id,
             authorId = authorId,
             createdAt = createdAt,
@@ -44,7 +44,7 @@ class VersionedArticleTest {
         assertThat(article.currentVersion.fullContent).isEqualTo("full-content")
     }
 
-    private fun baseArticle() = VersionedArticle.create(
+    private fun baseArticle() = Article.create(
         id = id,
         authorId = authorId,
         createdAt = createdAt,
@@ -105,7 +105,7 @@ class VersionedArticleTest {
     @Test
     fun `publish 시 slug 중복 검사 후 published 상태로 변경하고 이벤트를 추가`() : Unit = runBlocking {
         val article = baseArticle()
-        val checker = { _: VersionedArticle, _: Long, _: Slug -> }
+        val checker = { _: Article, _: Long, _: Slug -> }
 
         val published = article.publish(checker)
 
@@ -119,7 +119,7 @@ class VersionedArticleTest {
     @Test
     fun `published 상태에서 archive 시 예외 발생`(): Unit = runBlocking{
         val article = baseArticle()
-        val checker = { _: VersionedArticle, _: Long, _: Slug -> }
+        val checker = { _: Article, _: Long, _: Slug -> }
         val published = article.publish(checker)
 
         assertThatThrownBy { published.archive() }

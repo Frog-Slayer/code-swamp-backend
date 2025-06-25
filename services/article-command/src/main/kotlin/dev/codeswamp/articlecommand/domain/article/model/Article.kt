@@ -1,5 +1,6 @@
 package dev.codeswamp.articlecommand.domain.article.model
 
+import dev.codeswamp.articlecommand.domain.article.event.ArticleDeletedEvent
 import dev.codeswamp.articlecommand.domain.article.event.ArticleDraftedEvent
 import dev.codeswamp.articlecommand.domain.article.event.ArticlePublishedEvent
 import dev.codeswamp.articlecommand.domain.article.event.ArticleVersionCreatedEvent
@@ -8,12 +9,13 @@ import dev.codeswamp.articlecommand.domain.article.exception.PrivateArticleForbi
 import dev.codeswamp.articlecommand.domain.article.model.command.ArticleVersionUpdateCommand
 import dev.codeswamp.articlecommand.domain.article.model.command.CreateArticleCommand
 import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
+import dev.codeswamp.articlecommand.domain.article.model.vo.Title
 import dev.codeswamp.core.domain.AggregateRoot
 import dev.codeswamp.core.domain.DomainEvent
 import java.time.Instant
 import java.time.temporal.ChronoUnit
 
-data class VersionedArticle private constructor(
+data class Article private constructor(
     val id: Long,
     val authorId: Long,
 
@@ -34,29 +36,28 @@ data class VersionedArticle private constructor(
      */
     val metadata: ArticleMetadata,
 
-    val currentVersion: Version,
-
-    ) : AggregateRoot() {
+    val versionTree: VersionTree
+) : AggregateRoot() {
 
     companion object {
-        fun create(command: CreateArticleCommand): VersionedArticle {
+        fun create(command: CreateArticleCommand): Article {
             val articleId = command.generateId()
 
             val initialVersion = Version.create(
                 id = command.generateId(),
                 articleId = articleId,
-                previousVersionId = null,
+                parentId = null,
                 title = command.title,
                 diff = command.diff,
                 createdAt = command.createdAt,
-            ).withSnapshot(command.fullContent)
+            )
 
-            val article = VersionedArticle(
+            val article = Article(
                 id = articleId,
                 authorId = command.authorId,
                 createdAt = command.createdAt.truncatedTo(ChronoUnit.MILLIS),
                 metadata = command.metadata,
-                currentVersion = initialVersion,
+                versionTree = VersionTree.createWithInitialVersion(initialVersion)
            )
 
             return article
@@ -64,27 +65,28 @@ data class VersionedArticle private constructor(
 
         fun of(
             id: Long, authorId: Long, createdAt: Instant, isPublished: Boolean,
-            metadata: ArticleMetadata, currentVersion: Version
-        ) = VersionedArticle(
+            metadata: ArticleMetadata, versionList: List<Version>
+        ) = Article(
             id = id,
             authorId = authorId,
             createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
             hasBeenPublished = isPublished,
             metadata = metadata,
-            currentVersion = currentVersion
+            versionTree = VersionTree.of(versionList.associateBy { it.id })
         )
     }
 
-    fun updateMetadata(metadata: ArticleMetadata): VersionedArticle {
+    fun updateMetadata(metadata: ArticleMetadata): Article {
         return if (this.metadata == metadata) this
         else this.copy( metadata = metadata )
     }
 
     private fun isVersionChangeNeeded(command : ArticleVersionUpdateCommand): Boolean {
-        return command.hasMeaningfulDiff || command.title != currentVersion.title?.value
+        val prevTitle = versionTree.versions[command.parentVersionId]?.title
+        return command.hasMeaningfulDiff || prevTitle != Title.of(command.title)
     }
 
-    fun updateVersionIfChanged(command : ArticleVersionUpdateCommand) : VersionedArticle {
+    fun updateVersionIfChanged(command : ArticleVersionUpdateCommand) : Article {
         if (!isVersionChangeNeeded(command)) return this
         val newVersionId = command.generateId()
         val newVersion = Version.create(
@@ -93,66 +95,59 @@ data class VersionedArticle private constructor(
             diff = command.diff,
             createdAt = command.createdAt,
             articleId = id,
-            previousVersionId = currentVersion.id
+            parentId = command.parentVersionId
         )
 
-        return this.copy(currentVersion = newVersion)
+        return this.copy( versionTree = versionTree.append(newVersion))
             .withEvent( ArticleVersionCreatedEvent( articleId = id,  versionId = newVersionId))
     }
 
-    fun withSnapshot(snapshotContent: String?) : VersionedArticle {
-        if (currentVersion.state != VersionState.NEW ) return this // 새 버전이 생성되지 않은 경우는 스냅샷 저장을 하지 않음
-        return snapshotContent?. let {
-            this.copy( currentVersion =  currentVersion.withSnapshot(snapshotContent))
-        } ?:this
-    }
-
-    fun publish( fullContent: String ): VersionedArticle {
+    fun publish( versionId: Long, fullContent: String ): Article {
         if (metadata.slug == null) {
             throw InvalidArticleStateException("Cannot draft article", "Published article should have slug")
         }
 
         return this.copy(
             hasBeenPublished = true,
-            currentVersion = currentVersion.publish()
+            versionTree = versionTree.publish(versionId)
         ).withEvent(
             ArticlePublishedEvent(
                 articleId = id,
-                versionId = currentVersion.id,
-                previousVersionId = currentVersion.previousVersionId,
+                versionId = versionId,
                 fullContent = fullContent,
             )
         )
     }
 
-    fun draft(): VersionedArticle {
+    fun draft( versionId : Long ): Article {
         if (hasBeenPublished && metadata.slug == null) {
             throw InvalidArticleStateException("Cannot draft article", "Published article should have slug")
         }
 
-        return this.copy(currentVersion = currentVersion.draft()).withEvent(
+        return this.copy(versionTree = versionTree.draft( versionId )).withEvent(
             ArticleDraftedEvent(
                 articleId = id,
-                versionId = currentVersion.id,
+                versionId = versionId
             )
         )
     }
 
-    fun archive(): VersionedArticle {
-        if (currentVersion.state == VersionState.PUBLISHED)
-            throw InvalidArticleStateException("Invalid state transition", "cannot archive published version")
-
+    fun archive( versionId : Long ): Article {
         return this.copy(
-            currentVersion = currentVersion.archive()
+            versionTree = versionTree.archive(versionId)
         )
+    }
+
+    fun delete() : Article {
+        return this.withEvent(ArticleDeletedEvent(id))
     }
 
     fun checkOwnership(userId: Long) {
         if (authorId != userId) throw PrivateArticleForbiddenException(id)
     }
 
-    fun withEvent(event: DomainEvent): VersionedArticle {
-        return  this.copy().apply {
+    fun withEvent(event: DomainEvent): Article {
+        return this.also {
             addEvent(event)
         }
     }

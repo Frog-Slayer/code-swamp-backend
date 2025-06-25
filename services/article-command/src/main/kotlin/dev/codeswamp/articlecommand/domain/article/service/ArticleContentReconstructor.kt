@@ -15,7 +15,7 @@ class ArticleContentReconstructor(
     suspend fun reconstructFullContent(version: Version): String {
         return when {
             version.snapshot != null -> contentFromSnapshot(version)
-            version.previousVersionId == null -> contentFromInitialDiff(version.diff)
+            version.parentId == null -> contentFromInitialDiff(version.diff)
             else -> contentFromDiffChain(version)
         }
     }
@@ -29,13 +29,13 @@ class ArticleContentReconstructor(
     }
 
     private suspend fun contentFromDiffChain(version: Version): String {
-        val previousVersionId = version.previousVersionId
+        val previousVersionId = version.parentId
             ?: throw ContentReconstructionException("version ${version.id} has no previous version")
 
         val base = versionRepository.findNearestBaseTo(previousVersionId)
             ?: throw ContentReconstructionException("version ${version.id} has no base version")
 
-        val diffChain = versionRepository.findDiffChainBetween(base.id, version.previousVersionId)
+        val diffChain = versionRepository.findDiffChainBetween(base.id, version.parentId)
 
         val previousContent = diffProcessor.buildFullContent(
             base.snapshot?.fullContent

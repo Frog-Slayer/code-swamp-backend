@@ -2,14 +2,13 @@ package dev.codeswamp.articlecommand.application.usecase.command.article.draft
 
 import dev.codeswamp.articlecommand.application.exception.article.ArticleNotFoundException
 import dev.codeswamp.articlecommand.application.rebase.SnapshotPolicy
-import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
+import dev.codeswamp.articlecommand.domain.article.model.Article
 import dev.codeswamp.articlecommand.domain.article.model.command.ArticleVersionUpdateCommand
 import dev.codeswamp.articlecommand.domain.article.model.command.CreateArticleCommand
 import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.articlecommand.domain.article.repository.ArticleRepository
 import dev.codeswamp.articlecommand.domain.article.service.ArticleContentReconstructor
 import dev.codeswamp.articlecommand.domain.article.service.ArticleVersionTransitionSideEffectHandler
-import dev.codeswamp.articlecommand.domain.article.service.SlugUniquenessChecker
 import dev.codeswamp.articlecommand.domain.support.DiffProcessor
 import dev.codeswamp.core.application.event.EventRecorder
 import dev.codeswamp.core.domain.IdGenerator
@@ -33,7 +32,7 @@ class DraftArticleUseCaseImpl(
         val fullContent = contentReconstructor.contentFromInitialDiff(command.diff)
 
         val article = command.toCreateArticleCommand(fullContent)
-            .let(VersionedArticle::create)
+            .let(Article::create)
             .draft()
             .also { articleRepository.create(it) }
 

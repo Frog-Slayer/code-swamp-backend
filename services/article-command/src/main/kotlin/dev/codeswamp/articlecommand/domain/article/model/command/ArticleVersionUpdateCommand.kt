@@ -6,6 +6,7 @@ data class ArticleVersionUpdateCommand (
     val title: String,
     val hasMeaningfulDiff: Boolean,
     val diff: String,
+    val parentVersionId : Long,
     val generateId: () -> Long,
     val createdAt: Instant,
 )
