@@ -1,12 +1,11 @@
 package dev.codeswamp.articlecommand.application.usecase.command.article.draft
 
 import dev.codeswamp.articlecommand.application.exception.article.ArticleNotFoundException
-import dev.codeswamp.articlecommand.application.rebase.RebasePolicy
-import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
+import dev.codeswamp.articlecommand.domain.article.model.Article
+import dev.codeswamp.articlecommand.domain.article.model.command.ArticleVersionUpdateCommand
+import dev.codeswamp.articlecommand.domain.article.model.command.CreateArticleCommand
 import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.articlecommand.domain.article.repository.ArticleRepository
-import dev.codeswamp.articlecommand.domain.article.service.ArticleContentReconstructor
-import dev.codeswamp.articlecommand.domain.article.service.SlugUniquenessChecker
 import dev.codeswamp.articlecommand.domain.support.DiffProcessor
 import dev.codeswamp.core.application.event.EventRecorder
 import dev.codeswamp.core.domain.IdGenerator
@@ -18,73 +17,77 @@ import java.time.Instant
 class DraftArticleUseCaseImpl(
     private val articleRepository: ArticleRepository,
     private val idGenerator: IdGenerator,
-    private val slugUniquenessChecker: SlugUniquenessChecker,
-    private val contentReconstructor: ArticleContentReconstructor,
     private val diffProcessor: DiffProcessor,
-    private val rebasePolicy: RebasePolicy,
-    private val eventRecorder: EventRecorder
+    private val eventRecorder: EventRecorder,
 ) : DraftArticleUseCase {
 
     @Transactional
     override suspend fun create(command: CreateDraftCommand): DraftArticleResult {
-        val createdAt = Instant.now()
+        val (article, version) = command.toCreateArticleCommand()
+            .let(Article::create)
 
-        val article = VersionedArticle.Companion.create(
-            authorId = command.userId,
-            id = idGenerator.generateId(),
-            createdAt = createdAt,
-            metadata = ArticleMetadata(
-                folderId = command.folderId,
-                summary = "",
-                thumbnailUrl = null,
-                isPublic = false,
-                slug = null,
-            ),
-            title = command.title,
-            diff = command.diff,
-            fullContent = contentReconstructor.contentFromInitialDiff(command.diff),
-            versionId = idGenerator.generateId()
-        ).draft(slugUniquenessChecker::checkSlugUniqueness)
-        .also { articleRepository.create(it) }
+        val drafted = article.draft(version.id)
+                            .also { articleRepository.create(it) }
 
-        eventRecorder.recordAll(article.pullEvents())
+        eventRecorder.recordAll(drafted.pullEvents())
 
         return DraftArticleResult(
             article.id,
-            article.currentVersion.id
+            version.id
         )
     }
+
+    private fun CreateDraftCommand.toCreateArticleCommand() = CreateArticleCommand(
+        generateId = idGenerator::generateId,
+        authorId = userId,
+        createdAt = Instant.now(),
+        metadata = createDefaultMetadata(folderId),
+        title = title,
+        diff = diff,
+    )
+
+    private fun createDefaultMetadata(folderId: Long) = ArticleMetadata(
+        folderId = folderId,
+        summary = "",
+        thumbnailUrl = null,
+        isPublic = false,
+        slug = null,
+    )
 
     @Transactional
     override suspend fun update(command: UpdateDraftCommand): DraftArticleResult {
-        val createdAt = Instant.now()
-
-        val hasMeaningfulDiff = diffProcessor.hasValidDelta(command.diff)
-
-        val existingArticle = articleRepository.findByIdAndVersionId(command.articleId, command.versionId)
+        val existingArticle = articleRepository.findById(command.articleId)
             ?: throw ArticleNotFoundException.Companion.byId(command.articleId)
 
-        val updatedArticle = existingArticle
+        val (mayUpdated, version) = existingArticle
             .apply { checkOwnership(command.userId) }
-            .updateVersionIfChanged(
-                title = command.title,
-                hasMeaningfulDiff = hasMeaningfulDiff,
-                diff = command.diff,
-                generateId = idGenerator::generateId,
-                createdAt = createdAt,
-                shouldRebase =  rebasePolicy::shouldStoreAsBase,
-                reconstructFullContent = contentReconstructor::reconstructFullContent
-            )
-            .draft(slugUniquenessChecker::checkSlugUniqueness)
-            .also {
-                articleRepository.update(it)
-            }
+            .updateVersionIfChanged(command.toArticleVersionUpdateCommand(diffProcessor))
 
-        eventRecorder.recordAll(updatedArticle.pullEvents())
+        val drafted = mayUpdated.draft(version.id)
+
+        val (isMetadataChanged, versionDiff) = drafted.diff(existingArticle)
+
+        if (isMetadataChanged || versionDiff.addedVersions.isNotEmpty() || versionDiff.changedVersions.isNotEmpty()) {
+            if (isMetadataChanged) articleRepository.updateMetadata(drafted)
+
+            // DB 제약 사항으로 인해 update -> insert의 순서가 중요함
+            if (versionDiff.changedVersions.isNotEmpty()) articleRepository.updateVersions(versionDiff.changedVersions)
+            if (versionDiff.addedVersions.isNotEmpty()) articleRepository.insertVersions(versionDiff.addedVersions)
+            eventRecorder.recordAll(drafted.pullEvents())
+        }
 
         return DraftArticleResult(
-            updatedArticle.id,
-            updatedArticle.currentVersion.id
+             drafted.id,
+            version.id
         )
     }
+
+    private fun UpdateDraftCommand.toArticleVersionUpdateCommand(diffProcessor: DiffProcessor) = ArticleVersionUpdateCommand(
+        diffProcessor = diffProcessor,
+        generateId = idGenerator::generateId,
+        createdAt = Instant.now(),
+        title = title,
+        diff = diff,
+        currentVersionId = versionId,
+    )
 }

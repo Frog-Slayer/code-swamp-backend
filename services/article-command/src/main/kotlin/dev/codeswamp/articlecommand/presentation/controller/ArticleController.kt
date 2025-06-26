@@ -7,6 +7,7 @@ import dev.codeswamp.articlecommand.presentation.dto.request.article.DraftReques
 import dev.codeswamp.articlecommand.presentation.dto.request.article.DraftUpdateRequest
 import dev.codeswamp.articlecommand.presentation.dto.request.article.PublishRequest
 import dev.codeswamp.articlecommand.presentation.dto.request.article.PublishUpdateRequest
+import dev.codeswamp.articlecommand.presentation.dto.response.SimpleResponse
 import dev.codeswamp.articlecommand.presentation.dto.response.article.ArticleReadResponse
 import dev.codeswamp.articlecommand.presentation.dto.response.article.DraftResponse
 import dev.codeswamp.articlecommand.presentation.dto.response.article.PublishResponse
@@ -19,6 +20,8 @@ class ArticleController(
     private val commandFacade: ArticleCommandUseCaseFacade,
     private val queryFacade: ArticleQueryUseCaseFacade
 ) {
+    // TODO: ResponseEntity로 래핑 + 값 검증
+
     private val logger = LoggerFactory.getLogger(ArticleController::class.java)
 
     @GetMapping("/{articleId}/versions/{versionId}")
@@ -27,7 +30,7 @@ class ArticleController(
         @PathVariable articleId: Long,
         @PathVariable versionId: Long
     )
-            : ArticleReadResponse {
+    : ArticleReadResponse {
         return ArticleReadResponse.Companion.from(
             queryFacade.getVersionedArticle(
                 GetVersionedArticleQuery(
@@ -37,6 +40,13 @@ class ArticleController(
                 )
             )
         )
+    }
+
+    @GetMapping("/drafts")
+    suspend fun getDrafts(
+        @RequestAttribute userId: Long,
+    ){
+        TODO("not implemented")
     }
 
     @PostMapping("/publish")
@@ -72,5 +82,24 @@ class ArticleController(
         @RequestBody draftArticleRequest: DraftUpdateRequest
     ): DraftResponse {
         return DraftResponse.Companion.from(commandFacade.updateDraft(draftArticleRequest.toCommand(userId, articleId, versionId)))
+    }
+
+    @PatchMapping("/{articleId}/versions/{versionId}/archive")
+    suspend fun publishNew(
+        @RequestAttribute userId: Long,
+        @PathVariable articleId: Long,
+        @PathVariable versionId: Long,
+    ): SimpleResponse {
+
+        return SimpleResponse("Archived article($articleId):version($versionId) successfully")
+    }
+
+    @DeleteMapping("/{articleId}")
+    suspend fun delete(
+        @RequestAttribute userId: Long,
+        @PathVariable articleId: Long,
+    ) : SimpleResponse {
+
+        return SimpleResponse("Deleted article with id $articleId successfully")
     }
 }

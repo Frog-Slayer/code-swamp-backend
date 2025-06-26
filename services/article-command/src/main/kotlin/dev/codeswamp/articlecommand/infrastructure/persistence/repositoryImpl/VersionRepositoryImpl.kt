@@ -1,102 +1,98 @@
 package dev.codeswamp.articlecommand.infrastructure.persistence.repositoryImpl
 
-import dev.codeswamp.articlecommand.domain.article.exception.InvalidArticleStateException
 import dev.codeswamp.articlecommand.domain.article.model.Version
 import dev.codeswamp.articlecommand.domain.article.repository.VersionRepository
-import dev.codeswamp.articlecommand.infrastructure.persistence.graph.repository.VersionNodeRepository
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity.VersionEntity
-import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity.VersionStateJpa
-import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.BaseVersionR2dbcRepository
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.VersionR2dbcRepository
+import kotlinx.coroutines.reactive.awaitFirstOrNull
+import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.stereotype.Repository
+import reactor.core.publisher.Flux
 
 @Repository
 class VersionRepositoryImpl(
     private val versionR2dbcRepository: VersionR2dbcRepository,
-    private val versionNodeRepository: VersionNodeRepository,
-    private val baseVersionR2dbcRepository: BaseVersionR2dbcRepository,
+    private val databaseClient: DatabaseClient,
 ) : VersionRepository {
-    override suspend fun save(version: Version): Version {
-        return if (version.isNew) create(version)
-        else update(version)
-    }
-    private suspend fun create(version: Version): Version {
-        val entity = VersionEntity.Companion.from(version)
 
-        val saved = versionR2dbcRepository.insert(
-            id = entity.id,
-            articleId = entity.articleId,
-            prevVersionId = entity.previousVersionId,
-            title = entity.title,
-            diff = entity.diff,
-            createdAt = entity.createdAt,
-            state = entity.state.toString(),
-            isBaseVersion = entity.isBaseVersion,
-        )
+    override suspend fun insertVersions(versions: List<Version>) {
+        databaseClient.inConnectionMany { connection ->
+            val statement = connection.createStatement("""
+                    INSERT INTO version (id, article_id, parent_id, title, diff, created_at, state)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7)
+            """)
 
-        val fullContent = if (saved.isBaseVersion) {
-            version.fullContent?.also {
-                baseVersionR2dbcRepository.insert(saved.id, it)
-            } ?: throw InvalidArticleStateException(
-                    "Cannot create version",
-                    "It is base version, but has no full content"
-                )
-        } else null
+            versions.forEach {  version ->
+                val entity = VersionEntity.from(version)
+                statement
+                    .bind(0, entity.id)
+                    .bind(1, entity.articleId)
+                    .bind(4, entity.diff)
+                    .bind(5, entity.createdAt)
+                    .bind(6, entity.state)
+                    .apply{
+                        if ( entity.parentId != null) bind(2, entity.parentId)
+                        else bindNull(2, Long::class.java)
 
-        return saved.toDomain(fullContent)
-    }
+                        if ( entity.title != null) bind(3, entity.title)
+                        else bindNull(3,String::class.java)
+                    }
+                    .add()
+            }
 
-    private suspend fun update(version: Version): Version {
-        val entity = VersionEntity.Companion.from(version)
-        val saved = versionR2dbcRepository.save(entity)
-
-        return saved.restoreDomain()
+            Flux.from(statement.execute())
+        }.awaitFirstOrNull()
     }
 
+    override suspend fun updateVersions(versions: List<Version>) {
+        databaseClient.inConnectionMany { connection ->
+            val statement = connection.createStatement("""
+                    UPDATE version
+                    SET 
+                        article_id = $2,
+                        parent_id = $3,
+                        title = $4,
+                        diff = $5,
+                        created_at = $6,
+                        state = $7,
+                    WHERE id = $1
+            """)
+
+            versions.forEach {  version ->
+                val entity = VersionEntity.from(version)
+                statement
+                    .bind(0, entity.id)
+                    .bind(1, entity.articleId)
+                    .bind(4, entity.diff)
+                    .bind(5, entity.createdAt)
+                    .bind(6, entity.state)
+                    .apply{
+                        if ( entity.parentId != null) bind(2, entity.parentId)
+                        else bindNull(2, Long::class.java)
+
+                        if ( entity.title != null) bind(3, entity.title)
+                        else bindNull(3,String::class.java)
+                    }
+                    .add()
+            }
+
+            Flux.from(statement.execute())
+        }.awaitFirstOrNull()
+    }
+
+    override suspend fun findAllByArticleId(articleId: Long): List<Version> {
+        return versionR2dbcRepository.findAllByArticleId(articleId).map {  it.toDomain() }
+    }
 
     override suspend fun findByIdOrNull(id: Long): Version? {
-        val saved = versionR2dbcRepository.findById(id) ?: return null
-        return saved.restoreDomain()
+        return versionR2dbcRepository.findById(id)?.toDomain()
     }
 
     override suspend fun deleteAllByArticleIdIn(articleIds: List<Long>) {
         versionR2dbcRepository.deleteAllByArticleIdIn(articleIds)
-        versionNodeRepository.deleteAllByArticleIdIn(articleIds) //TODO => 별도 이벤트로 분리
     }
 
     override suspend fun deleteByArticleId(articleId: Long) {
         versionR2dbcRepository.deleteAllByArticleId(articleId)
-        versionNodeRepository.deleteAllByArticleId(articleId) // TODO => 별도 이벤트 분리
-    }
-
-    override suspend fun findPreviousPublishedVersion(articleId: Long, versionId: Long): Version? {
-        return versionR2dbcRepository.findTopByArticleIdAndIdLessThanAndStateOrderByIdDesc(articleId, versionId, VersionStateJpa.PUBLISHED)
-            ?.restoreDomain()
-    }
-
-    override suspend fun findNearestBaseTo(versionId: Long): Version? {
-        return versionNodeRepository.findBaseNodeNearestTo(versionId)
-            ?.let { versionR2dbcRepository.findById(it.versionId) }
-            ?.restoreDomain()
-    }
-
-    override suspend fun findDiffChainBetween(baseId: Long, targetId: Long): List<String> {
-        return versionNodeRepository.findShortestPathBetween(baseId, targetId)
-            .map { it.versionId }
-            .let { versionR2dbcRepository.findAllByIdIsIn(it) }
-            .sortedBy { it.createdAt }
-            .map { it.diff }
-    }
-
-    private suspend fun VersionEntity.restoreDomain(): Version {
-        val fullContent = if (this.isBaseVersion) {
-            baseVersionR2dbcRepository.findById(this.id)?.content
-                ?: throw InvalidArticleStateException(
-                    "Cannot restore version",
-                    "It is base version, but has no full content"
-                )
-        } else null
-
-        return this.toDomain(fullContent)
     }
 }

@@ -6,66 +6,51 @@ import java.time.temporal.ChronoUnit
 
 data class Version private constructor(
     val id: Long,
-    val state: VersionState,
-
     val articleId: Long,
-    val previousVersionId: Long?,
+    val parentId: Long?,
+
+    val state: VersionState,
 
     val title: Title?,
     val diff: String,
+
     val createdAt: Instant,
-
-    val isBaseVersion: Boolean = false,
-    val fullContent: String? = null,
-
-    val isNew : Boolean = false,
 ) {
     companion object {
         fun create(
             id: Long,
-            state: VersionState,
             articleId: Long,
-            previousVersionId: Long?,
+            parentId: Long?,
             title: String?,
             diff: String,
             createdAt: Instant,
         ) = Version(
             id = id,
-            state = state,
+            state = VersionState.NEW,
             articleId = articleId,
-            previousVersionId = previousVersionId,
+            parentId = parentId,
             title = Title.Companion.of(title),
             diff = diff,
             createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
-            isNew = true
         )
 
         fun from(
             id: Long,
             state: VersionState,
             articleId: Long,
-            previousVersionId: Long?,
+            parentId: Long?,
             title: String?,
             diff: String,
             createdAt: Instant,
-            isBaseVersion: Boolean,
-            fullContent: String?,
         ) = Version(
             id = id,
             state = state,
             articleId = articleId,
-            previousVersionId = previousVersionId,
+            parentId = parentId,
             title = Title.Companion.of(title),
             diff = diff,
             createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
-            isBaseVersion = isBaseVersion,
-            fullContent = fullContent,
-            isNew = false,
         )
-    }
-
-    fun asBaseVersion(fullContent: String): Version {
-        return this.copy(isBaseVersion = true, fullContent = fullContent)
     }
 
     fun publish() = this.copy(state = VersionState.PUBLISHED)
