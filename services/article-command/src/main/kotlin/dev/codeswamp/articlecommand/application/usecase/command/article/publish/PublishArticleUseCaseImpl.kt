@@ -29,6 +29,10 @@ class PublishArticleUseCaseImpl(
 
         val fullContent = article.restoreFullContent(version.id, diffProcessor)
         val published = article.publish( version.id, fullContent)
+            .also {
+                articleRepository.createMetadata(it)
+                articleRepository.insertVersions(listOf(it.getVersion(version.id)))
+            }
 
         eventRecorder.recordAll( published.pullEvents())
 

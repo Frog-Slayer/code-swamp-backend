@@ -36,21 +36,12 @@ data class ArticleMetadataEntity(
             id = article.id,
             authorId = article.authorId,
             createdAt = article.createdAt,
-            isPublished = article.hasBeenPublished,
+            isPublished = article.isPublished,
             isPublic = article.metadata.isPublic,
             folderId = article.metadata.folderId,
             summary = article.metadata.summary,
             slug = article.metadata.slug?.value,
             thumbnail = article.metadata.thumbnailUrl,
         )
-    }
-
-    fun updateTo(newMetadata: ArticleMetadataEntity) {
-        folderId = newMetadata.folderId
-        slug = newMetadata.slug
-        isPublic = newMetadata.isPublic
-        isPublished = newMetadata.isPublished
-        summary = newMetadata.summary
-        thumbnail = newMetadata.thumbnail
     }
 }

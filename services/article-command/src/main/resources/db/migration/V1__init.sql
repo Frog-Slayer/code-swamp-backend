@@ -7,7 +7,8 @@ CREATE TABLE folder (
 
         CONSTRAINT fk_folder_parent
             FOREIGN KEY (parent_id) REFERENCES folder(id)
-                ON DELETE SET NULL
+                ON DELETE SET NULL,
+        UNIQUE (parent_id, name)
 );
 
 CREATE TABLE article_metadata (
@@ -21,8 +22,9 @@ CREATE TABLE article_metadata (
      summary TEXT NOT NULL DEFAULT '',
      thumbnail TEXT,
 
-     UNIQUE (folder_id, slug),
-     CONSTRAINT fk_article_metadata_folder FOREIGN KEY (folder_id) REFERENCES folder(id) ON DELETE RESTRICT
+     CONSTRAINT fk_article_metadata_folder FOREIGN KEY (folder_id) REFERENCES folder(id) ON DELETE RESTRICT,
+
+    UNIQUE (folder_id, slug)
 );
 
 CREATE TABLE version (
@@ -33,7 +35,6 @@ CREATE TABLE version (
       diff TEXT NOT NULL,
       created_at TIMESTAMP(3) NOT NULL,
       state VARCHAR(50) NOT NULL,
-      is_base BOOLEAN NOT NULL,
 
       CONSTRAINT fk_version_article FOREIGN KEY (article_id) REFERENCES article_metadata(id),
       CONSTRAINT fk_version_prev_version FOREIGN KEY (parent_id) REFERENCES version(id)
@@ -41,7 +42,7 @@ CREATE TABLE version (
 
 /** 각 글에는 PUBLISHED 버전이 유일해야 함 **/
 CREATE UNIQUE INDEX unique_published_per_article
-ON article_version(article_id)
+ON version(article_id)
 WHERE state = 'PUBLISHED';
 
 CREATE TABLE outbox_event (

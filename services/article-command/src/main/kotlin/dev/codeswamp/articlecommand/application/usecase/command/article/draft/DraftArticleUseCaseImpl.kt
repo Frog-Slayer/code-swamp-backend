@@ -27,7 +27,10 @@ class DraftArticleUseCaseImpl(
             .let(Article::create)
 
         val drafted = article.draft(version.id)
-                            .also { articleRepository.create(it) }
+                            .also {
+                                articleRepository.createMetadata(it)
+                                articleRepository.insertVersions(listOf(it.getVersion(version.id)))
+                            }
 
         eventRecorder.recordAll(drafted.pullEvents())
 
