@@ -1,10 +1,9 @@
 package dev.codeswamp.articlecommand.infrastructure.persistence.repositoryImpl
 
-import dev.codeswamp.articlecommand.application.event.outbox.OutboxEvent
-import dev.codeswamp.articlecommand.application.event.outbox.OutboxEventRepository
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity.OutboxEventEntity
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.OutboxEventR2dbcRepository
-import kotlinx.coroutines.reactive.awaitFirst
+import dev.codeswamp.core.application.event.outbox.OutboxEvent
+import dev.codeswamp.core.application.event.outbox.OutboxEventRepository
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.stereotype.Repository
@@ -15,6 +14,7 @@ class OutboxEventRepositoryImpl(
     private val outboxEventRepository: OutboxEventR2dbcRepository,
     private val databaseClient: DatabaseClient
 ): OutboxEventRepository {
+
     override suspend fun save(event: OutboxEvent) {
         val entity = OutboxEventEntity.from(event)
         outboxEventRepository.save(entity)
@@ -44,7 +44,7 @@ class OutboxEventRepositoryImpl(
         }.awaitFirstOrNull()
     }
 
-    override suspend fun findPending(limit: Int): List<OutboxEvent> {
+   override suspend fun findPending(limit: Int): List<OutboxEvent> {
         return outboxEventRepository.findAllByStatus(
             OutboxEvent.EventStatus.PENDING.toString(), limit )
             .map { it.toOutboxEvent() }

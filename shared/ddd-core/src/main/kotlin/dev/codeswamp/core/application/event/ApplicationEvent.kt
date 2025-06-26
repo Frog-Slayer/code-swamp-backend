@@ -1,5 +1,5 @@
 package dev.codeswamp.core.application.event
 
-import dev.codeswamp.core.common.event.Event
+import dev.codeswamp.core.common.event.BusinessEvent
 
-interface ApplicationEvent : Event
+interface ApplicationEvent : BusinessEvent

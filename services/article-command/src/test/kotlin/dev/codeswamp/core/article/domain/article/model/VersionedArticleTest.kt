@@ -1,7 +1,7 @@
 package dev.codeswamp.core.article.domain.article.model
 
-import dev.codeswamp.articlecommand.domain.article.event.PublishedEvent
-import dev.codeswamp.articlecommand.domain.article.event.VersionCreatedEvent
+import dev.codeswamp.articlecommand.domain.article.event.ArticlePublishedEvent
+import dev.codeswamp.articlecommand.domain.article.event.ArticleVersionCreatedEvent
 import dev.codeswamp.articlecommand.domain.article.model.VersionState
 import dev.codeswamp.articlecommand.domain.article.model.VersionedArticle
 import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
@@ -82,7 +82,7 @@ class VersionedArticleTest {
         assertThat(updated.currentVersion.diff).isEqualTo("+++updated")
         assertThat(updated.currentVersion.id).isEqualTo(2L)
 
-        assertThat(updated.pullEvents().first()).isInstanceOf(VersionCreatedEvent::class.java)
+        assertThat(updated.pullEvents().first()).isInstanceOf(ArticleVersionCreatedEvent::class.java)
     }
 
     @Test
@@ -99,7 +99,7 @@ class VersionedArticleTest {
         assertThat(updated.currentVersion.title?.value).isEqualTo("title2")
         assertThat(updated.currentVersion.id).isEqualTo(2L)
 
-        assertThat(updated.pullEvents().first()).isInstanceOf(VersionCreatedEvent::class.java)
+        assertThat(updated.pullEvents().first()).isInstanceOf(ArticleVersionCreatedEvent::class.java)
     }
 
     @Test
@@ -112,7 +112,7 @@ class VersionedArticleTest {
         assertThat(published.isPublished).isTrue()
         assertThat(published.currentVersion.state).isEqualTo(VersionState.PUBLISHED)
 
-        assertThat(published.pullEvents().first()).isInstanceOf(PublishedEvent::class.java)
+        assertThat(published.pullEvents().first()).isInstanceOf(ArticlePublishedEvent::class.java)
     }
 
 

@@ -1,8 +1,11 @@
 package dev.codeswamp.articlecommand.domain.exception.domain
 
+import dev.codeswamp.core.common.exception.ConflictErrorCode
+import dev.codeswamp.core.common.exception.ConflictException
+
 enum class DomainConflictErrorCode(
     override val code: String
-) : DomainErrorCode {
+) : ConflictErrorCode {
     DOMAIN_CONFLICT("DOMAIN_CONFLICT"),
     CONTENT_RECONSTRUCTION_FAILURE("CONTENT_RECONSTRUCTION_FAILURE")
 }
@@ -10,4 +13,4 @@ enum class DomainConflictErrorCode(
 abstract class DomainConflictException(
     errorCode: DomainConflictErrorCode,
     message: String
-) : DomainException(errorCode, message)
+) : ConflictException(errorCode, message)

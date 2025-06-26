@@ -9,6 +9,7 @@ import java.time.Instant
 object ApplicationEventKafkaMapper {
     fun map(event: ApplicationEvent): KafkaEvent = when (event) {
         is AuthUserRollbackRequestedEvent -> KafkaAuthUserRollbackRequestedEvent(
+            eventId = "id",
             key = event.email,
             occurredAt = Instant.now(),
             failedUserEmail = event.email,

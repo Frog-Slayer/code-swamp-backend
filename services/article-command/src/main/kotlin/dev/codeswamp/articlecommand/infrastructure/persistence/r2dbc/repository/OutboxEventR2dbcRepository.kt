@@ -1,8 +1,8 @@
 package dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository
 
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity.OutboxEventEntity
-import org.springframework.data.neo4j.repository.query.Query
 import org.springframework.data.r2dbc.repository.Modifying
+import org.springframework.data.r2dbc.repository.Query
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
@@ -26,13 +26,13 @@ interface OutboxEventR2dbcRepository : CoroutineCrudRepository<OutboxEventEntity
     @Modifying
     @Query( """
         UPDATE outbox_event
-        SET status= :status,
+        SET status= :status
         WHERE id = :id
     """)
     suspend fun updateStatus(
         @Param("id") id: Long,
         @Param("status") status: String
-    )
+    ) :Int
 
     @Modifying
     @Query( """

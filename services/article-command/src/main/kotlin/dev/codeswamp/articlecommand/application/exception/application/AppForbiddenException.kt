@@ -1,12 +1,15 @@
 package dev.codeswamp.articlecommand.application.exception.application
 
+import dev.codeswamp.core.common.exception.ForbiddenErrorCode
+import dev.codeswamp.core.common.exception.ForbiddenException
+
 enum class AppForbiddenErrorCode(
     override val code: String,
-) : AppErrorCode {
+) : ForbiddenErrorCode{
     APP_FORBIDDEN("APP_FORBIDDEN"),
 }
 
 open class AppForbiddenException(
     errorCode: AppForbiddenErrorCode,
     message: String
-) : AppException(errorCode, message)
+) : ForbiddenException(errorCode, message)

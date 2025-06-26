@@ -1,7 +1,7 @@
 package dev.codeswamp.articlecommand.application.port.incoming
 
 import dev.codeswamp.core.application.event.ApplicationEvent
-import dev.codeswamp.core.common.event.EventHandler
+import dev.codeswamp.core.application.event.EventHandler
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 
