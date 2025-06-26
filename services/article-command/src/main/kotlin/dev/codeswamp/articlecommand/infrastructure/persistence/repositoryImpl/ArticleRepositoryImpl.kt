@@ -15,20 +15,12 @@ import org.springframework.stereotype.Repository
 @Repository
 class ArticleRepositoryImpl(
     private val articleMetadataR2dbcRepository: ArticleMetadataR2dbcRepository,
-    private val versionR2dbcRepository: VersionR2dbcRepository,
     private val versionRepository: VersionRepository
 ) : ArticleRepository {
 
-    override suspend fun create(article: Article): Article {
-        val savedMetadataEntity = createMetadata(article)
-        val savedVersion = versionRepository.save(article.currentVersion)
-
-        return toDomain(savedMetadataEntity, savedVersion)
-    }
-
-    private suspend fun createMetadata(article: Article) : ArticleMetadataEntity {
+    override suspend fun createMetadata(article: Article) {
         val entity = ArticleMetadataEntity.Companion.from(article)
-        return articleMetadataR2dbcRepository.insert(
+        articleMetadataR2dbcRepository.insert(
             id = entity.id,
             folderId = entity.folderId,
             slug = entity.slug,
@@ -41,41 +33,29 @@ class ArticleRepositoryImpl(
         )
     }
 
-    override suspend fun update (article: Article): Article {
-        updateMetadata(article)
-        versionRepository.save(article.currentVersion)
+    override suspend fun findById(id: Long): Article? {
+        val articleMetadataEntity = articleMetadataR2dbcRepository.findById(id) ?: return null
+        val versions = versionRepository.findAllByArticleId(id)
 
-        return article
+        return toDomain(articleMetadataEntity, versions)
     }
 
-    private suspend fun updateMetadata(article: Article): Article {
+    override suspend fun updateMetadata(article: Article) {
         val metadataEntity = ArticleMetadataEntity.Companion.from( article)
         articleMetadataR2dbcRepository.save(metadataEntity)
-        return toDomain(metadataEntity, article.currentVersion )
+    }
+
+    override suspend fun insertVersions(versions: List<Version>) {
+        versionRepository.insertVersions(versions)
+    }
+
+    override suspend fun updateVersions(versions: List<Version>) {
+        versionRepository.updateVersions(versions)
     }
 
     override suspend fun findIdByFolderIdAndSlug(folderId: Long, slug: String): Long? {
         return articleMetadataR2dbcRepository.findIdByFolderIdAndSlug(folderId, slug)
     }
-
-    override suspend fun findByIdAndVersionId(articleId: Long, versionId: Long): Article? {
-        val savedMetadataEntity = articleMetadataR2dbcRepository.findById(articleId)
-        val savedVersion = versionRepository.findByIdOrNull(versionId)
-
-        if (savedMetadataEntity == null || savedVersion == null) return null
-
-        if (savedMetadataEntity.id != savedVersion.articleId) throw ArticleVersionMismatchException(
-            savedMetadataEntity.id,
-            savedVersion.articleId
-        )
-
-        return toDomain(savedMetadataEntity, savedVersion)
-    }
-
-    override suspend fun countVersionsOfArticle(articleId: Long): Long {
-        return versionR2dbcRepository.countByArticleId(articleId)
-    }
-
 
     override suspend fun deleteAllByFolderIdIn(folderIds: List<Long>) {
         val articleIds = articleMetadataR2dbcRepository.findAllIdsByFolderIdIn(folderIds)
@@ -83,13 +63,12 @@ class ArticleRepositoryImpl(
         versionRepository.deleteAllByArticleIdIn(articleIds)
     }
 
-
     override suspend fun deleteById(id: Long) {
         articleMetadataR2dbcRepository.deleteById(id)
-        versionR2dbcRepository.deleteAllByArticleId(id)
+        versionRepository.deleteByArticleId(id)
     }
 
-    private fun toDomain(metadata: ArticleMetadataEntity, version: Version): Article {
+    private fun toDomain(metadata: ArticleMetadataEntity, versions: List<Version>): Article {
         return Article.Companion.of(
             id = metadata.id,
             authorId = metadata.authorId,
@@ -102,7 +81,7 @@ class ArticleRepositoryImpl(
                 isPublic = metadata.isPublic,
                 slug = Slug.Companion.of(metadata.slug)
             ),
-            currentVersion = version
+            versionList = versions
         )
     }
 }

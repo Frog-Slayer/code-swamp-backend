@@ -9,7 +9,6 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class GetVersionedArticleUseCaseImpl(
     private val articleRepository: ArticleRepository,
-    private val contentReconstructor: ArticleContentReconstructor,
 ) : GetVersionedArticleUseCase {
 
     @Transactional(readOnly = true)

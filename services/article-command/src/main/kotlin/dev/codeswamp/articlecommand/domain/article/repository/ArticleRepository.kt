@@ -1,16 +1,18 @@
 package dev.codeswamp.articlecommand.domain.article.repository
 
 import dev.codeswamp.articlecommand.domain.article.model.Article
+import dev.codeswamp.articlecommand.domain.article.model.Version
 
 interface ArticleRepository {
+    suspend fun findById(id: Long): Article?
 
-    suspend fun create(article: Article) : Article
-    suspend fun update(article: Article): Article
+    suspend fun createMetadata(article: Article)
+    suspend fun updateMetadata(article: Article)
+
+    suspend fun insertVersions(versions: List<Version>)
+    suspend fun updateVersions(versions: List<Version>)
 
     suspend fun findIdByFolderIdAndSlug(folderId: Long, slug: String): Long?
-    suspend fun findByIdAndVersionId(articleId: Long, versionId: Long): Article?
-
-    suspend fun countVersionsOfArticle(articleId: Long): Long
 
     suspend fun deleteAllByFolderIdIn(folderIds: List<Long>)
     suspend fun deleteById(id: Long)

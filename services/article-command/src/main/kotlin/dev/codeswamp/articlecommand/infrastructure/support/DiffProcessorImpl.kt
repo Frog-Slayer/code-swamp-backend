@@ -23,21 +23,6 @@ class DiffProcessorImpl : DiffProcessor {
         ).joinToString("\n")
     }
 
-
-    override fun buildFullContent(base: String, diffChain: List<String>): String {
-        if (diffChain.isEmpty()) return ""
-
-        var fullContent = base.lines()
-
-        for (diff in diffChain.drop(1)) {
-            val patch = UnifiedDiffUtils.parseUnifiedDiff(diff.lines())
-            if (!patch.hasValidDelta()) continue
-
-            fullContent = DiffUtils.patch(fullContent, patch)
-        }
-        return fullContent.joinToString("\n")
-    }
-
     override fun applyDiff(content: String, diff: String): String {
         val patch = UnifiedDiffUtils.parseUnifiedDiff(diff.lines())
 

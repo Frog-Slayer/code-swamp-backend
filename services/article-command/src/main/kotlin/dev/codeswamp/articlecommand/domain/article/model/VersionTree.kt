@@ -1,5 +1,10 @@
 package dev.codeswamp.articlecommand.domain.article.model
 
+data class VersionTreeDiff(
+    val addedVersions: List<Version>,
+    val changedVersions: List<Version>
+)
+
 data class VersionTree private constructor(
     val versions: Map<Long, Version>
 ) {
@@ -15,6 +20,22 @@ data class VersionTree private constructor(
         )
     }
 
+    fun get(versionId: Long) = versions[versionId] ?: throw IllegalStateException("VersionTree can only be created after initial version")
+
+    fun findDiffChainTo(versionId: Long) : List<String> {
+        val diffChain : MutableList<String> = mutableListOf()
+
+        var currentVersionId : Long? = versionId
+
+        while (currentVersionId != null) {
+            val currentVersion = versions[currentVersionId] ?:  throw IllegalStateException("Inconsistent version tree")
+            diffChain.add(currentVersion.diff)
+            currentVersionId = currentVersion.parentId
+        }
+
+        return diffChain.asReversed()
+    }
+
     fun append(version : Version) : VersionTree {
         val parentId = version.parentId
             ?: throw IllegalStateException("VersionTree can only be created after parent version")
@@ -25,6 +46,19 @@ data class VersionTree private constructor(
         if (parentVersion.articleId!= version.articleId) throw IllegalStateException("Illegal append")
 
         return this.copy( versions = versions + (version.id to version))
+    }
+
+    fun diff(origin: VersionTree) : VersionTreeDiff {
+        val added = versions.keys - origin.versions.keys
+        val changed = versions.keys.intersect(origin.versions.keys)
+            .filter {
+                versions[it] != origin.versions[it]
+            }
+
+        return VersionTreeDiff(
+            addedVersions = added.mapNotNull { versions[it] },
+            changedVersions = changed.mapNotNull { versions[it] }
+        )
     }
 
     fun publish(versionId: Long) : VersionTree {

@@ -14,9 +14,10 @@ data class VersionEntity(
     @Column("article_id")
     val articleId: Long,
 
-    @Column("prev_version_id")
-    val previousVersionId: Long?,
+    @Column("parent_id")
+    val parentId: Long?,
 
+    @Column("title")
     val title: String?,
 
     @Column("diff")
@@ -27,33 +28,27 @@ data class VersionEntity(
 
     @Column("state")
     var state: VersionStateJpa,
-
-    @Column("is_base")
-    val isBaseVersion: Boolean
-
 ) {
     companion object {
         fun from(version: Version) = VersionEntity(
             id = version.id,
             articleId = version.articleId,
-            previousVersionId = version.parentId,
+            parentId = version.parentId,
             diff = version.diff,
             createdAt = version.createdAt,
             state = VersionStateJpa.fromDomain(version.state),
-            isBaseVersion = version.snapshot != null,
             title = version.title?.value
         )
     }
 
-    fun toDomain(snapshot: String?): Version {
+    fun toDomain(): Version {
         return Version.Companion.from(
             id = id,
             articleId = articleId,
-            parentId = previousVersionId,
+            parentId = parentId,
             diff = diff,
             createdAt = createdAt,
             state = state.toDomain(),
-            snapshot = snapshot,
             title = title
         )
     }

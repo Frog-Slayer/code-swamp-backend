@@ -6,13 +6,14 @@ import java.time.temporal.ChronoUnit
 
 data class Version private constructor(
     val id: Long,
-    val state: VersionState,
-
     val articleId: Long,
     val parentId: Long?,
 
+    val state: VersionState,
+
     val title: Title?,
     val diff: String,
+
     val createdAt: Instant,
 ) {
     companion object {

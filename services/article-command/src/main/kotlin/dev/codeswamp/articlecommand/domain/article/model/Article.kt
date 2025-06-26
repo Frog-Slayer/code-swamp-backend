@@ -10,6 +10,7 @@ import dev.codeswamp.articlecommand.domain.article.model.command.ArticleVersionU
 import dev.codeswamp.articlecommand.domain.article.model.command.CreateArticleCommand
 import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.articlecommand.domain.article.model.vo.Title
+import dev.codeswamp.articlecommand.domain.support.DiffProcessor
 import dev.codeswamp.core.domain.AggregateRoot
 import dev.codeswamp.core.domain.DomainEvent
 import java.time.Instant
@@ -40,7 +41,7 @@ data class Article private constructor(
 ) : AggregateRoot() {
 
     companion object {
-        fun create(command: CreateArticleCommand): Article {
+        fun create(command: CreateArticleCommand): Pair<Article, Version> {
             val articleId = command.generateId()
 
             val initialVersion = Version.create(
@@ -58,9 +59,9 @@ data class Article private constructor(
                 createdAt = command.createdAt.truncatedTo(ChronoUnit.MILLIS),
                 metadata = command.metadata,
                 versionTree = VersionTree.createWithInitialVersion(initialVersion)
-           )
+            )
 
-            return article
+            return article to initialVersion
         }
 
         fun of(
@@ -82,12 +83,20 @@ data class Article private constructor(
     }
 
     private fun isVersionChangeNeeded(command : ArticleVersionUpdateCommand): Boolean {
-        val prevTitle = versionTree.versions[command.parentVersionId]?.title
-        return command.hasMeaningfulDiff || prevTitle != Title.of(command.title)
+        fun String.hasValidDelta() : Boolean = command.diffProcessor.hasValidDelta(this)
+
+        val prevTitle = versionTree.versions[command.currentVersionId]?.title
+        val hasMeaningfulDiff = command.diff.hasValidDelta()
+
+        return hasMeaningfulDiff || prevTitle != Title.of(command.title)
     }
 
-    fun updateVersionIfChanged(command : ArticleVersionUpdateCommand) : Article {
-        if (!isVersionChangeNeeded(command)) return this
+    fun updateVersionIfChanged(command : ArticleVersionUpdateCommand) : Pair<Article, Version> {
+        if (!isVersionChangeNeeded(command)) {
+            val currentVersion = versionTree.get(command.currentVersionId)
+            return Pair(this, currentVersion)
+        }
+
         val newVersionId = command.generateId()
         val newVersion = Version.create(
             id = newVersionId,
@@ -95,11 +104,24 @@ data class Article private constructor(
             diff = command.diff,
             createdAt = command.createdAt,
             articleId = id,
-            parentId = command.parentVersionId
+            parentId = command.currentVersionId
         )
 
-        return this.copy( versionTree = versionTree.append(newVersion))
-            .withEvent( ArticleVersionCreatedEvent( articleId = id,  versionId = newVersionId))
+        val articleWithUpdatedVersionTree = this.copy(
+            versionTree = versionTree.append(newVersion)
+        ).withEvent(
+            ArticleVersionCreatedEvent(articleId = id, versionId = newVersionId)
+        )
+
+        return articleWithUpdatedVersionTree to newVersion
+    }
+
+    fun restoreFullContent(versionId: Long, diffProcessor: DiffProcessor) : String {
+        fun String.applyDiff(diff: String) : String = diffProcessor.applyDiff(this, diff)
+
+        return versionTree
+            .findDiffChainTo( versionId )
+            .fold("") { content, diff -> content.applyDiff(diff) }
     }
 
     fun publish( versionId: Long, fullContent: String ): Article {
@@ -136,6 +158,12 @@ data class Article private constructor(
         return this.copy(
             versionTree = versionTree.archive(versionId)
         )
+    }
+
+    fun diff(other: Article) : Pair<Boolean, VersionTreeDiff> {
+        val metadataChanged = this.metadata != other.metadata
+        val versionDiff = this.versionTree.diff(other.versionTree)
+        return metadataChanged to versionDiff
     }
 
     fun delete() : Article {

@@ -28,7 +28,7 @@ CREATE TABLE article_metadata (
 CREATE TABLE version (
       id BIGINT PRIMARY KEY,
       article_id BIGINT NOT NULL,
-      prev_version_id BIGINT,
+      parent_id BIGINT,
       title TEXT,
       diff TEXT NOT NULL,
       created_at TIMESTAMP(3) NOT NULL,
@@ -36,18 +36,13 @@ CREATE TABLE version (
       is_base BOOLEAN NOT NULL,
 
       CONSTRAINT fk_version_article FOREIGN KEY (article_id) REFERENCES article_metadata(id),
-      CONSTRAINT fk_version_prev_version FOREIGN KEY (prev_version_id) REFERENCES version(id)
+      CONSTRAINT fk_version_prev_version FOREIGN KEY (parent_id) REFERENCES version(id)
 );
 
 /** 각 글에는 PUBLISHED 버전이 유일해야 함 **/
 CREATE UNIQUE INDEX unique_published_per_article
 ON article_version(article_id)
 WHERE state = 'PUBLISHED';
-
-CREATE TABLE snapshot (
-      version_id BIGINT PRIMARY KEY REFERENCES version(id),
-      content TEXT NOT NULL
-);
 
 CREATE TABLE outbox_event (
     id BIGINT PRIMARY KEY,
