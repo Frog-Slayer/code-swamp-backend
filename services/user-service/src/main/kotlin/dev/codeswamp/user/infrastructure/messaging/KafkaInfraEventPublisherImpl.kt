@@ -1,6 +1,6 @@
 package dev.codeswamp.user.infrastructure.messaging
 
-import dev.codeswamp.infrakafka.publisher.KafkaEventPublisher
+import dev.codeswamp.infrakafka.KafkaEventPublisher
 import dev.codeswamp.user.infrastructure.event.InfraEvent
 import dev.codeswamp.user.infrastructure.messaging.mapper.InfraEventKafkaMapper
 import org.springframework.stereotype.Component

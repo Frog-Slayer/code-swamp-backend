@@ -1,6 +1,6 @@
 package dev.codeswamp
 
-import dev.codeswamp.infrakafka.config.KafkaConfig
+import dev.codeswamp.infrakafka.KafkaConfig
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.EnableAspectJAutoProxy

@@ -3,7 +3,7 @@ package dev.codeswamp.articlecommand.application.usecase.command.folder.delete
 import dev.codeswamp.articlecommand.application.exception.folder.FolderNotFoundException
 import dev.codeswamp.articlecommand.domain.folder.repository.FolderRepository
 import dev.codeswamp.articlecommand.domain.folder.service.FolderDeletionPreparator
-import dev.codeswamp.core.application.event.EventRecorder
+import dev.codeswamp.core.application.event.eventbus.EventRecorder
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

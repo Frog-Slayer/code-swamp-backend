@@ -4,7 +4,7 @@ import dev.codeswamp.articlecommand.application.exception.folder.FolderNotFoundE
 import dev.codeswamp.articlecommand.application.port.outgoing.OutboxEventPublisher
 import dev.codeswamp.articlecommand.domain.folder.repository.FolderRepository
 import dev.codeswamp.articlecommand.domain.folder.service.DuplicatedFolderNameChecker
-import dev.codeswamp.core.application.event.EventRecorder
+import dev.codeswamp.core.application.event.eventbus.EventRecorder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

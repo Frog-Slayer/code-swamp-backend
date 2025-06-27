@@ -1,6 +1,6 @@
 package dev.codeswamp.user.infrastructure.messaging.mapper
 
-import dev.codeswamp.infrakafka.event.KafkaEvent
+import dev.codeswamp.infrakafka.KafkaEvent
 import dev.codeswamp.infrakafka.event.userevents.KafkaUserRegisteredEvent
 import dev.codeswamp.user.domain.user.DomainEvent
 import dev.codeswamp.user.domain.user.event.UserRegisteredEvent

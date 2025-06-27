@@ -54,10 +54,12 @@ subprojects {
 
 def springModules = [
         ":services:article-command",
+		":services:article-projection",
         ":services:article-query",
         ":services:auth-service",
         ":services:user-service",
         ":services:image-service",
+		":shared:ddd-core",
         ":shared:infra-kafka",
 ]
 

@@ -4,7 +4,7 @@ import dev.codeswamp.articlecommand.application.event.event.UserRegisteredEvent
 import dev.codeswamp.articlecommand.application.usecase.command.folder.create.CreateFolderUseCase
 import dev.codeswamp.articlecommand.application.usecase.command.folder.create.CreateRootFolderCommand
 import dev.codeswamp.core.common.event.Event
-import dev.codeswamp.core.application.event.EventHandler
+import dev.codeswamp.core.application.event.eventbus.EventHandler
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 

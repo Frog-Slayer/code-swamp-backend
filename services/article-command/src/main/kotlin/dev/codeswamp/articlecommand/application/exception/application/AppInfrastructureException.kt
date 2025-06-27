@@ -9,7 +9,6 @@ enum class AppInfrastructureErrorCode(
     override val code: String,
 ) : InfrastructureErrorCode {
     APP_INFRA_ERROR("APP_INFRA_ERROR"),
-    APP_TRANSIENT_EVENT_ERROR("APP_TRANSIENT_EVENT_ERROR"),
 }
 
 open class AppInfrastructureException(

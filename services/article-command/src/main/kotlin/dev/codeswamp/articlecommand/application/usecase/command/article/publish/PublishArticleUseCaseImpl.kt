@@ -8,7 +8,7 @@ import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.articlecommand.domain.article.model.vo.Slug
 import dev.codeswamp.articlecommand.domain.article.repository.ArticleRepository
 import dev.codeswamp.articlecommand.domain.support.DiffProcessor
-import dev.codeswamp.core.application.event.EventRecorder
+import dev.codeswamp.core.application.event.eventbus.EventRecorder
 import dev.codeswamp.core.domain.IdGenerator
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

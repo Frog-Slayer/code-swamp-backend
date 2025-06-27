@@ -1,6 +1,6 @@
 package dev.codeswamp.user.infrastructure.messaging.mapper
 
-import dev.codeswamp.infrakafka.event.KafkaEvent
+import dev.codeswamp.infrakafka.KafkaEvent
 import dev.codeswamp.infrakafka.event.userevents.KafkaAuthUserRollbackRequestedEvent
 import dev.codeswamp.user.application.event.ApplicationEvent
 import dev.codeswamp.user.application.event.AuthUserRollbackRequestedEvent

@@ -128,7 +128,13 @@ data class Article private constructor(
 
     fun publish( versionId: Long, fullContent: String ): Article {
         if (metadata.slug == null) {
-            throw InvalidArticleStateException("Cannot draft article", "Published article should have slug")
+            throw InvalidArticleStateException("Cannot publish article", "Slug is needed for publishing")
+        }
+
+        val toPublish = versionTree.get(versionId)
+
+        if (toPublish.title == null) {
+            throw InvalidArticleStateException("Cannot publish article", "Title is needed for publishing")
         }
 
         return this.copy(
@@ -138,6 +144,15 @@ data class Article private constructor(
             ArticlePublishedEvent(
                 articleId = id,
                 versionId = versionId,
+                authorId = authorId,
+                createdAt = createdAt,
+                updatedAt = toPublish.createdAt,
+                folderId = metadata.folderId,
+                summary = metadata.summary,
+                thumbnailUrl = metadata.thumbnailUrl,
+                isPublic = metadata.isPublic,
+                slug = metadata.slug.value,
+                title = toPublish.title.value,
                 fullContent = fullContent,
             )
         )

@@ -1,8 +1,8 @@
 package dev.codeswamp.articlecommand.application.usecase.query.article
 
-import dev.codeswamp.articlecommand.application.usecase.query.article.readversionedarticle.GetVersionedArticleQuery
-import dev.codeswamp.articlecommand.application.usecase.query.article.readversionedarticle.GetVersionedArticleUseCase
-import dev.codeswamp.articlecommand.application.usecase.query.article.readversionedarticle.ReadArticleResult
+import dev.codeswamp.articlecommand.application.usecase.query.article.versionedarticle.GetVersionedArticleQuery
+import dev.codeswamp.articlecommand.application.usecase.query.article.versionedarticle.GetVersionedArticleUseCase
+import dev.codeswamp.articlecommand.application.usecase.query.article.versionedarticle.ReadArticleResult
 import org.springframework.stereotype.Service
 
 @Service

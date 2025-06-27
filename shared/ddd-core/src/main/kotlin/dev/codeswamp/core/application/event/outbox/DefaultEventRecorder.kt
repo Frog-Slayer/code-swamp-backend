@@ -2,13 +2,14 @@ package dev.codeswamp.core.application.event.outbox
 
 import dev.codeswamp.core.application.SystemIdGenerator
 import dev.codeswamp.core.common.event.BusinessEvent
-import dev.codeswamp.core.application.event.EventRecorder
+import dev.codeswamp.core.application.event.eventbus.EventRecorder
+import dev.codeswamp.core.application.event.eventbus.EventKeyResolver
 import java.time.Instant
-import java.util.UUID
 
 abstract class DefaultEventRecorder(
     val outboxRepository: OutboxEventRepository,
     val serviceName: String,
+    val eventKeyResolver: EventKeyResolver,
     val systemIdGenerator: SystemIdGenerator
 ) : EventRecorder {
 
@@ -25,20 +26,20 @@ abstract class DefaultEventRecorder(
         outboxRepository.saveAll(outboxEvents)
     }
 
-    fun generateUUIDKey() : String {
-        return "$serviceName-${UUID.randomUUID()}"
+    fun generateEventKey(event: BusinessEvent) : String {
+        return eventKeyResolver.resolveKey(event)
     }
 
-    open fun createOutboxEvent(event: BusinessEvent) : OutboxEvent {
+     fun createOutboxEvent(event: BusinessEvent) : OutboxEvent {
         val eventType = EventTypeRegistry.register(event)
 
         return OutboxEvent.create(
-            { systemIdGenerator.generateId() },
+            systemIdGenerator::generateId,
             eventType = eventType,
             payload = event,
             createdAt = Instant.now(),
             serviceName = serviceName,
-            key = generateUUIDKey()
+            key = generateEventKey(event)
         )
     }
 }

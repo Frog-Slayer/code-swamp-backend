@@ -8,7 +8,7 @@ object EventTypeRegistry {
 
     fun register(event: BusinessEvent) : String {
         val clazz = event::class.java
-        val className = clazz.name
+        val className = clazz.simpleName
 
         registry.putIfAbsent(className, clazz)?. let{
             if ( it != clazz) {

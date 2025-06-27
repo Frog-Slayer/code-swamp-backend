@@ -1,9 +1,9 @@
 package dev.codeswamp.articlecommand.infrastructure.messaging.listener
 
-import dev.codeswamp.articlecommand.application.port.incoming.MessageDispatcher
+import dev.codeswamp.articlecommand.application.port.incoming.ApplicationEventDispatcher
 import dev.codeswamp.articlecommand.infrastructure.messaging.mapper.KafkaEventTranslator
-import dev.codeswamp.core.application.event.EventListener
-import dev.codeswamp.infrakafka.event.KafkaEvent
+import dev.codeswamp.core.application.event.eventbus.EventListener
+import dev.codeswamp.infrakafka.KafkaEvent
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.kafka.support.Acknowledgment
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component
 @Component
 class KafkaUserEventListener(
     private val eventTranslator: KafkaEventTranslator,
-    private val dispatcher: MessageDispatcher,
+    private val dispatcher: ApplicationEventDispatcher,
 ) : EventListener {
     private val logger = LoggerFactory.getLogger(javaClass)
 

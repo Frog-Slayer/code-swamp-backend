@@ -1,21 +1,24 @@
 package dev.codeswamp.articlecommand.infrastructure.messaging.mapper
 
+import com.fasterxml.jackson.databind.ObjectMapper
 import dev.codeswamp.articlecommand.application.event.event.UserRegisteredEvent
 import dev.codeswamp.core.application.event.ApplicationEvent
 import dev.codeswamp.core.infrastructure.messaging.EventTranslator
-import dev.codeswamp.infrakafka.event.KafkaEvent
-import dev.codeswamp.infrakafka.event.userevents.KafkaUserRegisteredEvent
+import dev.codeswamp.infrakafka.KafkaEvent
 import org.springframework.stereotype.Component
 
 @Component
-class KafkaEventTranslator : EventTranslator<KafkaEvent, ApplicationEvent> {
+class KafkaEventTranslator(
+    private val objectMapper: ObjectMapper
+): EventTranslator<KafkaEvent, ApplicationEvent> {
 
     override fun translate(event: KafkaEvent): ApplicationEvent {
-        return when (event) {
-            is KafkaUserRegisteredEvent -> event.toInternalEvent()
+        return when ( event.eventType ) {
+            "UserRegisteredEvent" ->  event.toUserRegisteredEvent()
             else -> throw IllegalArgumentException("Unsupported event type: ${event.eventType}")
         }
     }
 
-    fun KafkaUserRegisteredEvent.toInternalEvent() = UserRegisteredEvent(userId = userId, username = username)
+    fun KafkaEvent.toUserRegisteredEvent(): UserRegisteredEvent = objectMapper.treeToValue(this.event, UserRegisteredEvent::class.java)
+
 }
