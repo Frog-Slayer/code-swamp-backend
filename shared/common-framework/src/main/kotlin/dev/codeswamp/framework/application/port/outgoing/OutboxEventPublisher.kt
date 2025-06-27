@@ -1,4 +1,4 @@
-package dev.codeswamp.core.application.port.outgoing
+package dev.codeswamp.framework.application.port.outgoing
 
 import dev.codeswamp.core.application.event.eventbus.EventPublisher
 import dev.codeswamp.core.application.event.outbox.OutboxEvent

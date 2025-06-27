@@ -1,4 +1,4 @@
-package dev.codeswamp.core.application.port.incoming
+package dev.codeswamp.framework.application.port.incoming
 
 import dev.codeswamp.core.application.event.eventbus.EventHandler
 import dev.codeswamp.core.application.event.eventbus.EventDispatcher

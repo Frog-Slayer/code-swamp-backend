@@ -1,6 +1,4 @@
-package dev.codeswamp
-
-import java.time.Instant
+package dev.codeswamp.framework.infrastructure.support
 
 object SnowflakeIdGenerator {
     private const val EPOCH = 1748790000

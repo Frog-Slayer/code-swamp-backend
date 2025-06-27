@@ -1,4 +1,4 @@
-package dev.codeswamp.core.application.event.outbox
+package dev.codeswamp.framework.application.event.outbox
 
 interface OutboxEventRepository {
     suspend fun save(event: OutboxEvent)

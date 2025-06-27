@@ -1,0 +1,10 @@
+dependencies {
+    implementation project(":shared:ddd-core")
+    implementation project(":shared:auth-common")
+    implementation project(":shared:infra-kafka")
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"
+
+    implementation("org.slf4j:slf4j-api:2.0.17")
+    runtimeOnly("ch.qos.logback:logback-classic:1.5.18")
+
+}

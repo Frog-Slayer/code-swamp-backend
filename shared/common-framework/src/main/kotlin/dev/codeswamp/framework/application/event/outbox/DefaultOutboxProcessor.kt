@@ -1,4 +1,4 @@
-package dev.codeswamp.core.application.event.outbox
+package dev.codeswamp.framework.application.event.outbox
 
 import dev.codeswamp.core.application.port.outgoing.OutboxEventPublisher
 import dev.codeswamp.core.infrastructure.messaging.exception.TransientEventException

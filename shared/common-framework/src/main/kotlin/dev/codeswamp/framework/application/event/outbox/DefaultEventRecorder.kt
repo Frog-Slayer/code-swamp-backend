@@ -1,4 +1,4 @@
-package dev.codeswamp.core.application.event.outbox
+package dev.codeswamp.framework.application.event.outbox
 
 import dev.codeswamp.core.application.SystemIdGenerator
 import dev.codeswamp.core.common.event.BusinessEvent

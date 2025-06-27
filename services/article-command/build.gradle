@@ -1,7 +1,6 @@
 dependencies {
     implementation project(":shared:ddd-core")
     implementation project(":shared:infra-kafka")
-    implementation project(":shared:id-generator")
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'

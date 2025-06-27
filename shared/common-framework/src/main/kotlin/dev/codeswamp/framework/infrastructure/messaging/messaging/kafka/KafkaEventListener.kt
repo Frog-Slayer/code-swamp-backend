@@ -1,4 +1,4 @@
-package dev.codeswamp.core.infrastructure.messaging.messaging.kafka
+package dev.codeswamp.framework.infrastructure.messaging.messaging.kafka
 
 import dev.codeswamp.core.application.event.eventbus.EventListener
 import dev.codeswamp.core.application.port.incoming.BusinessEventDispatcher
