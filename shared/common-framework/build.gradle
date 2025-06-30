@@ -6,10 +6,8 @@ dependencies {
     implementation project(":shared:auth-common")
     api project(":shared:infra-kafka")
 
-
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-reactor'
     implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'
 
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"

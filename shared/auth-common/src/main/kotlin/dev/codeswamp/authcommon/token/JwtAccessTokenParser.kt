@@ -6,7 +6,7 @@ import io.jsonwebtoken.security.Keys
 import java.time.temporal.ChronoUnit
 import javax.crypto.SecretKey
 
-class JwtAccessTokenParser (
+class JwtAccessTokenParser private constructor (
     private val secretKey: SecretKey,
 ) : AccessTokenParser {
 
@@ -38,7 +38,7 @@ class JwtAccessTokenParser (
         return AccessTokenPayload(
                 sub = claims.subject,
                 userId = userId,
-                role = role,
+                roles = role,
                 issuedAt = claims.issuedAt.toInstant().truncatedTo(ChronoUnit.SECONDS),
                 expiration = claims.expiration.toInstant().truncatedTo(ChronoUnit.SECONDS),
         )

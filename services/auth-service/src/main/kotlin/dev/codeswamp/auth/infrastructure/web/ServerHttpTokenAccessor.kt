@@ -11,7 +11,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.stereotype.Component
 
 @Component
-class ServletHttpTokenAccessor(
+class ServerHttpTokenAccessor(
     private val authApplicationService: AuthApplicationService,
     @Value("\${jwt.access-token-exp}") private val accessTokenExpiration: Long,
     @Value("\${jwt.refresh-token-exp}") private val refreshTokenExpiration: Long,

@@ -59,6 +59,7 @@ def springModules = [
         ":services:auth-service",
         ":services:user-service",
         ":services:image-service",
+		":shared:auth-common",
 		":shared:common-framework",
         ":shared:infra-kafka",
 ]

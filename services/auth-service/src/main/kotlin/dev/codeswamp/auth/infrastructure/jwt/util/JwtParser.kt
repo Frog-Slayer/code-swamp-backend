@@ -25,7 +25,7 @@ class JwtParser(
             value = accessToken,
             username = payload.sub,
             userId = payload.userId,
-            roles = payload.role,
+            roles = payload.roles,
             expiration = payload.expiration,
         )
     }
