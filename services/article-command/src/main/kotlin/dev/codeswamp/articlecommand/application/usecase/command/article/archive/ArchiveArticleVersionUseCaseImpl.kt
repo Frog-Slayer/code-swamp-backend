@@ -2,7 +2,7 @@ package dev.codeswamp.articlecommand.application.usecase.command.article.archive
 
 import dev.codeswamp.articlecommand.application.exception.article.ArticleNotFoundException
 import dev.codeswamp.articlecommand.domain.article.repository.ArticleRepository
-import dev.codeswamp.core.application.event.eventbus.EventRecorder
+import dev.codeswamp.framework.application.outbox.EventRecorder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

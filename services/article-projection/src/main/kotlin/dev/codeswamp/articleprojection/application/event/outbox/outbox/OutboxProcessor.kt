@@ -1,8 +1,8 @@
 package dev.codeswamp.articleprojection.application.event.outbox.outbox
 
 import dev.codeswamp.core.application.event.outbox.OutboxEventRepository
-import dev.codeswamp.core.application.event.outbox.OutboxProcessor
-import dev.codeswamp.core.application.event.outbox.ProcessResult
+import dev.codeswamp.core.infrastructure.messaging.outbox.OutboxProcessor
+import dev.codeswamp.core.infrastructure.messaging.outbox.ProcessResult
 import jakarta.annotation.PostConstruct
 import jakarta.annotation.PreDestroy
 import kotlinx.coroutines.CancellationException

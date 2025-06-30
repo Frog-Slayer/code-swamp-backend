@@ -1,6 +1,5 @@
 package dev.codeswamp.infrakafka
 
-import dev.codeswamp.infrakafka.KafkaEvent
 import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties
 import org.springframework.context.annotation.Bean

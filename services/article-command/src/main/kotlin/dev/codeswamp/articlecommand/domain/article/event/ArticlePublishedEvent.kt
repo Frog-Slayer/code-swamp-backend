@@ -1,5 +1,6 @@
 package dev.codeswamp.articlecommand.domain.article.event
 
+import dev.codeswamp.core.common.EventType
 import dev.codeswamp.core.domain.DomainEvent
 import java.time.Instant
 
@@ -10,6 +11,7 @@ import java.time.Instant
  * - 2) Search Engine 인덱싱
  * - 3) TODO: 이후 알림 발송 서비스가 만들어지면 구독자에게 알림을 보냄
  */
+@EventType("article.published")
 data class ArticlePublishedEvent(
     val articleId: Long,
     val authorId: Long,

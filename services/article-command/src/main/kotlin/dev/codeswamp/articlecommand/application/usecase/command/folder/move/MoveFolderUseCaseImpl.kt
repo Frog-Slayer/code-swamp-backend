@@ -3,7 +3,7 @@ package dev.codeswamp.articlecommand.application.usecase.command.folder.move
 import dev.codeswamp.articlecommand.application.exception.folder.FolderNotFoundException
 import dev.codeswamp.articlecommand.domain.folder.repository.FolderRepository
 import dev.codeswamp.articlecommand.domain.folder.service.DuplicatedFolderNameChecker
-import dev.codeswamp.core.application.event.eventbus.EventRecorder
+import dev.codeswamp.framework.application.outbox.EventRecorder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

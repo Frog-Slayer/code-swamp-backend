@@ -1,19 +1,17 @@
-package dev.codeswamp.articleprojection.infrastructure.messaging.publisher
+package dev.codeswamp.core.infrastructure.messaging.messaging.kafka.publisher
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import dev.codeswamp.articleprojection.application.exception.infra.TransientEventException
-import dev.codeswamp.articleprojection.application.port.outgoing.OutboxEventPublisher
-import dev.codeswamp.core.infrastructure.messaging.outbox.OutboxEvent
+import dev.codeswamp.framework.application.outbox.OutboxEvent
+import dev.codeswamp.framework.application.port.outgoing.OutboxEventPublisher
+import dev.codeswamp.framework.infrastructure.messaging.exception.TransientEventException
 import dev.codeswamp.infrakafka.KafkaEvent
 import dev.codeswamp.infrakafka.KafkaEventPublisher
 import org.apache.kafka.common.errors.RetriableException
-import org.springframework.stereotype.Component
 import java.lang.Exception
 
-@Component
-class KafkaOutboxEventPublisherImpl(
+class KafkaOutboxEventPublisher (
+    private val objectMapper: ObjectMapper,
     private val kafkaPublisher: KafkaEventPublisher,
-    private val objectMapper: ObjectMapper
 ) : OutboxEventPublisher {
 
     override suspend fun publish(event: OutboxEvent) {

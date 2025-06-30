@@ -3,7 +3,7 @@ package dev.codeswamp.articleprojection.application.event.outbox.outbox
 import dev.codeswamp.core.application.SystemIdGenerator
 import dev.codeswamp.core.application.event.outbox.DefaultEventRecorder
 import dev.codeswamp.core.application.event.outbox.EventTypeRegistry
-import dev.codeswamp.core.application.event.outbox.OutboxEvent
+import dev.codeswamp.core.infrastructure.messaging.outbox.OutboxEvent
 import dev.codeswamp.core.application.event.outbox.OutboxEventRepository
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component

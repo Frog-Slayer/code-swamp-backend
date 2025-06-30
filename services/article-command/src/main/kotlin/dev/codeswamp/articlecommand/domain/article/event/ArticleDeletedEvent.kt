@@ -1,5 +1,6 @@
 package dev.codeswamp.articlecommand.domain.article.event
 
+import dev.codeswamp.core.common.EventType
 import dev.codeswamp.core.domain.DomainEvent
 
 /**
@@ -9,6 +10,7 @@ import dev.codeswamp.core.domain.DomainEvent
  * - neo4j에 저장된 해당 글의 버전 트리를 삭제
  */
 
+@EventType("article.deleted")
 data class ArticleDeletedEvent(
     val articleId: Long,
 ) : DomainEvent

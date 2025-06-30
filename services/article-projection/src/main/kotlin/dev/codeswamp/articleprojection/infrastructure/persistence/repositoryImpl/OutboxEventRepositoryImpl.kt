@@ -2,7 +2,7 @@ package dev.codeswamp.articleprojection.infrastructure.persistence.repositoryImp
 
 import dev.codeswamp.articleprojection.infrastructure.persistence.r2dbc.entity.OutboxEventEntity
 import dev.codeswamp.articleprojection.infrastructure.persistence.r2dbc.repository.OutboxEventR2dbcRepository
-import dev.codeswamp.core.application.event.outbox.OutboxEvent
+import dev.codeswamp.core.infrastructure.messaging.outbox.OutboxEvent
 import dev.codeswamp.core.application.event.outbox.OutboxEventRepository
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import org.springframework.r2dbc.core.DatabaseClient

@@ -2,7 +2,8 @@ package dev.codeswamp.articleprojection.infrastructure.persistence.r2dbc.entity
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import dev.codeswamp.core.application.event.outbox.EventTypeRegistry
-import dev.codeswamp.core.application.event.outbox.OutboxEvent
+import dev.codeswamp.core.common.event.BusinessEvent
+import dev.codeswamp.core.infrastructure.messaging.outbox.OutboxEvent
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
@@ -54,7 +55,7 @@ data class OutboxEventEntity (
         return OutboxEvent(
             id = id,
             eventType = eventType,
-            payload = jacksonObjectMapper().readValue(payloadJson, clazz) as dev.codeswamp.core.common.event.BusinessEvent,
+            payload = jacksonObjectMapper().readValue(payloadJson, clazz) as BusinessEvent,
             status = OutboxEvent.EventStatus.valueOf(status),
             createdAt = createdAt,
             retryCount = retryCount,

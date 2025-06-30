@@ -1,0 +1,4 @@
+code-swamp:
+  messaging:
+    service-name: "article_command"
+    outbox-table-name: "article_command_outbox"

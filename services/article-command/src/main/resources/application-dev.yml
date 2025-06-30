@@ -1,6 +1,9 @@
 spring:
   config:
-    import: 'classpath:infra-kafka-application.yml'
+    import:
+     - classpath:kafka-dev.yml
+     - classpath:outbox-dev.yml
+
   r2dbc:
     url: r2dbc:postgresql://localhost:5433/mydb
     username: spring
@@ -24,6 +27,7 @@ spring:
     authentication:
       username: neo4j
       password: codeswamp
+
 
 logging:
   level:

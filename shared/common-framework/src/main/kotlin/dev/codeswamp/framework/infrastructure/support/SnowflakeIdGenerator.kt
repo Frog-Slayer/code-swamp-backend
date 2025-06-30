@@ -1,5 +1,7 @@
 package dev.codeswamp.framework.infrastructure.support
 
+import java.time.Instant
+
 object SnowflakeIdGenerator {
     private const val EPOCH = 1748790000
     private const val WORKER_ID_BITS = 10L
