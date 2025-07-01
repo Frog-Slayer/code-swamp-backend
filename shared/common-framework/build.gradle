@@ -3,8 +3,9 @@ jar { enabled =  true }
 
 dependencies {
     api project(":shared:ddd-core")
-    implementation project(":shared:auth-common")
     api project(":shared:infra-kafka")
+    implementation project(":shared:id-generator")
+    implementation project(":shared:common-auth")
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-reactor'
     implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'

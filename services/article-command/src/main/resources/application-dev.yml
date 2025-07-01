@@ -2,10 +2,9 @@ spring:
   config:
     import:
      - classpath:kafka-dev.yml
-     - classpath:outbox-dev.yml
-
+     - classpath:application-secret.yml
   r2dbc:
-    url: r2dbc:postgresql://localhost:5433/mydb
+    url: r2dbc:postgresql://localhost:5433/mydb?schema=article
     username: spring
     password: boot
 
@@ -16,6 +15,7 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
     enabled: true
+    default-schema: article
 
   data:
     redis:

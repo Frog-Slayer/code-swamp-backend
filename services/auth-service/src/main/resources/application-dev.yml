@@ -1,30 +1,18 @@
 spring:
-  #  datasource:
-  #    url: jdbc:postgresql://localhost:5433/mydb
-  #    driver-class-name: org.postgresql.Driver
-  #    username: spring
-  #    password: boot
-  #  jpa:
-  #    hibernate:
-  #      ddl-auto: update
-  #    properties:
-  #      hibernate:
-  #        dialect: org.hibernate.dialect.PostgreSQLDialect
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.H2Dialect
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5433/mydb?schema=auth
+    username: spring
+    password: boot
+
+  flyway:
+    url: jdbc:postgresql://localhost:5433/mydb
+    user: spring
+    password: boot
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    enabled: true
+    default-schema: auth
+
   data:
     redis:
       host: localhost

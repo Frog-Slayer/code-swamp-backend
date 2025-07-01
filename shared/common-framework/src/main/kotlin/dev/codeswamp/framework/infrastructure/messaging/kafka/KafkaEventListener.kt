@@ -8,13 +8,13 @@ import dev.codeswamp.infrakafka.KafkaEvent
 import org.slf4j.LoggerFactory
 import org.springframework.kafka.support.Acknowledgment
 
-class KafkaEventListener(
+abstract class KafkaEventListener(
     private val eventTranslator: EventTranslator<KafkaEvent, BusinessEvent>,
     private val dispatcher: BusinessEventDispatcher,
 ) : EventListener {
     private val logger = LoggerFactory.getLogger(javaClass)
 
-    suspend fun listen(
+    open suspend fun listen(
         event: KafkaEvent,
         ack: Acknowledgment
     ) {

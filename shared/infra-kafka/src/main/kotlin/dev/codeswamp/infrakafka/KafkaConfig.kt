@@ -42,4 +42,9 @@ class KafkaConfig(
         factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL
         return factory
     }
+
+    @Bean
+    fun kafkaEventPublisher(kafkaTemplate: KafkaTemplate<String, KafkaEvent>) = KafkaEventPublisher(
+        kafkaTemplate = kafkaTemplate,
+    )
 }

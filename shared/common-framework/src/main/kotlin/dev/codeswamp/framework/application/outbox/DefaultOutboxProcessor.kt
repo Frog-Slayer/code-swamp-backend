@@ -4,6 +4,8 @@ import dev.codeswamp.core.infrastructure.persistence.TransactionExecutor
 import dev.codeswamp.framework.application.port.outgoing.OutboxEventPublisher
 import dev.codeswamp.framework.application.port.outgoing.OutboxEventRepository
 import dev.codeswamp.framework.infrastructure.messaging.exception.TransientEventException
+import jakarta.annotation.PostConstruct
+import jakarta.annotation.PreDestroy
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -27,6 +29,7 @@ class DefaultOutboxProcessor(
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private val logger : Logger = LoggerFactory.getLogger(javaClass)
 
+    @PostConstruct
     override fun startProcessing() {
         scope.launch {
             try {
@@ -42,6 +45,7 @@ class DefaultOutboxProcessor(
         }
     }
 
+    @PreDestroy
     override fun stopProcessing() {
         scope.cancel("Application shutting down")
     }

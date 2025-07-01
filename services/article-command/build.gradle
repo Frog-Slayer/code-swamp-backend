@@ -1,4 +1,5 @@
 dependencies {
+    implementation project(":shared:common-auth")
     implementation project(":shared:common-framework")
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'

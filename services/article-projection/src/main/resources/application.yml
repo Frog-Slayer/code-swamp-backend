@@ -5,11 +5,7 @@ spring:
     active: dev
   config:
     import: application-secret.yml
-  jpa:
-    show-sql: false
-  servlet:
-    multipart:
-      max-file-size: 5MB
 
 server:
   forward-headers-strategy: framework
+  port: 8888

@@ -1,6 +1,6 @@
 spring:
   application:
-    name: codeswamp
+    name: auth
   profiles:
     active: dev
   config:

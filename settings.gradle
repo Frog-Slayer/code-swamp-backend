@@ -8,8 +8,9 @@ include(
         "services:user-service",
         "services:image-service",
         "shared:common-framework",
-        "shared:auth-common",
+        "shared:common-auth",
         "shared:common-grpc",
+        'shared:id-generator',
         "shared:infra-kafka",
         "shared:ddd-core"
 )

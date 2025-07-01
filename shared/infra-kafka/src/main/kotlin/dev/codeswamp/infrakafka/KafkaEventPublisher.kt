@@ -7,7 +7,6 @@ import org.springframework.messaging.Message
 import org.springframework.messaging.support.MessageBuilder
 import org.springframework.stereotype.Component
 
-@Component
 class KafkaEventPublisher(
     private val kafkaTemplate: KafkaTemplate<String, KafkaEvent>
 ) {

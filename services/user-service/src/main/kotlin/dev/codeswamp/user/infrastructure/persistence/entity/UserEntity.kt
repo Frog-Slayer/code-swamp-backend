@@ -1,23 +1,22 @@
 package dev.codeswamp.user.infrastructure.persistence.entity
 
 import dev.codeswamp.user.domain.user.model.User
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
+import org.springframework.data.annotation.Id
+import org.springframework.data.relational.core.mapping.Column
+import org.springframework.data.relational.core.mapping.Table
 
-@Entity
 @Table(name = "users")
 data class UserEntity(
     @Id
     val id: Long,
 
-    @Column(unique = true)
+    @Column("username")
     val username: String,
 
-    @Column(unique = true)
+    @Column("nickname")
     var nickname: String,
 
+    @Column("profile_image")
     var profileImage: String? = null,
 ) {
     fun toDomain(): User {

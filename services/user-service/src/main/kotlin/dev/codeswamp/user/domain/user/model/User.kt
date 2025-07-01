@@ -1,7 +1,7 @@
 package dev.codeswamp.user.domain.user.model
 
-import dev.codeswamp.user.domain.AggregateRoot
-import dev.codeswamp.user.domain.user.DomainEvent
+import dev.codeswamp.core.domain.AggregateRoot
+import dev.codeswamp.core.domain.DomainEvent
 import dev.codeswamp.user.domain.user.event.UserRegisteredEvent
 
 data class User private constructor(

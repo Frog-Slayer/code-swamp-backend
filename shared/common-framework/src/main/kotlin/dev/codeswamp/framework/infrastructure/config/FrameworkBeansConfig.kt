@@ -2,10 +2,8 @@ package dev.codeswamp.framework.infrastructure.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import dev.codeswamp.core.application.SystemIdGenerator
-import dev.codeswamp.core.application.event.eventbus.EventDispatcher
 import dev.codeswamp.core.application.event.eventbus.EventHandler
 import dev.codeswamp.core.application.event.eventbus.EventKeyResolver
-import dev.codeswamp.core.common.event.BusinessEvent
 import dev.codeswamp.core.domain.IdGenerator
 import dev.codeswamp.core.infrastructure.messaging.messaging.kafka.publisher.KafkaOutboxEventPublisher
 import dev.codeswamp.core.infrastructure.persistence.TransactionExecutor
@@ -19,31 +17,24 @@ import dev.codeswamp.framework.application.port.incoming.BusinessEventDispatcher
 import dev.codeswamp.framework.application.port.outgoing.OutboxEventPublisher
 import dev.codeswamp.framework.application.port.outgoing.OutboxEventRepository
 import dev.codeswamp.framework.infrastructure.messaging.kafka.KafkaEventTranslator
+import dev.codeswamp.framework.infrastructure.persistence.config.TransactionConfig
 import dev.codeswamp.framework.infrastructure.persistence.r2dbc.OutboxEventMapper
 import dev.codeswamp.framework.infrastructure.persistence.r2dbc.OutboxEventRepositoryImpl
 import dev.codeswamp.framework.infrastructure.support.DefaultIdGenerator
 import dev.codeswamp.framework.infrastructure.support.DefaultSystemIdGenerator
 import dev.codeswamp.infrakafka.KafkaConfig
 import dev.codeswamp.infrakafka.KafkaEventPublisher
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
-import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.r2dbc.core.DatabaseClient
 
-@ConfigurationProperties(prefix = "code-swamp.messaging")
-data class MessagingProperties (
-    var serviceName: String,
-    var outboxTableName: String,
-)
-
 @Configuration
-@Import(KafkaConfig::class)
-@EnableConfigurationProperties(MessagingProperties::class)
+@Import(KafkaConfig::class, TransactionConfig::class)
 class FrameworkBeansConfig(
-    private val messagingProperties: MessagingProperties,
+    @Value("\${spring.application.name}") private val serviceName : String,
     private val objectMapper: ObjectMapper,
     private val kafkaPublisher: KafkaEventPublisher,
     private val eventKeyResolver: EventKeyResolver
@@ -86,7 +77,6 @@ class FrameworkBeansConfig(
         databaseClient: DatabaseClient,
         outboxEventMapper: OutboxEventMapper
     ) : OutboxEventRepository = OutboxEventRepositoryImpl(
-        tableName = messagingProperties.outboxTableName,
         databaseClient = databaseClient,
         mapper = outboxEventMapper
     )
@@ -99,7 +89,7 @@ class FrameworkBeansConfig(
         eventTypeRegistry: EventTypeRegistry,
     ) : EventRecorder = DefaultEventRecorder(
         outboxRepository = outboxEventRepository,
-        serviceName = messagingProperties.serviceName,
+        serviceName = serviceName,
         eventKeyResolver = eventKeyResolver,
         systemIdGenerator = systemIdGenerator,
         eventTypeRegistry = eventTypeRegistry,
