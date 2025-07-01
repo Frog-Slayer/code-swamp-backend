@@ -8,8 +8,8 @@ import dev.codeswamp.articlecommand.domain.article.model.vo.ArticleMetadata
 import dev.codeswamp.articlecommand.domain.article.model.vo.Slug
 import dev.codeswamp.articlecommand.domain.article.repository.ArticleRepository
 import dev.codeswamp.articlecommand.domain.support.DiffProcessor
-import dev.codeswamp.core.application.event.EventRecorder
 import dev.codeswamp.core.domain.IdGenerator
+import dev.codeswamp.framework.application.outbox.EventRecorder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.Instant
@@ -29,6 +29,10 @@ class PublishArticleUseCaseImpl(
 
         val fullContent = article.restoreFullContent(version.id, diffProcessor)
         val published = article.publish( version.id, fullContent)
+            .also {
+                articleRepository.createMetadata(it)
+                articleRepository.insertVersions(listOf(it.getVersion(version.id)))
+            }
 
         eventRecorder.recordAll( published.pullEvents())
 

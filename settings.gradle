@@ -7,9 +7,10 @@ include(
         "services:auth-service",
         "services:user-service",
         "services:image-service",
-        "shared:auth-common",
+        "shared:common-framework",
+        "shared:common-auth",
         "shared:common-grpc",
+        'shared:id-generator',
         "shared:infra-kafka",
-        "shared:id-generator",
         "shared:ddd-core"
 )

@@ -1,5 +1,6 @@
 package dev.codeswamp.auth.application.service
 
+import dev.codeswamp.SnowflakeIdGenerator.generateId
 import dev.codeswamp.auth.application.dto.TemporaryLoginResult
 import dev.codeswamp.auth.application.dto.ValidatedTokenPair
 import dev.codeswamp.auth.application.port.outgoing.UserProfileFetcher
@@ -16,7 +17,9 @@ import dev.codeswamp.auth.domain.service.TokenGenerator
 import dev.codeswamp.auth.domain.service.TokenParser
 import dev.codeswamp.auth.domain.service.TokenValidator
 import dev.codeswamp.auth.domain.support.IdGenerator
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 
 data class SignUpResult(
@@ -37,24 +40,31 @@ class AuthApplicationService(
     private val tokenRotator: RefreshTokenRotator,
     private val tokenParser: TokenParser,
 ) {
+    private val logger = LoggerFactory.getLogger(this::class.java)
 
+    @Transactional
     suspend fun signup(email: String, signupToken: String): SignUpResult {
         if (!temporaryTokenService.authenticate(signupToken, email))
             throw IllegalStateException("Invalid or expired signup token")
 
+        val newUser = AuthUser.createUser(
+            generateId = idGenerator::generateId,
+            email = email
+        )
+
+        authUserRepository.save(newUser)
+        val otp = temporaryTokenService.generateOtp(email)
+
+        logger.info("userId ${newUser.id}, otp ${otp}")
+
         return SignUpResult(
-            authUserRepository.save(
-                AuthUser.createUser(
-                    generateId = { idGenerator.generateId() },
-                    email = email,
-                )
-            ).id,
-            temporaryTokenService.generateOtp(email)
+            userId = newUser.id,
+            otp = otp
         )
     }
 
     suspend fun findByUsername(username: String): AuthUser? {
-        return authUserRepository.findByUsername(username)
+        return authUserRepository.findByEmail(username)
     }
 
     suspend fun refresh(rawRefreshToken: RawRefreshToken): ValidatedTokenPair {
@@ -86,7 +96,7 @@ class AuthApplicationService(
 
         if (!isTokenValid) throw Exception("token is invalid")
 
-        val authUser = authUserRepository.findByUsername(email) ?: throw Exception("user not found")
+        val authUser = authUserRepository.findByEmail(email) ?: throw Exception("user not found")
 
         val accessToken = tokenGenerator.generateAccessToken(authUser)
         val refreshToken = issueAndStoreRefreshToken(authUser)
@@ -99,6 +109,7 @@ class AuthApplicationService(
         )
     }
 
+    @Transactional
     suspend fun deleteRefreshTokenByUserId(userId: Long) {
         tokenRepository.findRefreshTokenByUserId(userId)?.let {
             tokenRepository.delete(it)

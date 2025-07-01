@@ -1,38 +1,26 @@
 spring:
   config:
-    import: 'classpath:/infra-kafka-application.yml'
-  datasource:
-    url: jdbc:h2:mem:testdb
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
-  h2:
-    console:
-      enabled: true
-      path: /h2-console
-  jpa:
-    hibernate:
-      ddl-auto: update
-  #  datasource:
-  #    url: jdbc:postgresql://localhost:5433/mydb
-  #    driver-class-name: org.postgresql.Driver
-  #    username: spring
-  #    password: boot
-  #  jpa:
-  #    hibernate:
-  #      ddl-auto: update
-  #    properties:
-  #      hibernate:
-  #        dialect: org.hibernate.dialect.PostgreSQLDialect
+    import:
+     - classpath:kafka-dev.yml
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5433/mydb?schema=user_resource
+    username: spring
+    password: boot
+
+  flyway:
+    url: jdbc:postgresql://localhost:5433/mydb
+    user: spring
+    password: boot
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    enabled: true
+    default-schema: user_resource
+
   data:
     redis:
       host: localhost
       port: 6379
       password: ""
-
-logging:
-  level:
-    root: debug
 
 grpc:
   server:
@@ -41,3 +29,6 @@ grpc:
     auth-service:
       address: static://localhost:9090
       negotiation-type: plaintext
+
+frontend:
+  url: "http://localhost:3000"

@@ -1,0 +1,22 @@
+bootJar { enabled = false }
+jar { enabled =  true }
+
+dependencies {
+    api project(":shared:ddd-core")
+    api project(":shared:infra-kafka")
+    implementation project(":shared:id-generator")
+    implementation project(":shared:common-auth")
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-reactor'
+    implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
+    implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1"
+
+    implementation 'org.postgresql:r2dbc-postgresql:1.0.7.RELEASE'
+    implementation 'org.slf4j:slf4j-api:2.0.17'
+
+    runtimeOnly 'org.postgresql:postgresql'
+    runtimeOnly 'ch.qos.logback:logback-classic:1.5.18'
+    runtimeOnly 'com.h2database:h2'
+}

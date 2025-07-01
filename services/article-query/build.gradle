@@ -7,7 +7,6 @@ plugins {
 }
 
 dependencies {
-    implementation project(":shared:id-generator")
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-neo4j'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'

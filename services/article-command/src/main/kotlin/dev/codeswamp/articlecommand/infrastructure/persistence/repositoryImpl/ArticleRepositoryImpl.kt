@@ -59,13 +59,13 @@ class ArticleRepositoryImpl(
 
     override suspend fun deleteAllByFolderIdIn(folderIds: List<Long>) {
         val articleIds = articleMetadataR2dbcRepository.findAllIdsByFolderIdIn(folderIds)
-        articleMetadataR2dbcRepository.deleteAllByIdIn(articleIds)
         versionRepository.deleteAllByArticleIdIn(articleIds)
+        articleMetadataR2dbcRepository.deleteAllByIdIn(articleIds)
     }
 
     override suspend fun deleteById(id: Long) {
-        articleMetadataR2dbcRepository.deleteById(id)
         versionRepository.deleteByArticleId(id)
+        articleMetadataR2dbcRepository.deleteById(id)
     }
 
     private fun toDomain(metadata: ArticleMetadataEntity, versions: List<Version>): Article {

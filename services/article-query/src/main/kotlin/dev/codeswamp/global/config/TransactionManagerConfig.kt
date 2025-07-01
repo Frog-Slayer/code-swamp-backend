@@ -12,10 +12,6 @@ import org.springframework.transaction.annotation.EnableTransactionManagement
 
 @Configuration
 @EnableTransactionManagement
-@EnableNeo4jRepositories(
-    basePackages = ["dev.codeswamp.core.article.infrastructure.persistence.graph.repository"],
-    transactionManagerRef = "neo4jTransactionManager"
-)
 class TransactionManagerConfig {
 
     @Primary
@@ -25,10 +21,4 @@ class TransactionManagerConfig {
     ): JpaTransactionManager {
         return JpaTransactionManager(entityManagerFactory)
     }
-
-    @Bean
-    fun neo4jTransactionManager(driver: Driver): Neo4jTransactionManager {
-        return Neo4jTransactionManager(driver)
-    }
-
 }

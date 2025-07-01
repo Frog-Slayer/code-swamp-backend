@@ -1,8 +1,10 @@
 spring:
   config:
-    import: 'classpath:infra-kafka-application.yml'
+    import:
+     - classpath:kafka-dev.yml
+     - classpath:application-secret.yml
   r2dbc:
-    url: r2dbc:postgresql://localhost:5433/mydb
+    url: r2dbc:postgresql://localhost:5433/mydb?schema=article
     username: spring
     password: boot
 
@@ -13,6 +15,7 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
     enabled: true
+    default-schema: article
 
   data:
     redis:
@@ -24,6 +27,7 @@ spring:
     authentication:
       username: neo4j
       password: codeswamp
+
 
 logging:
   level:

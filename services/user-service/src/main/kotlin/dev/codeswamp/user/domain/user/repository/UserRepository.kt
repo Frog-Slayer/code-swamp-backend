@@ -5,8 +5,9 @@ import dev.codeswamp.user.domain.user.model.User
 import dev.codeswamp.user.domain.user.model.Username
 
 interface UserRepository {
-    fun save(user: User): User
-    fun findById(id: Long): User?
-    fun findByUsername(username: Username): User?
-    fun findByNickname(nickname: Nickname): User?
+    suspend fun insert(user: User): User
+    suspend fun save(user: User): User
+    suspend fun findById(id: Long): User?
+    suspend fun findByUsername(username: Username): User?
+    suspend fun findByNickname(nickname: Nickname): User?
 }

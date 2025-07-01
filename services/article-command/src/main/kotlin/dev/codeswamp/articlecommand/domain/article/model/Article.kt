@@ -27,10 +27,10 @@ data class Article private constructor(
     val createdAt: Instant,
 
     /**
-     * hasBeenPublished: 한 번 publish된 이후에는 true를 유지.
+     * isPublished: 한 번 publish된 이후에는 true를 유지.
      * Draft 상태에서는 false, publish 후에는 변경 금지.
      */
-    val hasBeenPublished: Boolean = false,//한번 publish된 이후에는 true를 유지
+    val isPublished: Boolean = false,//한번 publish된 이후에는 true를 유지
 
     /**
      * metadata: 가변 메타 데이터. 변경은 버전 관리에 포함되지 않는다.
@@ -71,7 +71,7 @@ data class Article private constructor(
             id = id,
             authorId = authorId,
             createdAt = createdAt.truncatedTo(ChronoUnit.MILLIS),
-            hasBeenPublished = isPublished,
+            isPublished = isPublished,
             metadata = metadata,
             versionTree = VersionTree.of(versionList.associateBy { it.id })
         )
@@ -116,6 +116,8 @@ data class Article private constructor(
         return articleWithUpdatedVersionTree to newVersion
     }
 
+    fun getVersion(versionId: Long) : Version = versionTree.get(versionId)
+
     fun restoreFullContent(versionId: Long, diffProcessor: DiffProcessor) : String {
         fun String.applyDiff(diff: String) : String = diffProcessor.applyDiff(this, diff)
 
@@ -126,23 +128,38 @@ data class Article private constructor(
 
     fun publish( versionId: Long, fullContent: String ): Article {
         if (metadata.slug == null) {
-            throw InvalidArticleStateException("Cannot draft article", "Published article should have slug")
+            throw InvalidArticleStateException("Cannot publish article", "Slug is needed for publishing")
+        }
+
+        val toPublish = versionTree.get(versionId)
+
+        if (toPublish.title == null) {
+            throw InvalidArticleStateException("Cannot publish article", "Title is needed for publishing")
         }
 
         return this.copy(
-            hasBeenPublished = true,
+            isPublished = true,
             versionTree = versionTree.publish(versionId)
         ).withEvent(
             ArticlePublishedEvent(
                 articleId = id,
                 versionId = versionId,
+                authorId = authorId,
+                createdAt = createdAt,
+                updatedAt = toPublish.createdAt,
+                folderId = metadata.folderId,
+                summary = metadata.summary,
+                thumbnailUrl = metadata.thumbnailUrl,
+                isPublic = metadata.isPublic,
+                slug = metadata.slug.value,
+                title = toPublish.title.value,
                 fullContent = fullContent,
             )
         )
     }
 
     fun draft( versionId : Long ): Article {
-        if (hasBeenPublished && metadata.slug == null) {
+        if (isPublished && metadata.slug == null) {
             throw InvalidArticleStateException("Cannot draft article", "Published article should have slug")
         }
 

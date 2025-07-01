@@ -1,18 +1,34 @@
 package dev.codeswamp.articlecommand.domain.article.event
 
+import dev.codeswamp.core.common.EventType
 import dev.codeswamp.core.domain.DomainEvent
+import java.time.Instant
 
 /**
- * Domain Event: ArticlePublishedEvent
  * - 특정 Article의 Version이 'PUBLISHED' 상태로 전이될 떄 발행됨
- * - 1) 이전 버전 및 이전 발행본을 ARCHIVED 상태로 전이
- * - 2) Read model을 갱신
+ * - 발행 시점 해당 버전의 Snapshot
+ * - 1) Read model을 갱신
+ * - 2) Search Engine 인덱싱
  * - 3) TODO: 이후 알림 발송 서비스가 만들어지면 구독자에게 알림을 보냄
  */
+@EventType("article.published")
 data class ArticlePublishedEvent(
     val articleId: Long,
+    val authorId: Long,
     val versionId: Long,
-    val fullContent: String,
+
+    val createdAt: Instant,
+    val updatedAt: Instant,
+
+    val folderId: Long,
+
+    val summary: String,
+    val thumbnailUrl: String? = null,
+    val isPublic: Boolean,
+
+    val slug: String,
+    val title: String,
+    val fullContent: String
 ) : DomainEvent
 
 

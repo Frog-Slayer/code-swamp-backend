@@ -9,7 +9,6 @@ data class VersionTree private constructor(
     val versions: Map<Long, Version>
 ) {
     companion object {
-        // 새 버전 생성하는 것 필요(Version만 들어옴)
         fun createWithInitialVersion(initialVersion: Version) : VersionTree {
             if (initialVersion.parentId != null) throw IllegalStateException("VersionTree can only be created after initial version")
             return VersionTree(mapOf(initialVersion.id to initialVersion))

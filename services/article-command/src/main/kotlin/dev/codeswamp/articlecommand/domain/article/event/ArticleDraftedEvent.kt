@@ -1,5 +1,6 @@
 package dev.codeswamp.articlecommand.domain.article.event
 
+import dev.codeswamp.core.common.EventType
 import dev.codeswamp.core.domain.DomainEvent
 
 /**
@@ -8,6 +9,7 @@ import dev.codeswamp.core.domain.DomainEvent
  * - 이전 버전이 PUBLISHED가 아니라면 ARCHIVED 상태로 전이
  */
 
+@EventType("article.drafted")
 data class ArticleDraftedEvent(
     val articleId: Long,
     val versionId: Long,

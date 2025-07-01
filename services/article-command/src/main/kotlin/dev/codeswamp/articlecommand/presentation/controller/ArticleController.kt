@@ -2,7 +2,7 @@ package dev.codeswamp.articlecommand.presentation.controller
 
 import dev.codeswamp.articlecommand.application.usecase.command.article.ArticleCommandUseCaseFacade
 import dev.codeswamp.articlecommand.application.usecase.query.article.ArticleQueryUseCaseFacade
-import dev.codeswamp.articlecommand.application.usecase.query.article.readversionedarticle.GetVersionedArticleQuery
+import dev.codeswamp.articlecommand.application.usecase.query.article.versionedarticle.GetVersionedArticleQuery
 import dev.codeswamp.articlecommand.presentation.dto.request.article.DraftRequest
 import dev.codeswamp.articlecommand.presentation.dto.request.article.DraftUpdateRequest
 import dev.codeswamp.articlecommand.presentation.dto.request.article.PublishRequest

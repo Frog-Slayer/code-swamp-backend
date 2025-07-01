@@ -3,9 +3,6 @@ spring:
     name: article-command
   profiles:
     active: dev
-  servlet:
-    multipart:
-      max-file-size: 5MB
 
 server:
   forward-headers-strategy: framework
