@@ -3,8 +3,6 @@ spring:
     name: codeswamp
   profiles:
     active: dev
-  config:
-    import: application-secret.yml
 
 server:
   forward-headers-strategy: framework

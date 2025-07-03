@@ -27,6 +27,7 @@ class JwtGenerator(
         val value = Jwts.builder()
             .subject(user.email)
             .claim("userId", user.id.toString())
+            .claim( "role", user.roles)
             .issuedAt(Date.from(now))
             .expiration(Date.from(now.plusSeconds(accessTokenExpiration)))
             .signWith(secretKey)

@@ -1,6 +1,7 @@
 package dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity
 
 import dev.codeswamp.articlecommand.domain.article.model.Version
+import dev.codeswamp.articlecommand.domain.article.model.VersionState
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
@@ -27,7 +28,7 @@ data class VersionEntity(
     val createdAt: Instant,
 
     @Column("state")
-    var state: VersionStateJpa,
+    var state: String,
 ) {
     companion object {
         fun from(version: Version) = VersionEntity(
@@ -36,7 +37,7 @@ data class VersionEntity(
             parentId = version.parentId,
             diff = version.diff,
             createdAt = version.createdAt,
-            state = VersionStateJpa.fromDomain(version.state),
+            state = version.state.name,
             title = version.title?.value
         )
     }
@@ -48,7 +49,7 @@ data class VersionEntity(
             parentId = parentId,
             diff = diff,
             createdAt = createdAt,
-            state = state.toDomain(),
+            state = VersionState.valueOf(state),
             title = title
         )
     }
