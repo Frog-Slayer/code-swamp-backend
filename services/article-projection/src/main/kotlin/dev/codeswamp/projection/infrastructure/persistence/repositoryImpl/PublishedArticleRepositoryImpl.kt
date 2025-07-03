@@ -29,4 +29,8 @@ class PublishedArticleRepositoryImpl(
             content = article.content
         ).toDomain()
     }
+
+    override suspend fun deleteByArticleId(articleId: Long) {
+       publishedArticleR2dbcRepository.deleteById(articleId)
+    }
 }
