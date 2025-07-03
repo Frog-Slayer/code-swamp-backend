@@ -19,7 +19,7 @@ class TokenAuthenticationManager(
             ?: return Mono.error(AuthenticationServiceException("Invalid principal"))
 
         return mono {
-            val validatedAccessToken = authApplication.validateAccessToken(accessToken)//비동기
+            val validatedAccessToken = authApplication.validateAccessToken(accessToken)
             val userDetails = CustomUserDetails(validatedAccessToken.authUser)
             AuthenticationToken.authenticated(userDetails, null, userDetails.authorities)
         }

@@ -10,6 +10,7 @@ import dev.codeswamp.auth.infrastructure.security.oauth2.factory.UserInfoFactory
 import dev.codeswamp.auth.infrastructure.web.HttpTokenAccessor
 import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactor.mono
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.security.core.Authentication
@@ -27,6 +28,7 @@ import java.net.URI
 
 @Component
 class OAuth2LoginSuccessHandler(
+    @Value("\${frontend.url}") private val frontendUrl: String,
     private val userProfileFetcher: UserProfileFetcher,
     private val userInfoFactory: UserInfoFactory,
     private val authApplicationService: AuthApplicationService,
@@ -35,7 +37,7 @@ class OAuth2LoginSuccessHandler(
     private val tokenAccessor: HttpTokenAccessor
 ) : ServerAuthenticationSuccessHandler {
 
-    val frontendCallbackUrl: String = "http://localhost:3000/auth/callback"
+    val frontendCallbackUrl: String = "$frontendUrl/auth/callback"
 
     override fun onAuthenticationSuccess(
         exchange: WebFilterExchange,
