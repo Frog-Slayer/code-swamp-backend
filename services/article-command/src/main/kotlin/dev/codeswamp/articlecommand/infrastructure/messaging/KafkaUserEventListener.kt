@@ -1,4 +1,4 @@
-package dev.codeswamp.articlecommand.domain.messaging
+package dev.codeswamp.articlecommand.infrastructure.messaging
 
 import dev.codeswamp.core.common.event.BusinessEvent
 import dev.codeswamp.core.infrastructure.messaging.EventTranslator

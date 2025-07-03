@@ -10,13 +10,12 @@ import java.time.Instant
 
 interface PublishedArticleR2dbcRepository : CoroutineCrudRepository<PublishedArticleEntity, Long> {
 
-    @Modifying
     @Query("""
-        INSERT INTO published_article (id, author_id, folder_id, created_at, updated_at, summary, thumbnail, is_public, slug, title, content)
+        INSERT INTO published_articles (id, author_id, folder_id, created_at, updated_at, summary, thumbnail, is_public, slug, title, content)
         VALUES (:id, :author_id, :folder_id, :created_at, :updated_at, :summary, :thumbnail, :is_public, :slug, :title, :content)
         ON CONFLICT (id)
         DO UPDATE SET
-            updated_at = :updatedAt,
+            updated_at = :updated_at,
             summary = :summary,
             thumbnail = :thumbnail,
             is_public = :is_public,

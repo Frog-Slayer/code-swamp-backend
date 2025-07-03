@@ -7,6 +7,7 @@ import dev.codeswamp.projection.application.readmodel.repository.PublishedArticl
 import dev.codeswamp.core.application.event.eventbus.EventHandler
 import dev.codeswamp.core.common.event.Event
 import dev.codeswamp.framework.application.outbox.EventRecorder
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Component
 import org.springframework.transaction.annotation.Transactional
 
@@ -16,16 +17,30 @@ class ArticlePublishedEventHandler(
     private val eventRecorder: EventRecorder,
 ): EventHandler<ArticlePublishedEvent> {
     override fun canHandle(event: Event): Boolean = event is ArticlePublishedEvent
+    private val logger = LoggerFactory.getLogger(ArticlePublishedEventHandler::class.java)
+
 
     @Transactional
     override suspend fun handle(event: ArticlePublishedEvent) {
+        logger.info("Received article published event: $event")
         val toPublish = event.toArticle()
 
-        publishedArticleRepository.save(toPublish)
+        try {
+            publishedArticleRepository.save(toPublish)
+        } catch (e: Exception) {
+            logger.error("Failed to publish article", e)
+            throw e
+        }
 
-        eventRecorder.record(PublishedArticleSavedEvent(
+        try {
+            eventRecorder.record(PublishedArticleSavedEvent(
             event.articleId,
         ))
+        } catch (e: Exception) {
+            logger.error("Failed to publish article", e)
+            throw e
+        }
+
     }
 
     fun ArticlePublishedEvent.toArticle() = PublishedArticle(
