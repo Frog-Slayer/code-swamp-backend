@@ -5,6 +5,7 @@ import dev.codeswamp.articlecommand.domain.article.repository.VersionRepository
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity.VersionEntity
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.VersionR2dbcRepository
 import kotlinx.coroutines.reactive.awaitFirstOrNull
+import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.stereotype.Repository
 import reactor.core.publisher.Flux
@@ -16,68 +17,67 @@ class VersionRepositoryImpl(
 ) : VersionRepository {
 
     override suspend fun insertVersions(versions: List<Version>) {
-        databaseClient.inConnectionMany { connection ->
-            val statement = connection.createStatement("""
-                    INSERT INTO version (id, article_id, parent_id, title, diff, created_at, state)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7)
-            """)
+        if (versions.isEmpty()) return
 
-            versions.forEach {  version ->
-                val entity = VersionEntity.from(version)
-                statement
-                    .bind(0, entity.id)
-                    .bind(1, entity.articleId)
-                    .bind(4, entity.diff)
-                    .bind(5, entity.createdAt)
-                    .bind(6, entity.state)
-                    .apply{
-                        if ( entity.parentId != null) bind(2, entity.parentId)
-                        else bindNull(2, Long::class.java)
+        val entities = versions.map(VersionEntity::from)
 
-                        if ( entity.title != null) bind(3, entity.title)
-                        else bindNull(3,String::class.java)
-                    }
-                    .add()
-            }
+        val ids = entities.map { it.id }.toTypedArray()
+        val articleIds = entities.map { it.articleId }.toTypedArray()
+        val parentIds = entities.map { it.parentId }.toTypedArray()
+        val titles = entities.map { it.title }.toTypedArray()
+        val diffs = entities.map { it.diff }.toTypedArray()
+        val createdAts = entities.map { it.createdAt }.toTypedArray()
+        val states = entities.map { it.state }.toTypedArray()
 
-            Flux.from(statement.execute())
-        }.awaitFirstOrNull()
+        databaseClient.sql("""
+            INSERT INTO version (id, article_id, parent_id, title, diff, created_at, state)
+            SELECT * FROM UNNEST( 
+                :ids::bigint[],
+                :articleIds::bigint[],
+                :parentIds::bigint[],
+                :titles::text[],
+                :diffs::text[],
+                :createdAts::timestamp[],
+                :states::text[]
+            )
+        """)
+            .bind("ids", ids)
+            .bind("articleIds", articleIds)
+            .bind("parentIds", parentIds)
+            .bind("titles", titles)
+            .bind("diffs",diffs)
+            .bind("createdAts", createdAts)
+            .bind("states", states)
+            .fetch()
+            .rowsUpdated()
+            .awaitSingle()
     }
 
     override suspend fun updateVersions(versions: List<Version>) {
-        databaseClient.inConnectionMany { connection ->
-            val statement = connection.createStatement("""
-                    UPDATE version
-                    SET 
-                        article_id = $2,
-                        parent_id = $3,
-                        title = $4,
-                        diff = $5,
-                        created_at = $6,
-                        state = $7,
-                    WHERE id = $1
-            """)
+        if (versions.isEmpty()) return
 
-            versions.forEach {  version ->
-                val entity = VersionEntity.from(version)
-                statement
-                    .bind(0, entity.id)
-                    .bind(1, entity.articleId)
-                    .bind(4, entity.diff)
-                    .bind(5, entity.createdAt)
-                    .bind(6, entity.state)
-                    .apply{
-                        if ( entity.parentId != null) bind(2, entity.parentId)
-                        else bindNull(2, Long::class.java)
+        val entities = versions.map(VersionEntity::from)
 
-                        if ( entity.title != null) bind(3, entity.title)
-                        else bindNull(3,String::class.java)
-                    }
-                    .add()
-            }
+        val ids = entities.map { it.id }.toTypedArray()
+        val states = entities.map { it.state }.toTypedArray()
 
-            Flux.from(statement.execute())
-        }.awaitFirstOrNull()
+        databaseClient.sql("""
+            UPDATE version v
+            SET 
+                state = u.state
+            FROM ( 
+                SELECT * FROM UNNEST( 
+                    :ids::bigint[],
+                    :states::text[]
+                ) 
+            ) AS u(id, state)
+            WHERE v.id = u.id
+        """)
+            .bind("ids", ids)
+            .bind("states", states)
+            .fetch()
+            .rowsUpdated()
+            .awaitSingle()
     }
 
     override suspend fun findAllByArticleId(articleId: Long): List<Version> {

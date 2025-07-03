@@ -11,7 +11,9 @@ import dev.codeswamp.articlecommand.presentation.dto.response.SimpleResponse
 import dev.codeswamp.articlecommand.presentation.dto.response.article.ArticleReadResponse
 import dev.codeswamp.articlecommand.presentation.dto.response.article.DraftResponse
 import dev.codeswamp.articlecommand.presentation.dto.response.article.PublishResponse
+import dev.codeswamp.authcommon.security.CustomUserDetails
 import org.slf4j.LoggerFactory
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
@@ -26,11 +28,12 @@ class ArticleController(
 
     @GetMapping("/{articleId}/versions/{versionId}")
     suspend fun getVersionedArticle(
-        @RequestAttribute userId: Long,
+        @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable articleId: Long,
         @PathVariable versionId: Long
     )
     : ArticleReadResponse {
+        val userId = requireNotNull(user.getId())
         return ArticleReadResponse.Companion.from(
             queryFacade.getVersionedArticle(
                 GetVersionedArticleQuery(
@@ -44,49 +47,53 @@ class ArticleController(
 
     @GetMapping("/drafts")
     suspend fun getDrafts(
-        @RequestAttribute userId: Long,
+        @AuthenticationPrincipal user: CustomUserDetails,
     ){
         TODO("not implemented")
     }
 
     @PostMapping("/publish")
     suspend fun publishNew(
-        @RequestAttribute userId: Long,
+        @AuthenticationPrincipal user: CustomUserDetails,
         @RequestBody publishRequest: PublishRequest,
     ): PublishResponse {
+        val userId = user.getId()
         return PublishResponse.Companion.from(commandFacade.createPublish(publishRequest.toCommand(userId)))
     }
 
     @PostMapping("/{articleId}/publish")
     suspend fun publish(
-        @RequestAttribute userId: Long,
+        @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable articleId: Long,
         @RequestBody publishRequest: PublishUpdateRequest
     ): PublishResponse {
+        val userId = user.getId()
         return PublishResponse.Companion.from(commandFacade.updatePublish(publishRequest.toCommand(userId, articleId)))
     }
 
     @PostMapping("/draft")
     suspend fun draftNew(
-        @RequestAttribute userId: Long,
+        @AuthenticationPrincipal user: CustomUserDetails,
         @RequestBody draftArticleRequest: DraftRequest
     ): DraftResponse {
+        val userId = user.getId()
         return DraftResponse.Companion.from(commandFacade.createDraft(draftArticleRequest.toCommand(userId)))
     }
 
     @PatchMapping("/{articleId}/versions/{versionId}/draft")
     suspend fun draft(
-        @RequestAttribute userId: Long,
+        @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable articleId: Long,
         @PathVariable versionId: Long,
         @RequestBody draftArticleRequest: DraftUpdateRequest
     ): DraftResponse {
+        val userId = user.getId()
         return DraftResponse.Companion.from(commandFacade.updateDraft(draftArticleRequest.toCommand(userId, articleId, versionId)))
     }
 
     @PatchMapping("/{articleId}/versions/{versionId}/archive")
     suspend fun publishNew(
-        @RequestAttribute userId: Long,
+        @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable articleId: Long,
         @PathVariable versionId: Long,
     ): SimpleResponse {
@@ -96,7 +103,7 @@ class ArticleController(
 
     @DeleteMapping("/{articleId}")
     suspend fun delete(
-        @RequestAttribute userId: Long,
+        @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable articleId: Long,
     ) : SimpleResponse {
 
