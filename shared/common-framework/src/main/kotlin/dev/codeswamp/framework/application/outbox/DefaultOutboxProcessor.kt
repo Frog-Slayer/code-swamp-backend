@@ -32,15 +32,15 @@ class DefaultOutboxProcessor(
     @PostConstruct
     override fun startProcessing() {
         scope.launch {
-            try {
-                while (isActive) {
+            while (isActive) {
+                try {
                     processOutbox()
                     delay(5000)
+                } catch (e: CancellationException) {
+                    logger.info("OutboxProcessor coroutine cancelled", e)
+                } catch (e: Exception) {
+                    logger.error("Unexpected exception in OutboxProcessor", e)
                 }
-            } catch (e: CancellationException) {
-                logger.info("OutboxProcessor coroutine cancelled", e)
-            } catch (e: Exception) {
-                logger.error("Unexpected exception in OutboxProcessor", e)
             }
         }
     }

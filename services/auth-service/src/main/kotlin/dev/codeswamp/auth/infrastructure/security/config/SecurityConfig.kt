@@ -10,6 +10,7 @@ import dev.codeswamp.auth.infrastructure.security.oauth2.handler.OAuth2LoginSucc
 import dev.codeswamp.auth.infrastructure.security.provider.TokenAuthenticationManager
 import dev.codeswamp.auth.infrastructure.web.HttpTokenAccessor
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
@@ -26,6 +27,7 @@ import reactor.core.publisher.Mono
 @Configuration
 @EnableWebFluxSecurity
 class SecurityConfig(
+    @Value("\${frontend.url}") private val frontendUrl: String,
     private val objectMapper: ObjectMapper,
     private val oAuth2LoginSuccessHandler: OAuth2LoginSuccessHandler,
     private val oAuth2LoginFailureHandler: OAuth2LoginFailureHandler,
@@ -37,8 +39,8 @@ class SecurityConfig(
 
     @Bean
     fun skipPathList(): List<String> = listOf(
-        "/auth/refresh",
-        "/auth/temp-login",
+        "/refresh",
+        "/temp-login",
         "/oauth2/authorization/**",
         "/login/**",
         "/error/**",
@@ -57,7 +59,7 @@ class SecurityConfig(
             .cors {
                 it.configurationSource { exchange ->
                     CorsConfiguration().apply {
-                        allowedOrigins = listOf("http://localhost:3000")
+                        allowedOrigins = listOf(frontendUrl)
                         allowedHeaders = listOf("*")
                         allowedMethods = listOf("*")
                         exposedHeaders = listOf("Authorization")

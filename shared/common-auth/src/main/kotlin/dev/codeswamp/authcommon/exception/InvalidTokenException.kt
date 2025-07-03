@@ -1,5 +1,7 @@
 package dev.codeswamp.authcommon.exception
 
+import org.springframework.security.core.AuthenticationException
+
 class InvalidTokenException(
     message: String,
-) : RuntimeException("Invalid token: $message")
+) : AuthenticationException("Invalid token: $message")

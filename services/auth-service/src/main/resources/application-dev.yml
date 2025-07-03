@@ -33,3 +33,6 @@ grpc:
     user-service:
       address: static://localhost:9091
       negotiation-type: plaintext
+
+frontend:
+  url: "http://localhost:3000"

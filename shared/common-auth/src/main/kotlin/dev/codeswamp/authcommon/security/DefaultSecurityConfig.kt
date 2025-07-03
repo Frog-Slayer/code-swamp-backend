@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder
 import org.springframework.security.config.web.server.ServerHttpSecurity
 import org.springframework.security.web.server.SecurityWebFilterChain
+import org.springframework.security.web.server.ServerAuthenticationEntryPoint
 import org.springframework.security.web.server.header.XFrameOptionsServerHttpHeadersWriter
 import org.springframework.web.cors.CorsConfiguration
 import reactor.core.publisher.Mono
@@ -44,6 +45,7 @@ class DefaultSecurityConfig(
     fun httpFilterChain(
         http: ServerHttpSecurity,
         tokenAuthenticationManager: ReactiveAuthenticationManager,
+        authenticationEntryPoint: ServerAuthenticationEntryPoint,
     ): SecurityWebFilterChain {
         val skipPathList = skipPathProvider.skipPaths()
         return http
@@ -71,21 +73,28 @@ class DefaultSecurityConfig(
                     .anyExchange().authenticated()
             }
             .exceptionHandling {
-                it.authenticationEntryPoint { exchange, authException ->
-                    val response = exchange.response
-                    response.statusCode = HttpStatus.UNAUTHORIZED
-                    response.writeWith(
-                        Mono.fromSupplier {
-                            val errorResponseAsJson = objectMapper.writeValueAsBytes("Unauthorized")
-                            response.bufferFactory().wrap(errorResponseAsJson)
-                        }
-                    )
-                }
+                it.authenticationEntryPoint(authenticationEntryPoint)
             }
             .addFilterBefore(
-                TokenAuthenticationFilter(tokenAuthenticationManager),
+                TokenAuthenticationFilter(tokenAuthenticationManager, authenticationEntryPoint),
                 SecurityWebFiltersOrder.LOGOUT
             )
             .build()
+    }
+
+
+    @Bean
+    fun authenticationEntryPoint(): ServerAuthenticationEntryPoint {
+        return ServerAuthenticationEntryPoint { exchange, authException ->
+            val response = exchange.response
+            response.statusCode = HttpStatus.UNAUTHORIZED
+            logger.info("Authentication failed with: {}", response)
+            response.writeWith(
+                Mono.fromSupplier {
+                    val errorResponseAsJson = objectMapper.writeValueAsBytes("Unauthorized")
+                    response.bufferFactory().wrap(errorResponseAsJson)
+                }
+            )
+        }
     }
 }

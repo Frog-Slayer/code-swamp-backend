@@ -20,14 +20,13 @@ class ArticleController(
 
     @GetMapping("/{articleId}")
     suspend fun getArticleWithId(
-        @AuthenticationPrincipal user: CustomUserDetails,
+        @AuthenticationPrincipal user: CustomUserDetails?,
         @PathVariable articleId: Long
-    )
-            : ArticleReadResponse {
+    ): ArticleReadResponse {
         return ArticleReadResponse.Companion.from(
             queryFacade.getPublishedArticleById(
                 query = GetPublishedArticleByIdQuery(
-                    userId = user.getId(),
+                    userId = user?.getId(),
                     articleId = articleId
                 )
             )
@@ -36,7 +35,7 @@ class ArticleController(
 
     @GetMapping("/@{username}/**")
    suspend fun getArticleByPathAndSlug(
-        @AuthenticationPrincipal user: CustomUserDetails,
+        @AuthenticationPrincipal user: CustomUserDetails?,
         @PathVariable username: String,
         request: ServerHttpRequest,
     ): ArticleReadResponse {
@@ -48,7 +47,7 @@ class ArticleController(
         return ArticleReadResponse.Companion.from(
             queryFacade.getPublishedArticleBySlug(
                 GetPublishedArticleBySlugQuery(
-                    userId = user.getId(),
+                    userId = user?.getId(),
                     path = fullPath
                 )
             )
