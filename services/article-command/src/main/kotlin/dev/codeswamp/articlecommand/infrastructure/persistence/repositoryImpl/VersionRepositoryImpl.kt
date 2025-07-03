@@ -1,14 +1,13 @@
 package dev.codeswamp.articlecommand.infrastructure.persistence.repositoryImpl
 
 import dev.codeswamp.articlecommand.domain.article.model.Version
+import dev.codeswamp.articlecommand.domain.article.model.VersionState
 import dev.codeswamp.articlecommand.domain.article.repository.VersionRepository
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.entity.VersionEntity
 import dev.codeswamp.articlecommand.infrastructure.persistence.r2dbc.repository.VersionR2dbcRepository
-import kotlinx.coroutines.reactive.awaitFirstOrNull
 import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.stereotype.Repository
-import reactor.core.publisher.Flux
 
 @Repository
 class VersionRepositoryImpl(
@@ -22,6 +21,7 @@ class VersionRepositoryImpl(
         val entities = versions.map(VersionEntity::from)
 
         val ids = entities.map { it.id }.toTypedArray()
+        val ownerIds = entities.map { it.ownerId }.toTypedArray()
         val articleIds = entities.map { it.articleId }.toTypedArray()
         val parentIds = entities.map { it.parentId }.toTypedArray()
         val titles = entities.map { it.title }.toTypedArray()
@@ -30,9 +30,10 @@ class VersionRepositoryImpl(
         val states = entities.map { it.state }.toTypedArray()
 
         databaseClient.sql("""
-            INSERT INTO version (id, article_id, parent_id, title, diff, created_at, state)
+            INSERT INTO version (id, owner_id, article_id, parent_id, title, diff, created_at, state)
             SELECT * FROM UNNEST( 
                 :ids::bigint[],
+                :ownerIds::bigint[],
                 :articleIds::bigint[],
                 :parentIds::bigint[],
                 :titles::text[],
@@ -42,6 +43,7 @@ class VersionRepositoryImpl(
             )
         """)
             .bind("ids", ids)
+            .bind("ownerIds", ownerIds)
             .bind("articleIds", articleIds)
             .bind("parentIds", parentIds)
             .bind("titles", titles)
@@ -94,5 +96,12 @@ class VersionRepositoryImpl(
 
     override suspend fun deleteByArticleId(articleId: Long) {
         versionR2dbcRepository.deleteAllByArticleId(articleId)
+    }
+
+    override suspend fun findByUserIdAndState (
+        authorId: Long,
+        state: VersionState
+    ): List<Version> {
+        return versionR2dbcRepository.findAllByOwnerIdAndState(authorId, state.name).map { it -> it.toDomain() }
     }
 }

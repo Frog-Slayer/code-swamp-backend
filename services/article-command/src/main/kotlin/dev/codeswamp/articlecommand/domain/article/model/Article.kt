@@ -46,6 +46,7 @@ data class Article private constructor(
 
             val initialVersion = Version.create(
                 id = command.generateId(),
+                ownerId = command.authorId,
                 articleId = articleId,
                 parentId = null,
                 title = command.title,
@@ -100,6 +101,7 @@ data class Article private constructor(
         val newVersionId = command.generateId()
         val newVersion = Version.create(
             id = newVersionId,
+            ownerId = authorId,
             title = command.title,
             diff = command.diff,
             createdAt = command.createdAt,

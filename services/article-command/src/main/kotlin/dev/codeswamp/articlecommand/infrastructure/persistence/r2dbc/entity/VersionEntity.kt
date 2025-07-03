@@ -12,6 +12,9 @@ data class VersionEntity(
     @Id//도메인에서 생성
     val id: Long,
 
+    @Column("owner_id")
+    val ownerId: Long,
+
     @Column("article_id")
     val articleId: Long,
 
@@ -33,6 +36,7 @@ data class VersionEntity(
     companion object {
         fun from(version: Version) = VersionEntity(
             id = version.id,
+            ownerId = version.ownerId,
             articleId = version.articleId,
             parentId = version.parentId,
             diff = version.diff,
@@ -45,6 +49,7 @@ data class VersionEntity(
     fun toDomain(): Version {
         return Version.Companion.from(
             id = id,
+            ownerId = ownerId,
             articleId = articleId,
             parentId = parentId,
             diff = diff,

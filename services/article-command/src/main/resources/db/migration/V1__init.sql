@@ -30,6 +30,7 @@ CREATE TABLE article_metadata (
 CREATE TABLE version (
       id BIGINT PRIMARY KEY,
       article_id BIGINT NOT NULL,
+      owner_id BIGINT NOT NULL,
       parent_id BIGINT,
       title TEXT,
       diff TEXT NOT NULL,
