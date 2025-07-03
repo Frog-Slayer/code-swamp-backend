@@ -6,6 +6,8 @@ import java.time.temporal.ChronoUnit
 
 data class Version private constructor(
     val id: Long,
+
+    val ownerId: Long,
     val articleId: Long,
     val parentId: Long?,
 
@@ -19,6 +21,7 @@ data class Version private constructor(
     companion object {
         fun create(
             id: Long,
+            ownerId: Long,
             articleId: Long,
             parentId: Long?,
             title: String?,
@@ -26,6 +29,7 @@ data class Version private constructor(
             createdAt: Instant,
         ) = Version(
             id = id,
+            ownerId = ownerId,
             state = VersionState.NEW,
             articleId = articleId,
             parentId = parentId,
@@ -36,6 +40,7 @@ data class Version private constructor(
 
         fun from(
             id: Long,
+            ownerId: Long,
             state: VersionState,
             articleId: Long,
             parentId: Long?,
@@ -44,6 +49,7 @@ data class Version private constructor(
             createdAt: Instant,
         ) = Version(
             id = id,
+            ownerId = ownerId,
             state = state,
             articleId = articleId,
             parentId = parentId,

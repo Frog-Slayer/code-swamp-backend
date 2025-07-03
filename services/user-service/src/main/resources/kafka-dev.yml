@@ -17,7 +17,7 @@ spring:
       properties:
         spring:
           json:
-            trusted.packages: dev.codeswamp.infrakafka.*
+            trusted.packages: dev.codeswamp.infrakafka
             use.type.headers: true
           deserializer:
             value.delegate.class: org.springframework.kafka.support.serializer.JsonDeserializer
