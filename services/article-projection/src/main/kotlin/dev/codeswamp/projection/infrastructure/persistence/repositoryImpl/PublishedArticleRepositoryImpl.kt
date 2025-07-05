@@ -17,6 +17,7 @@ class PublishedArticleRepositoryImpl(
     override suspend fun save(article : PublishedArticle): PublishedArticle {
         return publishedArticleR2dbcRepository.upsert(
             id = article.id,
+            versionId =  article.versionId,
             authorId = article.authorId,
             folderId = article.folderId,
             createdAt = article.createdAt,

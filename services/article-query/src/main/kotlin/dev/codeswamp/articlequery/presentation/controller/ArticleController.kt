@@ -4,9 +4,10 @@ import dev.codeswamp.articlequery.application.usecase.query.article.ArticleQuery
 import dev.codeswamp.articlequery.application.usecase.query.article.list.recent.GetRecentArticlesQuery
 import dev.codeswamp.articlequery.application.usecase.query.article.read.byid.GetPublishedArticleByIdQuery
 import dev.codeswamp.articlequery.application.usecase.query.article.read.byslug.GetPublishedArticleBySlugQuery
-import dev.codeswamp.articlequery.presentation.dto.request.GetRecentArticlesRequest
+import dev.codeswamp.articlequery.application.usecase.query.article.status.CheckVersionExistsQuery
 import dev.codeswamp.articlequery.presentation.dto.response.article.ArticleCardResponseDto
 import dev.codeswamp.articlequery.presentation.dto.response.article.ArticleReadResponse
+import dev.codeswamp.articlequery.presentation.dto.response.article.CheckVersionExistsResponse
 import dev.codeswamp.authcommon.security.CustomUserDetails
 import org.slf4j.LoggerFactory
 import org.springframework.http.ResponseEntity
@@ -19,7 +20,8 @@ import java.time.Instant
 @RestController
 @RequestMapping("/articles")
 class ArticleController(
-    private val queryFacade: ArticleQueryUseCaseFacade
+    private val queryFacade: ArticleQueryUseCaseFacade,
+    private val articleQueryUseCaseFacade: ArticleQueryUseCaseFacade
 ) {
     private val logger = LoggerFactory.getLogger(ArticleController::class.java)
 
@@ -43,7 +45,7 @@ class ArticleController(
         @AuthenticationPrincipal user: CustomUserDetails?,
         @PathVariable username: String,
         request: ServerHttpRequest,
-    ): ArticleReadResponse {
+   ): ArticleReadResponse {
         val rawPath = request.uri.path.removePrefix("/articles/")
         val fullPath = URLDecoder.decode(rawPath, "UTF-8")
 
@@ -57,6 +59,18 @@ class ArticleController(
                 )
             )
         )
+   }
+
+   @GetMapping("/{articleId}/versions/{versionId}/status")
+   suspend fun checkVersionExists(
+        @PathVariable articleId: Long,
+        @PathVariable versionId: Long
+    ): ResponseEntity<CheckVersionExistsResponse> {
+       val result = articleQueryUseCaseFacade.checkVersionExists(CheckVersionExistsQuery(
+           articleId, versionId
+       ))
+
+       return ResponseEntity.ok(CheckVersionExistsResponse( result.fullPath))
     }
 
    @GetMapping("/recent")

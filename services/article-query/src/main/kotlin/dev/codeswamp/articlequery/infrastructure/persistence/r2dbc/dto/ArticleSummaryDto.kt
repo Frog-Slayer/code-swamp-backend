@@ -2,8 +2,9 @@ package dev.codeswamp.articlequery.infrastructure.persistence.r2dbc.dto
 
 import java.time.Instant
 
-data class ArticleListItemProjection(
+data class ArticleSummaryDto(
     val id: Long,
+    val versionId: Long,
     val authorId: Long,
     val folderId: Long,
     val createdAt: Instant,

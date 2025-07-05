@@ -11,6 +11,9 @@ data class PublishedArticleEntity(
     @Id
     val id: Long,
 
+    @Column("version_id")
+    val versionId: Long,
+
     @Column("author_id")
     val authorId: Long,
 
@@ -38,6 +41,7 @@ data class PublishedArticleEntity(
     companion object {
         fun from(publishedArticle: PublishedArticle) = PublishedArticleEntity(
             id = publishedArticle.id,
+            versionId = publishedArticle.versionId,
             authorId = publishedArticle.authorId,
             folderId = publishedArticle.folderId,
             createdAt = publishedArticle.createdAt,
@@ -53,6 +57,7 @@ data class PublishedArticleEntity(
 
     fun toDomain() = PublishedArticle.Companion.from(
         id = id,
+        versionId = versionId,
         authorId = authorId,
         folderId = folderId,
         createdAt = createdAt,

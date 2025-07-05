@@ -4,6 +4,7 @@ import java.time.Instant
 
 data class PublishedArticle (
     val id: Long,
+    val versionId: Long,
     val authorId: Long,
     val folderId: Long,
 

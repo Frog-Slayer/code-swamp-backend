@@ -1,7 +1,6 @@
 package dev.codeswamp.articlequery.infrastructure.persistence.r2dbc.repository
 
-import dev.codeswamp.articlequery.application.usecase.query.article.list.ArticleListItem
-import dev.codeswamp.articlequery.infrastructure.persistence.r2dbc.dto.ArticleListItemProjection
+import dev.codeswamp.articlequery.infrastructure.persistence.r2dbc.dto.ArticleSummaryDto
 import dev.codeswamp.articlequery.infrastructure.persistence.r2dbc.entity.PublishedArticleEntity
 import org.springframework.data.r2dbc.repository.Query
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
@@ -13,9 +12,12 @@ import java.time.Instant
 interface PublishedArticleR2dbcRepository : CoroutineCrudRepository<PublishedArticleEntity, Long> {
     suspend fun findByFolderIdAndSlug(folderId: Long, slug: String): PublishedArticleEntity?
 
+    suspend fun existsByIdAndVersionId(id: Long, versionId: Long): Boolean
+
     @Query("""
         SELECT  
             id,
+            version_id,
             author_id,
             folder_id,
             created_at,
@@ -36,5 +38,26 @@ interface PublishedArticleR2dbcRepository : CoroutineCrudRepository<PublishedArt
         @Param("createdAt") createdAt: Instant,
         @Param("articleId") articleId: Long,
         @Param("limit") limit: Int
-    ) : List<ArticleListItemProjection>
+    ) : List<ArticleSummaryDto>
+
+
+     @Query("""
+        SELECT  
+            id,
+            version_id,
+            author_id,
+            folder_id,
+            created_at,
+            updated_at,
+            summary,
+            thumbnail,
+            is_public,
+            slug,
+            title
+        FROM published_articles
+        WHERE id = :articleId
+    """)
+    suspend fun findArticleSummaryById(
+         @Param("articleId") id: Long
+    ): ArticleSummaryDto?
 }

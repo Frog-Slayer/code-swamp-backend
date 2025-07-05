@@ -4,6 +4,7 @@ import java.time.Instant
 
 data class ArticleSummary(
     val id: Long,
+    val versionId: Long,
     val authorId: Long,
     val folderId: Long,
     val createdAt: Instant,

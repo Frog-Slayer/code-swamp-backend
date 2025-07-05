@@ -11,10 +11,11 @@ import java.time.Instant
 interface PublishedArticleR2dbcRepository : CoroutineCrudRepository<PublishedArticleEntity, Long> {
 
     @Query("""
-        INSERT INTO published_articles (id, author_id, folder_id, created_at, updated_at, summary, thumbnail, is_public, slug, title, content)
-        VALUES (:id, :author_id, :folder_id, :created_at, :updated_at, :summary, :thumbnail, :is_public, :slug, :title, :content)
+        INSERT INTO published_articles (id, version_id, author_id, folder_id, created_at, updated_at, summary, thumbnail, is_public, slug, title, content)
+        VALUES (:id, :version_id, :author_id, :folder_id, :created_at, :updated_at, :summary, :thumbnail, :is_public, :slug, :title, :content)
         ON CONFLICT (id)
         DO UPDATE SET
+            version_id = :version_id,
             updated_at = :updated_at,
             summary = :summary,
             thumbnail = :thumbnail,
@@ -26,6 +27,7 @@ interface PublishedArticleR2dbcRepository : CoroutineCrudRepository<PublishedArt
     """)
     suspend fun upsert(
         @Param("id") id: Long,
+        @Param("version_id") versionId: Long,
         @Param("author_id") authorId: Long,
         @Param("folder_id") folderId: Long,
 
