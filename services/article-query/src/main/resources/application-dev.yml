@@ -27,6 +27,14 @@ meilisearch:
   url: http://localhost:7700
   api-key: Uyflv5mWWF3Apyp23PhvAPyFpVnJB6CC_coToMPFcrk
 
+grpc:
+  server:
+    port: 9095
+  client:
+    user-service:
+      address: static://localhost:9091
+      negotiation-type: plaintext
+
 logging:
   level:
     org.springframework.context: DEBUG

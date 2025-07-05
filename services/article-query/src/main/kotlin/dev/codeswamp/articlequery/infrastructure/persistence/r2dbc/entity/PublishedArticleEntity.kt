@@ -20,7 +20,7 @@ data class PublishedArticleEntity(
     @Column("created_at")
     val createdAt: Instant,
     @Column("updated_at")
-    val updateAt: Instant,
+    val updatedAt: Instant,
 
     val summary: String,
 
@@ -41,7 +41,7 @@ data class PublishedArticleEntity(
             authorId = publishedArticle.authorId,
             folderId = publishedArticle.folderId,
             createdAt = publishedArticle.createdAt,
-            updateAt = publishedArticle.updateAt,
+            updatedAt = publishedArticle.updatedAt,
             summary = publishedArticle.summary,
             thumbnail = publishedArticle.thumbnailUrl,
             isPublic = publishedArticle.isPublic,
@@ -56,7 +56,7 @@ data class PublishedArticleEntity(
         authorId = authorId,
         folderId = folderId,
         createdAt = createdAt,
-        updateAt = updateAt,
+        updatedAt = updatedAt,
         summary = summary,
         thumbnailUrl = thumbnail,
         isPublic = isPublic,

@@ -42,4 +42,6 @@ interface PublishedArticleR2dbcRepository : CoroutineCrudRepository<PublishedArt
     ) : PublishedArticleEntity
 
     override suspend fun findById(id: Long) : PublishedArticleEntity?
+
+    suspend fun deleteAllByFolderIdIsIn(folderIds: List<Long>)
 }

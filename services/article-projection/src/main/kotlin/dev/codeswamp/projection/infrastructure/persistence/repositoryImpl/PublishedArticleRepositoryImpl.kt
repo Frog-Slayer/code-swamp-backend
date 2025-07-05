@@ -33,4 +33,8 @@ class PublishedArticleRepositoryImpl(
     override suspend fun deleteByArticleId(articleId: Long) {
        publishedArticleR2dbcRepository.deleteById(articleId)
     }
+
+    override suspend fun deleteAllByFolderIds(folderIds: List<Long>) {
+        publishedArticleR2dbcRepository.deleteAllByFolderIdIsIn(folderIds)
+    }
 }

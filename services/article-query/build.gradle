@@ -1,5 +1,6 @@
 dependencies {
     implementation project(":shared:common-framework")
+    implementation project(":shared:common-grpc")
     implementation project(":shared:common-auth")
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -12,11 +13,15 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-reactor'
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
 
+    implementation 'io.grpc:grpc-netty-shaded:1.73.0'
+    implementation 'net.devh:grpc-spring-boot-starter:3.1.0.RELEASE'
+
     implementation 'org.flywaydb:flyway-core'
     implementation 'org.flywaydb:flyway-database-postgresql'
 
     implementation 'org.springframework.boot:spring-boot-starter-data-r2dbc'
     implementation 'org.postgresql:r2dbc-postgresql:1.0.7.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'com.h2database:h2'
 

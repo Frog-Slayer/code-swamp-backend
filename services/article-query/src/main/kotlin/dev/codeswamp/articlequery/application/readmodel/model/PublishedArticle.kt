@@ -9,7 +9,7 @@ data class PublishedArticle private constructor(
     val folderId: Long,
 
     val createdAt: Instant,
-    val updateAt: Instant,
+    val updatedAt: Instant,
 
     val summary: String,
     val thumbnailUrl: String? = null,
@@ -25,7 +25,7 @@ data class PublishedArticle private constructor(
             authorId: Long,
             folderId: Long,
             createdAt: Instant,
-            updateAt: Instant,
+            updatedAt: Instant,
             summary: String,
             thumbnailUrl: String?,
             isPublic: Boolean,
@@ -37,7 +37,7 @@ data class PublishedArticle private constructor(
             authorId = authorId,
             folderId = folderId,
             createdAt = createdAt,
-            updateAt = updateAt,
+            updatedAt = updatedAt,
             summary = summary,
             thumbnailUrl = thumbnailUrl,
             isPublic = isPublic,

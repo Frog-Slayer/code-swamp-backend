@@ -10,7 +10,9 @@ import dev.codeswamp.articlecommand.presentation.dto.request.folder.MoveFolderRe
 import dev.codeswamp.articlecommand.presentation.dto.request.folder.RenameFolderRequest
 import dev.codeswamp.articlecommand.presentation.dto.response.SimpleResponse
 import dev.codeswamp.articlecommand.presentation.dto.response.folder.CreateFolderResponse
+import dev.codeswamp.authcommon.security.CustomUserDetails
 import org.springframework.http.ResponseEntity
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 import java.net.URI
 
@@ -22,13 +24,13 @@ class FolderController(
 
     @PostMapping
     suspend fun create(
-        @RequestAttribute userId: Long,
+        @AuthenticationPrincipal user: CustomUserDetails,
         @RequestBody request: CreateFolderRequest
     ): ResponseEntity<CreateFolderResponse> {
 
         val createResult = folderCommandUseCaseFacade.create(
             CreateFolderCommand(
-                userId = requireNotNull(userId),
+                userId = requireNotNull(user.getId()),
                 name = request.name,
                 parentId = request.parentId
             )
@@ -41,14 +43,14 @@ class FolderController(
 
     @PatchMapping("/{folderId}/rename")
     suspend fun rename(
-        @RequestAttribute userId: Long,
+        @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable folderId: Long,
         @RequestBody request: RenameFolderRequest
     )
             : ResponseEntity<SimpleResponse> {
         folderCommandUseCaseFacade.rename(
             RenameFolderCommand(
-                userId = requireNotNull(userId),
+                userId = requireNotNull(user.getId()),
                 folderId = folderId,
                 newName = request.newName
             )
@@ -60,14 +62,14 @@ class FolderController(
 
     @PatchMapping("/{folderId}/move")
     suspend fun move(
-        @RequestAttribute userId: Long,
+        @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable folderId: Long,
         @RequestBody request: MoveFolderRequest
     )
             : ResponseEntity<SimpleResponse> {
         folderCommandUseCaseFacade.move(
             MoveFolderCommand(
-                userId = requireNotNull(userId),
+                userId = requireNotNull(user.getId()),
                 folderId = folderId,
                 newParentId = request.newParentId
             )
@@ -79,13 +81,12 @@ class FolderController(
 
     @DeleteMapping("/{folderId}")
     suspend fun delete(
-        @RequestAttribute userId: Long,
+        @AuthenticationPrincipal user: CustomUserDetails,
         @PathVariable folderId: Long
-    )
-            : ResponseEntity<SimpleResponse> {
+    ): ResponseEntity<SimpleResponse> {
         folderCommandUseCaseFacade.delete(
             DeleteFolderCommand(
-                userId = requireNotNull(userId),
+                userId = requireNotNull(user.getId()),
                 folderId = folderId
             )
         )
