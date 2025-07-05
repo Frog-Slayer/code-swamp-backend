@@ -5,6 +5,7 @@ option java_multiple_files = true;
 
 service UserService {
   rpc FetchUserProfile(UserProfileRequest) returns (UserProfileResponse);
+  rpc FetchUserProfiles(UserProfilesRequest) returns (UserProfilesResponse);
 }
 
 message UserProfileRequest{
@@ -12,6 +13,16 @@ message UserProfileRequest{
 }
 
 message UserProfileResponse{
-  string nickname = 1;
-  string profileImage = 2;
+  int64 userId = 1;
+  string username = 2;
+  string nickname = 3;
+  string profileImage = 4;
+}
+
+message UserProfilesRequest{
+  repeated int64 userId = 1;
+}
+
+message UserProfilesResponse{
+  repeated UserProfileResponse profiles = 1;
 }

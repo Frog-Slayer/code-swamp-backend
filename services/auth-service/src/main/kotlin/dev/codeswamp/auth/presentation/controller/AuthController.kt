@@ -11,7 +11,7 @@ import org.springframework.http.server.reactive.ServerHttpResponse
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping()
+@RequestMapping
 class AuthController(
     private val authApplicationService: AuthApplicationService,
     private val userProfileFetcher: UserProfileFetcher,

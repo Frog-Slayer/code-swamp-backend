@@ -11,6 +11,9 @@ data class PublishedArticleEntity(
     @Id
     val id: Long,
 
+    @Column("version_id")
+    val versionId: Long,
+
     @Column("author_id")
     val authorId: Long,
 
@@ -44,6 +47,7 @@ data class PublishedArticleEntity(
 
     fun toDomain() = PublishedArticle(
         id = id,
+        versionId = versionId,
         authorId = authorId,
         folderId = folderId,
         createdAt = createdAt,

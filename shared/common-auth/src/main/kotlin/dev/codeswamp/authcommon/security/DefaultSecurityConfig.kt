@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpStatus
+import org.springframework.security.authentication.AnonymousAuthenticationToken
 import org.springframework.security.authentication.ReactiveAuthenticationManager
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder
@@ -44,7 +45,7 @@ class DefaultSecurityConfig(
     @Bean
     fun httpFilterChain(
         http: ServerHttpSecurity,
-        tokenAuthenticationManager: ReactiveAuthenticationManager,
+        tokenAuthenticationManager: TokenAuthenticationManager,
         authenticationEntryPoint: ServerAuthenticationEntryPoint,
     ): SecurityWebFilterChain {
         val skipPathList = skipPathProvider.skipPaths()
@@ -76,7 +77,7 @@ class DefaultSecurityConfig(
                 it.authenticationEntryPoint(authenticationEntryPoint)
             }
             .addFilterBefore(
-                TokenAuthenticationFilter(tokenAuthenticationManager, authenticationEntryPoint),
+                TokenAuthenticationFilter(tokenAuthenticationManager),
                 SecurityWebFiltersOrder.LOGOUT
             )
             .build()

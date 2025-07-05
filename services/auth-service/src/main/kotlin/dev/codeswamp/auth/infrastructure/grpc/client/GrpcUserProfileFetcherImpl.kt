@@ -20,6 +20,8 @@ class GrpcUserProfileFetcherImpl : UserProfileFetcher {
             val response = stub.fetchUserProfile(request)
 
             return UserProfile(
+                response.userId,
+                response.username,
                 response.nickname,
                 response.profileImage
             )

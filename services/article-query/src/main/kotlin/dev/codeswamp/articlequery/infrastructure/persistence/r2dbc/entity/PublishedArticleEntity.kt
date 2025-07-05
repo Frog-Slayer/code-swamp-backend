@@ -11,6 +11,9 @@ data class PublishedArticleEntity(
     @Id
     val id: Long,
 
+    @Column("version_id")
+    val versionId: Long,
+
     @Column("author_id")
     val authorId: Long,
 
@@ -20,7 +23,7 @@ data class PublishedArticleEntity(
     @Column("created_at")
     val createdAt: Instant,
     @Column("updated_at")
-    val updateAt: Instant,
+    val updatedAt: Instant,
 
     val summary: String,
 
@@ -38,10 +41,11 @@ data class PublishedArticleEntity(
     companion object {
         fun from(publishedArticle: PublishedArticle) = PublishedArticleEntity(
             id = publishedArticle.id,
+            versionId = publishedArticle.versionId,
             authorId = publishedArticle.authorId,
             folderId = publishedArticle.folderId,
             createdAt = publishedArticle.createdAt,
-            updateAt = publishedArticle.updateAt,
+            updatedAt = publishedArticle.updatedAt,
             summary = publishedArticle.summary,
             thumbnail = publishedArticle.thumbnailUrl,
             isPublic = publishedArticle.isPublic,
@@ -53,10 +57,11 @@ data class PublishedArticleEntity(
 
     fun toDomain() = PublishedArticle.Companion.from(
         id = id,
+        versionId = versionId,
         authorId = authorId,
         folderId = folderId,
         createdAt = createdAt,
-        updateAt = updateAt,
+        updatedAt = updatedAt,
         summary = summary,
         thumbnailUrl = thumbnail,
         isPublic = isPublic,

@@ -17,6 +17,7 @@ class PublishedArticleRepositoryImpl(
     override suspend fun save(article : PublishedArticle): PublishedArticle {
         return publishedArticleR2dbcRepository.upsert(
             id = article.id,
+            versionId =  article.versionId,
             authorId = article.authorId,
             folderId = article.folderId,
             createdAt = article.createdAt,
@@ -32,5 +33,9 @@ class PublishedArticleRepositoryImpl(
 
     override suspend fun deleteByArticleId(articleId: Long) {
        publishedArticleR2dbcRepository.deleteById(articleId)
+    }
+
+    override suspend fun deleteAllByFolderIds(folderIds: List<Long>) {
+        publishedArticleR2dbcRepository.deleteAllByFolderIdIsIn(folderIds)
     }
 }

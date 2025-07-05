@@ -4,19 +4,6 @@ plugins {
 	id 'com.google.protobuf' version '0.9.5'
 }
 
-group = 'dev.codeswamp'
-version = '0.0.1-SNAPSHOT'
-
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
-	}
-}
-
-repositories {
-	mavenCentral()
-}
-
 dependencies {
 	implementation 'org.jetbrains.kotlin:kotlin-reflect'
 	api 'io.grpc:grpc-kotlin-stub:1.4.1'

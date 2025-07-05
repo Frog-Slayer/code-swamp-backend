@@ -45,6 +45,7 @@ class ArticlePublishedEventHandler(
 
     fun ArticlePublishedEvent.toArticle() = PublishedArticle(
         id = articleId,
+        versionId = versionId,
         authorId = authorId,
         folderId = folderId,
         createdAt = createdAt,

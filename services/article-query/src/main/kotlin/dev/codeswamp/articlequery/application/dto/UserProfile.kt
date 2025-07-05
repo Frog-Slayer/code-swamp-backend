@@ -1,6 +1,6 @@
-package dev.codeswamp.auth.application.dto
+package dev.codeswamp.articlequery.application.dto
 
-data class UserProfile(
+data class UserProfile (
     val userId: Long,
     val username: String,
     val nickname: String,

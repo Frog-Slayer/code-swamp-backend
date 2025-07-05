@@ -6,4 +6,7 @@ interface PublishedArticleRepository {
     suspend fun findByArticleId(articleId: Long) : PublishedArticle?
     suspend fun save(article: PublishedArticle): PublishedArticle
     suspend fun deleteByArticleId(articleId: Long)
+
+    suspend fun deleteAllByFolderIds(folderIds: List<Long>)
+
 }

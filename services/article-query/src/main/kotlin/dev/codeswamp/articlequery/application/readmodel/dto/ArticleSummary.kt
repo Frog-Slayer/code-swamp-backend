@@ -1,21 +1,17 @@
-package dev.codeswamp.projection.application.readmodel.model
+package dev.codeswamp.articlequery.application.readmodel.dto
 
 import java.time.Instant
 
-data class PublishedArticle (
+data class ArticleSummary(
     val id: Long,
     val versionId: Long,
     val authorId: Long,
     val folderId: Long,
-
     val createdAt: Instant,
     val updatedAt: Instant,
-
     val summary: String,
     val thumbnail: String? = null,
     val isPublic: Boolean,
-
     val slug: String,
     val title: String,
-    val content: String,
 )

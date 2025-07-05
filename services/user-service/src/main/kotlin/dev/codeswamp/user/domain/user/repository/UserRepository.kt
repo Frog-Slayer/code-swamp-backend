@@ -8,6 +8,7 @@ interface UserRepository {
     suspend fun insert(user: User): User
     suspend fun save(user: User): User
     suspend fun findById(id: Long): User?
+    suspend fun findAllByIdsIn(ids: List<Long>): List<User>
     suspend fun findByUsername(username: Username): User?
     suspend fun findByNickname(nickname: Nickname): User?
 }
