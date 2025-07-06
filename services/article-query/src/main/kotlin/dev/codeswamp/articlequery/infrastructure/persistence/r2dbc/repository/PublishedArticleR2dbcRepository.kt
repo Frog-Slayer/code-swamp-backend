@@ -30,7 +30,7 @@ interface PublishedArticleR2dbcRepository : CoroutineCrudRepository<PublishedArt
         FROM published_articles
         WHERE (is_public = true OR author_id = :userId)
         AND (created_at, id) < (:createdAt, :articleId)
-        ORDER BY created_at ASC, id ASC
+        ORDER BY created_at DESC, id DESC
         LIMIT :limit
     """)
     suspend fun findArticlesBeforeCursor(

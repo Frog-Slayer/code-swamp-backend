@@ -1,10 +1,11 @@
-package dev.codeswamp.user.infrastructure.persistence.repository
+package dev.codeswamp.user.infrastructure.persistence
 
 import dev.codeswamp.user.domain.user.model.Nickname
 import dev.codeswamp.user.domain.user.model.User
 import dev.codeswamp.user.domain.user.model.Username
 import dev.codeswamp.user.domain.user.repository.UserRepository
 import dev.codeswamp.user.infrastructure.persistence.entity.UserEntity
+import dev.codeswamp.user.infrastructure.persistence.repository.UserR2dbcRepository
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import org.springframework.stereotype.Repository
@@ -31,14 +32,6 @@ class UserRepositoryImpl(
     }
 
     override suspend fun findAllByIdsIn(ids: List<Long>): List<User> {
-        return userR2dbcRepository.findAllById(ids).map{ it.toDomain() }.toList()
-    }
-
-    override suspend fun findByUsername(username: Username): User? {
-        return username.value?.let { userR2dbcRepository.findByUsername(it)?.toDomain() }
-    }
-
-    override suspend fun findByNickname(nickname: Nickname): User? {
-        return nickname.value?.let { userR2dbcRepository.findByNickname(it)?.toDomain() }
+        return userR2dbcRepository.findAllById(ids).map { it.toDomain() }.toList()
     }
 }
