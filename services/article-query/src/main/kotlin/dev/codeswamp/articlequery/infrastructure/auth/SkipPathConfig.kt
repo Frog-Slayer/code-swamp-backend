@@ -9,6 +9,6 @@ import org.springframework.context.annotation.Import
 @Import(DefaultSecurityConfig::class)
 class SkipPathConfig : SkipPathProvider {
     override fun skipPaths(): List<String> {
-        return listOf("/articles/recent")
+        return listOf("/graphql")
     }
 }

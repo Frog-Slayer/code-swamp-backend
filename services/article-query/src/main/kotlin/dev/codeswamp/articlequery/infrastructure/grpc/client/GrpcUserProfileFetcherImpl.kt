@@ -1,6 +1,6 @@
 package dev.codeswamp.articlequery.infrastructure.grpc.client
 
-import dev.codeswamp.articlequery.application.dto.UserProfile
+import dev.codeswamp.articlequery.application.readmodel.model.UserProfile
 import dev.codeswamp.articlequery.application.port.outgoing.UserProfileFetcher
 import dev.codeswamp.grpc.UserProfileRequest
 import dev.codeswamp.grpc.UserProfilesRequest
@@ -13,6 +13,21 @@ class GrpcUserProfileFetcherImpl : UserProfileFetcher {
 
     @GrpcClient("user-service")
     lateinit var stub: UserServiceGrpcKt.UserServiceCoroutineStub
+    override suspend fun fetchUserProfile(userId: Long): UserProfile {
+        try {
+            val request = UserProfileRequest.newBuilder().setUserId(userId).build()
+            val profile = stub.fetchUserProfile(request)
+
+            return UserProfile(
+                profile.userId,
+                profile.username,
+                profile.nickname,
+                profile.profileImage
+                )
+        } catch (e: Exception) {
+            throw RuntimeException("cannot fetch user profile")
+        }
+    }
 
     override suspend fun fetchUserProfiles(userIds: List<Long>): List<UserProfile> {
         try {

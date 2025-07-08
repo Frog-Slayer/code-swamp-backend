@@ -2,9 +2,11 @@ dependencies {
     implementation project(":shared:common-framework")
     implementation project(":shared:common-grpc")
     implementation project(":shared:common-auth")
+    implementation project(":shared:infra-database-query")
 
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-graphql'
+    implementation 'com.graphql-java:graphql-java-extended-scalars:22.0'
 
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-webflux'

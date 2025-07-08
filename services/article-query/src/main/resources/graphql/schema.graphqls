@@ -1,0 +1,41 @@
+scalar Long
+scalar DateTime
+
+type Query{
+    articleById(articleId: ID!): PublishedArticle!
+    articleByPathAndSlug(path: String!, slug: String!): PublishedArticle!
+    articlesByKeyword(keyword: String!): [PublishedArticle]!
+    foldersByOwnerId(ownerId: String!): [Folder]!
+    myFolders: [Folder]!
+    recentArticles(limit: Int, lastArticleId: Long, lastCreatedAt: DateTime): [PublishedArticle]!
+}
+
+type PublishedArticle {
+    id: ID!
+    author: AuthorProfile!
+    folder: Folder!
+    versionId: String!
+    createdAt: String!
+    updatedAt: String!
+    summary: String!
+    thumbnailUrl: String
+    isPublic: Boolean!
+    slug: String!
+    title: String!
+    content: String!
+}
+
+type AuthorProfile {
+    userId: ID!
+    username: String!
+    nickname: String!
+    profileImage: String
+}
+
+type Folder {
+    id: ID!,
+    ownerId: String!
+    name: String!
+    fullPath: String!
+    parentId: String
+}

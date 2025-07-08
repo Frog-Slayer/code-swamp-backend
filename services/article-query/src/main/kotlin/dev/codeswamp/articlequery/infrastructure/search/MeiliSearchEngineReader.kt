@@ -1,6 +1,5 @@
 package dev.codeswamp.articlequery.infrastructure.search
 
-import dev.codeswamp.articlequery.application.dto.command.ArticleSearchDTO
 import dev.codeswamp.articlequery.application.support.SearchEngineReader
 import kotlinx.coroutines.reactor.awaitSingleOrNull
 import org.springframework.beans.factory.annotation.Qualifier
@@ -12,9 +11,9 @@ class MeiliSearchEngineReader(
     @Qualifier("meiliWebClient") private val meiliClient: WebClient,
 ) : SearchEngineReader {
 
-    override suspend fun search(query: ArticleSearchDTO): List<Long> {
+    override suspend fun search(query: String): List<Long> {
         val response = meiliClient.get()
-            .uri("/indexes/articles/search?q=${query.keyword}&attributesToRetrieve=articleId")
+            .uri("/indexes/articles/search?q=${query}&attributesToRetrieve=articleId")
             .retrieve()
             .bodyToMono(Map::class.java)
             .awaitSingleOrNull()
