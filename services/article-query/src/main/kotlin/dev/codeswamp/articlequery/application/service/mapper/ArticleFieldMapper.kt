@@ -1,5 +1,7 @@
 package dev.codeswamp.articlequery.application.service.mapper
 
+import dev.codeswamp.databasequery.FieldMapper
+
 object ArticleFieldMapper : FieldMapper {
     private val graphqlToDbFieldMap = mapOf(
         "id" to "id",

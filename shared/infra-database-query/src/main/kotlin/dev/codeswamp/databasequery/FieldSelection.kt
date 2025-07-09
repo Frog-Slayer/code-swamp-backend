@@ -1,6 +1,4 @@
-package dev.codeswamp.articlequery.application.service
-
-import dev.codeswamp.articlequery.application.service.mapper.FieldMapper
+package dev.codeswamp.databasequery
 
 data class FieldSelection(
     val name: String,

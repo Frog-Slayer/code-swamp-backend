@@ -8,7 +8,7 @@ import dev.codeswamp.articlequery.application.port.outgoing.UserProfileFetcher
 import dev.codeswamp.articlequery.application.readmodel.model.Folder
 import dev.codeswamp.articlequery.application.readmodel.repository.FolderRepository
 import dev.codeswamp.articlequery.application.readmodel.repository.PublishedArticleRepository
-import dev.codeswamp.articlequery.application.service.FieldSelection
+import dev.codeswamp.databasequery.FieldSelection
 import dev.codeswamp.articlequery.application.service.mapper.ArticleFieldMapper
 import dev.codeswamp.articlequery.application.service.mapper.FolderFieldMapper
 import org.springframework.stereotype.Service

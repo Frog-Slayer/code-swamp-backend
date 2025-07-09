@@ -1,7 +1,6 @@
 package dev.codeswamp.articlequery.presentation.controller
 
-import dev.codeswamp.articlequery.application.dto.EnrichedArticle
-import dev.codeswamp.articlequery.application.service.FieldSelection
+import dev.codeswamp.databasequery.FieldSelection
 import dev.codeswamp.articlequery.application.service.QueryService
 import dev.codeswamp.articlequery.presentation.dto.response.EnrichedArticleResponse
 import dev.codeswamp.articlequery.presentation.dto.response.FolderResponse
