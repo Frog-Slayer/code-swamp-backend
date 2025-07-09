@@ -5,8 +5,9 @@ spring:
     active: dev
   config:
     import: application-secret.yml
-  jpa:
-    show-sql: false
+  graphql:
+    graphiql:
+      enabled: true
 
 server:
   port: 8081

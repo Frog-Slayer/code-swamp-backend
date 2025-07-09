@@ -62,6 +62,7 @@ def springModules = [
 		":shared:common-auth",
 		":shared:common-framework",
         ":shared:infra-kafka",
+		":shared:infra-database-query",
 ]
 
 configure(springModules.collect { project(it)}) {

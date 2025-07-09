@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Import
 class SkipPathConfig :  SkipPathProvider{
     override fun skipPaths(): List<String> {
         return listOf(
+            "/graphql",
             "/signup"
         )
     }

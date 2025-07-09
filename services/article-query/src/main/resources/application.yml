@@ -5,6 +5,9 @@ spring:
     active: dev
   config:
     import: application-secret.yml
+  graphql:
+    graphiql:
+      enabled: true
 
 server:
   forward-headers-strategy: framework

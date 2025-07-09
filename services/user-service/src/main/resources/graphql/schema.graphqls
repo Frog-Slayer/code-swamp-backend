@@ -1,0 +1,10 @@
+type Query{
+  userProfile(username: String!): UserPublicProfile!
+}
+
+type UserPublicProfile {
+   userId: ID!
+   username: String!
+   nickname: String!
+   profileImage: String
+}

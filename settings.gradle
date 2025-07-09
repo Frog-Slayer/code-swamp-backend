@@ -12,5 +12,6 @@ include(
         "shared:common-grpc",
         'shared:id-generator',
         "shared:infra-kafka",
-        "shared:ddd-core"
+        "shared:ddd-core",
+        "shared:infra-database-query"
 )
