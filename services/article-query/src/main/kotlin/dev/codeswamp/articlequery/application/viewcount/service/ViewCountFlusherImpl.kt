@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.data.redis.core.ReactiveRedisOperations
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
-import java.time.Instant
 
 @Service
 class ViewCountFlusherImpl(

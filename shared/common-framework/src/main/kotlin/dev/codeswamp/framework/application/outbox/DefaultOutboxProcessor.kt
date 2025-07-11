@@ -16,8 +16,10 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.scheduling.annotation.Scheduled
 import kotlin.coroutines.cancellation.CancellationException
 
 class DefaultOutboxProcessor(
@@ -29,25 +31,9 @@ class DefaultOutboxProcessor(
     private val scope = CoroutineScope(Dispatchers.Default + SupervisorJob())
     private val logger : Logger = LoggerFactory.getLogger(javaClass)
 
-    @PostConstruct
-    override fun startProcessing() {
-        scope.launch {
-            while (isActive) {
-                try {
-                    processOutbox()
-                    delay(5000)
-                } catch (e: CancellationException) {
-                    logger.info("OutboxProcessor coroutine cancelled", e)
-                } catch (e: Exception) {
-                    logger.error("Unexpected exception in OutboxProcessor", e)
-                }
-            }
-        }
-    }
-
-    @PreDestroy
-    override fun stopProcessing() {
-        scope.cancel("Application shutting down")
+    @Scheduled(fixedRate = 5000)
+    fun flushOutboxEvents() = runBlocking {
+        processOutbox()
     }
 
     override suspend fun processOutbox() = coroutineScope {

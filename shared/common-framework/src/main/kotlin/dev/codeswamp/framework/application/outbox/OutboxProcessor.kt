@@ -7,7 +7,5 @@ sealed class ProcessResult {
 }
 
 interface OutboxProcessor {
-    fun startProcessing()
-    fun stopProcessing()
     suspend fun processOutbox() : List<ProcessResult>
 }
