@@ -1,4 +1,4 @@
-package dev.codeswamp.articlequery.application.viewcount
+package dev.codeswamp.articlequery.application.event
 
 import dev.codeswamp.core.application.event.ApplicationEvent
 import dev.codeswamp.core.common.EventType

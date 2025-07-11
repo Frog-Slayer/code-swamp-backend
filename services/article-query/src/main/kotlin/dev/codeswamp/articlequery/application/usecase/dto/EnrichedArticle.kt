@@ -18,14 +18,14 @@ data class EnrichedArticle (
     val slug: String?,
     val title: String?,
     val content: String?,
-    val view: Int?
+    val views: Int?
 )  {
     companion object {
         fun from(
             article: PublishedArticle,
-            author: UserProfile?,
-            folder: Folder?,
-            view: Int? = null
+            author: UserProfile? = null,
+            folder: Folder? = null,
+            views: Int? = null
         ) = EnrichedArticle(
             id = article.id,
             author = author,
@@ -39,7 +39,7 @@ data class EnrichedArticle (
             slug = article.slug,
             title = article.title,
             content = article.content,
-            view = view
+            views = views
         )
     }
 }

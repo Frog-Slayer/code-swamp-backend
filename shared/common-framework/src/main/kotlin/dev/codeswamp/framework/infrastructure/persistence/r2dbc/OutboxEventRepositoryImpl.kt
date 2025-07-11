@@ -23,7 +23,10 @@ class OutboxEventRepositoryImpl(
             VALUES (:id, :event_key, :event_type, :payload, :status, :created_at, :retry_count, :service_name)
         """)
             .bind("id", entity.id)
-            .bind("event_key", entity.key)
+            .apply  {
+                if ( entity.key != null) bind("event_key", entity.key)
+                else bindNull("event_key", String::class.java)
+            }
             .bind("event_type", entity.eventType)
             .bind("payload", Json.of(entity.payloadJson))
             .bind("status", entity.status)

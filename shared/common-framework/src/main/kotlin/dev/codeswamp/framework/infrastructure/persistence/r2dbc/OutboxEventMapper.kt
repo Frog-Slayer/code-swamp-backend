@@ -8,7 +8,7 @@ import java.time.Instant
 
 data class OutboxEventEntity (
     val id: Long,
-    val key : String,
+    val key : String?,
     val eventType: String,
     val payloadJson: String,
     val status: String,

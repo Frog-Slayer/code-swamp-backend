@@ -10,6 +10,7 @@ import graphql.schema.DataFetchingEnvironment
 import graphql.schema.DataFetchingFieldSelectionSet
 import org.slf4j.LoggerFactory
 import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
@@ -41,15 +42,14 @@ class ArticleGraphQLResolver(
     suspend fun articleById(
         @AuthenticationPrincipal user: CustomUserDetails?,
         @Argument articleId: Long,
+        @ContextValue("ipAddress") ipAddress: String?,
+        @ContextValue("userAgent") userAgent: String?,
         env: DataFetchingEnvironment,
-        request: ServerRequest
     ) : EnrichedArticleResponse {
-        val userId = user?.getId()
-
         val viewer = Viewer(
             userId = user?.getId(),
-            ipAddress = request.remoteAddress().toString(),
-            userAgent = request.headers().firstHeader("User-Agent")
+            ipAddress = ipAddress,
+            userAgent = userAgent
         )
 
         val fieldSelection = FieldSelection.fromSelectionSet(env.selectionSet, "article")
@@ -64,16 +64,17 @@ class ArticleGraphQLResolver(
         @AuthenticationPrincipal user: CustomUserDetails?,
         @Argument path: String,
         @Argument slug: String,
+        @ContextValue("ipAddress") ipAddress: String?,
+        @ContextValue("userAgent") userAgent: String?,
         env: DataFetchingEnvironment,
-        request : ServerRequest
     ): EnrichedArticleResponse {
         val userId = user?.getId()
         val fieldSelection = FieldSelection.fromSelectionSet(env.selectionSet, "article")
 
         val viewer = Viewer(
             userId = user?.getId(),
-            ipAddress = request.remoteAddress().toString(),
-            userAgent = request.headers().firstHeader("User-Agent")
+            ipAddress = ipAddress,
+            userAgent = userAgent
         )
 
         val article = useCaseOrchestrator.getArticleByPathAndSlug( viewer, path, slug, fieldSelection)

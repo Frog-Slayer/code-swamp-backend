@@ -9,7 +9,7 @@ class ViewCountServiceImpl(
     private val viewCountRepository: ViewCountRepository
 ): ViewCountService {
     override suspend fun shouldBeCounted(viewer: Viewer, articleId: Long): Boolean {
-        return viewCountRepository.existsByArticleIdAndViewer(articleId, viewer)
+        return !viewCountRepository.existsByArticleIdAndViewer(articleId, viewer)
     }
 
     override suspend fun incrementIfNeeded(viewer: Viewer, articleId: Long){

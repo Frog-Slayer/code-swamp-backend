@@ -6,7 +6,7 @@ import java.time.Instant
 data class KafkaEvent (
     val topic: String,
     val eventId: Long,
-    val key: String,
+    val key: String?,
     val eventType: String,
     val occurredAt: Instant,
     val event: JsonNode

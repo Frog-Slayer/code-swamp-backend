@@ -1,6 +1,6 @@
 package dev.codeswamp.articlequery.application.viewcount.service
 
-import dev.codeswamp.articlequery.application.viewcount.ViewCountFlushedEvent
+import dev.codeswamp.articlequery.application.event.ViewCountFlushedEvent
 import dev.codeswamp.articlequery.application.viewcount.ViewCountRepository
 import dev.codeswamp.core.application.event.eventbus.EventPublisher
 import dev.codeswamp.core.infrastructure.persistence.TransactionExecutor

@@ -42,7 +42,7 @@ data class PublishedArticle private constructor(
             isPublic = isPublic,
             slug = slug,
             title = title,
-            content = content
+            content = content,
         )
     }
 }

@@ -69,7 +69,7 @@ class UseCaseOrchestrator(
         viewService.incrementIfNeeded( viewer, articleId )
 
         val views = if ( fields.includes("views")) {
-            viewService.getTotalViews(articleId)
+            ( 0 ) + viewService.getTotalViews(articleId)
         } else null
 
         return EnrichedArticle.from(article, author, folder, views)
@@ -100,7 +100,7 @@ class UseCaseOrchestrator(
         viewService.incrementIfNeeded( viewer, articleId )
 
         val views = if ( fields.includes("views")) {
-            viewService.getTotalViews(articleId)
+            (  0 ) + viewService.getTotalViews(articleId)
         } else null
 
         return EnrichedArticle.from(article, author, folder, views)
@@ -134,14 +134,20 @@ class UseCaseOrchestrator(
 
         val views = if (fields.includes("views")) {
             val articleIds = articles.mapNotNull { it.id }
-            viewService.getArticlesTotalViews( articleIds ).associate { it.first to it.second }
+
+            val unflushedViews  = viewService.getArticlesTotalViews( articleIds ).associate { it.first to it.second }
+
+            articleIds.associateWith { id ->
+                val extra = unflushedViews[id] ?: 0
+                extra
+            }
         } else null
 
         return articles.map { article ->
             val author = authors?.get(article.authorId)
             val folder = folders?.get(article.folderId)
-            val view = views?.get(article.id)
-            EnrichedArticle.from(article, author, folder, view)
+            val views = views?.get(article.id)
+            EnrichedArticle.from(article, author, folder, views)
         }
     }
 
@@ -178,7 +184,12 @@ class UseCaseOrchestrator(
 
         val views = if (fields.includes("views")) {
             val articleIds = articles.mapNotNull { it.id }
-            viewService.getArticlesTotalViews( articleIds ).associate { it.first to it.second }
+            val unflushedViews  = viewService.getArticlesTotalViews( articleIds ).associate { it.first to it.second }
+
+            articleIds.associateWith { id ->
+                val extra = unflushedViews[id] ?: 0
+                extra
+            }
         } else null
 
         val enrichedArticles = articles.map { article ->

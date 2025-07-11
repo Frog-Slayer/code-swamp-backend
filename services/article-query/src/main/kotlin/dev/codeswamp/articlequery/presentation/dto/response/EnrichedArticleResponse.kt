@@ -25,6 +25,7 @@ data class EnrichedArticleResponse (
     val slug: String?,
     val title: String?,
     val content: String?,
+    val views: Int?
 ) {
     companion object {
         fun from(article: EnrichedArticle) = EnrichedArticleResponse(
@@ -40,6 +41,7 @@ data class EnrichedArticleResponse (
             slug = article.slug,
             title = article.title,
             content = article.content,
+            views = article.views
         )
     }
 }
