@@ -1,8 +1,11 @@
-package dev.codeswamp.articlequery.application.service.mapper
+package dev.codeswamp.articlequery.infrastructure.persistence.mapper
 
+import dev.codeswamp.articlequery.application.mapper.ArticleFieldMapper
 import dev.codeswamp.databasequery.FieldMapper
+import org.springframework.stereotype.Component
 
-object ArticleFieldMapper : FieldMapper {
+@Component
+class ArticleFieldMapperImpl : ArticleFieldMapper{
     private val graphqlToDbFieldMap = mapOf(
         "id" to "id",
         "author" to "author_id",

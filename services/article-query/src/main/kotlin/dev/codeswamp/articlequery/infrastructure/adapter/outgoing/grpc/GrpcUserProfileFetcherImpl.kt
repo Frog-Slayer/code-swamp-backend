@@ -1,7 +1,7 @@
-package dev.codeswamp.articlequery.infrastructure.grpc.client
+package dev.codeswamp.articlequery.infrastructure.adapter.outgoing.grpc
 
-import dev.codeswamp.articlequery.application.readmodel.model.UserProfile
 import dev.codeswamp.articlequery.application.port.outgoing.UserProfileFetcher
+import dev.codeswamp.articlequery.application.readmodel.model.UserProfile
 import dev.codeswamp.grpc.UserProfileRequest
 import dev.codeswamp.grpc.UserProfilesRequest
 import dev.codeswamp.grpc.UserServiceGrpcKt
@@ -23,7 +23,7 @@ class GrpcUserProfileFetcherImpl : UserProfileFetcher {
                 profile.username,
                 profile.nickname,
                 profile.profileImage
-                )
+            )
         } catch (e: Exception) {
             throw RuntimeException("cannot fetch user profile")
         }
@@ -36,10 +36,10 @@ class GrpcUserProfileFetcherImpl : UserProfileFetcher {
 
             return profiles.map { profile ->
                 UserProfile(
-                profile.userId,
-                profile.username,
-                profile.nickname,
-                profile.profileImage
+                    profile.userId,
+                    profile.username,
+                    profile.nickname,
+                    profile.profileImage
                 )
             }
         } catch (e: Exception) {
