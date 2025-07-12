@@ -2,7 +2,7 @@ package dev.codeswamp.articlequery.presentation.dto.response
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer
-import dev.codeswamp.articlequery.application.dto.EnrichedArticle
+import dev.codeswamp.articlequery.application.usecase.dto.EnrichedArticle
 import java.time.Instant
 
 data class EnrichedArticleResponse (
@@ -25,6 +25,7 @@ data class EnrichedArticleResponse (
     val slug: String?,
     val title: String?,
     val content: String?,
+    val views: Int?
 ) {
     companion object {
         fun from(article: EnrichedArticle) = EnrichedArticleResponse(
@@ -40,6 +41,7 @@ data class EnrichedArticleResponse (
             slug = article.slug,
             title = article.title,
             content = article.content,
+            views = article.views
         )
     }
 }

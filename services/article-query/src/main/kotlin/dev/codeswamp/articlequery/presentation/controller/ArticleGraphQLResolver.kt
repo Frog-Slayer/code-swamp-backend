@@ -1,7 +1,8 @@
 package dev.codeswamp.articlequery.presentation.controller
 
+import dev.codeswamp.articlequery.application.context.Viewer
 import dev.codeswamp.databasequery.FieldSelection
-import dev.codeswamp.articlequery.application.service.QueryService
+import dev.codeswamp.articlequery.application.usecase.UseCaseOrchestrator
 import dev.codeswamp.articlequery.presentation.dto.response.EnrichedArticleResponse
 import dev.codeswamp.articlequery.presentation.dto.response.FolderResponse
 import dev.codeswamp.authcommon.security.CustomUserDetails
@@ -9,14 +10,16 @@ import graphql.schema.DataFetchingEnvironment
 import graphql.schema.DataFetchingFieldSelectionSet
 import org.slf4j.LoggerFactory
 import org.springframework.graphql.data.method.annotation.Argument
+import org.springframework.graphql.data.method.annotation.ContextValue
 import org.springframework.graphql.data.method.annotation.QueryMapping
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.stereotype.Controller
+import org.springframework.web.reactive.function.server.ServerRequest
 import java.time.Instant
 
 @Controller
 class ArticleGraphQLResolver(
-    private val queryService: QueryService
+    private val useCaseOrchestrator: UseCaseOrchestrator
 ) {
     private val logger = LoggerFactory.getLogger(ArticleGraphQLResolver::class.java)
 
@@ -33,18 +36,25 @@ class ArticleGraphQLResolver(
        }
 
        return FieldSelection(name = rootName, children = childSelections)
-   }
+    }
 
     @QueryMapping
     suspend fun articleById(
         @AuthenticationPrincipal user: CustomUserDetails?,
         @Argument articleId: Long,
-        env: DataFetchingEnvironment
+        @ContextValue("ipAddress") ipAddress: String?,
+        @ContextValue("userAgent") userAgent: String?,
+        env: DataFetchingEnvironment,
     ) : EnrichedArticleResponse {
-        val userId = user?.getId()
+        val viewer = Viewer(
+            userId = user?.getId(),
+            ipAddress = ipAddress,
+            userAgent = userAgent
+        )
+
         val fieldSelection = FieldSelection.fromSelectionSet(env.selectionSet, "article")
 
-        val article =  queryService.getArticleByArticleId(userId, articleId, fieldSelection)
+        val article = useCaseOrchestrator.getArticleByArticleId(viewer, articleId, fieldSelection)
 
         return EnrichedArticleResponse.from(article)
     }
@@ -54,12 +64,20 @@ class ArticleGraphQLResolver(
         @AuthenticationPrincipal user: CustomUserDetails?,
         @Argument path: String,
         @Argument slug: String,
-        env: DataFetchingEnvironment
+        @ContextValue("ipAddress") ipAddress: String?,
+        @ContextValue("userAgent") userAgent: String?,
+        env: DataFetchingEnvironment,
     ): EnrichedArticleResponse {
         val userId = user?.getId()
         val fieldSelection = FieldSelection.fromSelectionSet(env.selectionSet, "article")
 
-        val article =  queryService.getArticleByPathAndSlug(userId, path, slug, fieldSelection)
+        val viewer = Viewer(
+            userId = user?.getId(),
+            ipAddress = ipAddress,
+            userAgent = userAgent
+        )
+
+        val article = useCaseOrchestrator.getArticleByPathAndSlug( viewer, path, slug, fieldSelection)
 
         return EnrichedArticleResponse.from(article)
     }
@@ -76,7 +94,7 @@ class ArticleGraphQLResolver(
     ): List<FolderResponse> {
         val fieldSelection = FieldSelection.fromSelectionSet(env.selectionSet, "folder")
 
-        val folderList = queryService.getAllFoldersForUser(ownerId, fieldSelection)
+        val folderList = useCaseOrchestrator.getAllFoldersForUser(ownerId, fieldSelection)
         return folderList.map { FolderResponse.from(it) }
     }
 
@@ -90,7 +108,7 @@ class ArticleGraphQLResolver(
     ): List<EnrichedArticleResponse> {
         val userId = user?.getId()
         val fieldSelection = FieldSelection.fromSelectionSet(env.selectionSet, "articles")
-        val articles = queryService.getRecentArticles(userId, lastCreatedAt, lastArticleId, limit, fieldSelection)
+        val articles = useCaseOrchestrator.getRecentArticles(userId, lastCreatedAt, lastArticleId, limit, fieldSelection)
 
         logger.info("articles: {}", articles)
         return articles.map { EnrichedArticleResponse.from(it) }
@@ -103,7 +121,7 @@ class ArticleGraphQLResolver(
     ) : List<FolderResponse> {
         val userId = user.getId() ?: throw Exception("User not found")
         val fieldSelection = FieldSelection.fromSelectionSet(env.selectionSet, "folders")
-        val folders = queryService.getAllFoldersForUser(userId, fieldSelection)
+        val folders = useCaseOrchestrator.getAllFoldersForUser(userId, fieldSelection)
 
         return folders.map { FolderResponse.from(it) }
     }

@@ -27,7 +27,7 @@ class DefaultEventRecorder (
         outboxRepository.insertAll(outboxEvents)
     }
 
-    fun generateEventKey(event: BusinessEvent) : String {
+    fun generateEventKey(event: BusinessEvent) : String? {
         return eventKeyResolver.resolveKey(event)
     }
 

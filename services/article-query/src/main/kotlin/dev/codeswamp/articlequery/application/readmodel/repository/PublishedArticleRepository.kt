@@ -1,6 +1,5 @@
 package dev.codeswamp.articlequery.application.readmodel.repository
 
-import dev.codeswamp.articlequery.application.readmodel.dto.ArticleSummary
 import dev.codeswamp.articlequery.application.readmodel.model.PublishedArticle
 import java.time.Instant
 

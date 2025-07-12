@@ -30,8 +30,10 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Import
 import org.springframework.r2dbc.core.DatabaseClient
+import org.springframework.scheduling.annotation.EnableScheduling
 
 @Configuration
+@EnableScheduling
 @Import(KafkaConfig::class, TransactionConfig::class)
 class FrameworkBeansConfig(
     @Value("\${spring.application.name}") private val serviceName : String,

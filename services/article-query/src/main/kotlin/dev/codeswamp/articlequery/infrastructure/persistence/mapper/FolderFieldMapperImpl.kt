@@ -1,8 +1,10 @@
-package dev.codeswamp.articlequery.application.service.mapper
+package dev.codeswamp.articlequery.infrastructure.persistence.mapper
 
-import dev.codeswamp.databasequery.FieldMapper
+import dev.codeswamp.articlequery.application.mapper.FolderFieldMapper
+import org.springframework.stereotype.Component
 
-object FolderFieldMapper : FieldMapper {
+@Component
+class FolderFieldMapperImpl : FolderFieldMapper {
     private val graphqlToDbFieldMap = mapOf(
         "id" to "id",
         "ownerId" to "owner_id",

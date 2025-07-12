@@ -9,7 +9,7 @@ import java.time.Instant
 data class OutboxEvent (
     val id: Long,
     val serviceName: String,
-    val key: String,
+    val key: String?,
     val eventType: String,
     val payload: BusinessEvent,
     val status: EventStatus = EventStatus.PENDING,
@@ -29,7 +29,7 @@ data class OutboxEvent (
             payload: BusinessEvent,
             createdAt: Instant,
             serviceName: String,
-            key: String,
+            key: String?,
         ) = OutboxEvent(
             id = generateId(),
             eventType = eventType,

@@ -1,4 +1,4 @@
-package dev.codeswamp.articlequery.application.dto
+package dev.codeswamp.articlequery.application.usecase.dto
 
 import dev.codeswamp.articlequery.application.readmodel.model.Folder
 import dev.codeswamp.articlequery.application.readmodel.model.PublishedArticle
@@ -18,9 +18,15 @@ data class EnrichedArticle (
     val slug: String?,
     val title: String?,
     val content: String?,
+    val views: Int?
 )  {
     companion object {
-        fun from(article: PublishedArticle, author: UserProfile?, folder: Folder?) = EnrichedArticle(
+        fun from(
+            article: PublishedArticle,
+            author: UserProfile? = null,
+            folder: Folder? = null,
+            views: Int? = null
+        ) = EnrichedArticle(
             id = article.id,
             author = author,
             folder = folder,
@@ -33,6 +39,7 @@ data class EnrichedArticle (
             slug = article.slug,
             title = article.title,
             content = article.content,
+            views = views
         )
     }
 }
